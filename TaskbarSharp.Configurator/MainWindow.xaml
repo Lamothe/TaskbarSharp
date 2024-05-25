@@ -259,7 +259,6 @@
                     <TextBox IsReadOnly="True" HorizontalAlignment="Left" Height="32" Margin="0,239,0,0" TextWrapping="Wrap" Text="https://github.com/ChrisAnd1998/TaskbarSharp/issues" VerticalAlignment="Top" Width="447" Grid.Column="1" />
                     <TextBox IsReadOnly="True" HorizontalAlignment="Left" Height="32" Margin="0,304,0,0" TextWrapping="Wrap" Text="chrisand1998@gmail.com" VerticalAlignment="Top" Width="447" Grid.Column="1" />
                     <TextBox IsReadOnly="True" HorizontalAlignment="Left" Height="32" Margin="0,341,0,0" TextWrapping="Wrap" Text="u/chrisand1998" VerticalAlignment="Top" Width="447" Grid.Column="1" />
-                    <Button ToolTip="Check if there is a new version available." x:Name="bb" Content="Check" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="57" Margin="69,91,0,0" Style="{StaticResource AccentButtonStyle}" Grid.Column="1" Click="Button_Click_4" />
                     <TextBlock x:Name="vers" Grid.Column="1" HorizontalAlignment="Left" Margin="131,99,0,0"  Text="No connection.." VerticalAlignment="Top" Width="197" Height="19" />
                     <TextBlock HorizontalAlignment="Left" FontWeight="Bold" Margin="10,412,0,0" TextWrapping="Wrap" Text="References: " VerticalAlignment="Top" Width="129" Height="32" Grid.ColumnSpan="2" />
                     <TextBox IsReadOnly="True" Grid.Column="1" HorizontalAlignment="Left" Height="71" Margin="0,406,0,0" TextWrapping="Wrap" Text="ModernWPF:  https://github.com/Kinnara/ModernWpf&#xD;&#xA;TaskScheduler:  https://github.com/dahall/TaskScheduler&#xD;&#xA;Emoji.Wpf:  https://github.com/samhocevar/emoji.wpf" VerticalAlignment="Top" Width="447" />
@@ -284,7 +283,7 @@
         <Button ToolTip="Stop the TaskbarSharp background service. And put the icons back to the left." Content="Stop TaskbarSharp" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="121" Margin="510,245,0,-245" Click="Button_Click_2" />
         <Button ToolTip="Reset all settings back to default. Click 'Apply' to confirm." FontFamily="Segoe MDL2 Assets" Content="&#xE777;"  FontSize="19" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="38" Margin="-2,190,0,-190" Click="Button_Click_6" />
         <Button ToolTip="Reload current applied settings." FontFamily="Segoe MDL2 Assets" Content="&#xE895;"  FontSize="19" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="38" Margin="41,134,0,-134" Click="Button_Click_5" />
-        <Button ToolTip="Restart the TaskbarSharp background service." Content="Restart TaskbarSharp" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="121" Margin="384,77,0,-77" Click="Button_Click_7" />
+        <Button ToolTip="Restart the TaskbarSharp background service." Content="Restart TaskbarSharp" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="121" Margin="384,77,0,-77" Click="Button_Click_Restart" />
         <CheckBox  ToolTip="Show console output for debugging." x:Name="checkboxconsole" Content="Show Console" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="51" RenderTransformOrigin="0.5,0.5" Margin="183,21,0,-21" />
     </ui:SimpleStackPanel>
 </Window>

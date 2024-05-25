@@ -274,35 +274,6 @@ namespace TaskbarSharp.Configurator
 
             try
             {
-                string address = "https://raw.githubusercontent.com/ChrisAnd1998/FalconX-Center-Taskbar/master/VERSION";
-                var client = new WebClient() { CachePolicy = new System.Net.Cache.RequestCachePolicy(System.Net.Cache.RequestCacheLevel.NoCacheNoStore) };
-                var reader = new StreamReader(client.OpenRead(address));
-
-                string latest = reader.ReadToEnd().ToString();
-
-                if (latest.Contains(Assembly.GetExecutingAssembly().GetName().Version.ToString()))
-                {
-                    this.vers.Text = "You are up to date.";
-                }
-                else if (Operators.CompareString(latest.Substring(0, 7).ToString().Replace(".", ""), Assembly.GetExecutingAssembly().GetName().Version.ToString().Replace(".", ""), false) <= 0)
-                {
-                    this.vers.Text = "This is a Pre-Release! Unstable.";
-                }
-                else
-                {
-                    this.vers.Text = "Update " + latest.Substring(0, 7) + " is available!";
-
-                }
-
-                reader.Dispose();
-                client.Dispose();
-            }
-            catch
-            {
-            }
-
-            try
-            {
                 using (var ts = new TaskService())
                 {
                     var td = ts.GetTask("TaskbarSharp" + " " + WindowsIdentity.GetCurrent().Name.Replace(@"\", ""));
@@ -312,13 +283,13 @@ namespace TaskbarSharp.Configurator
                         return;
                     }
 
-                    string cfg = td.Definition.Actions.ToString().Replace('"' + AppDomain.CurrentDomain.BaseDirectory + "TaskbarSharp.exe" + '"', "");
+                    var cfg = td.Definition.Actions.ToString().Replace('"' + AppDomain.CurrentDomain.BaseDirectory + "TaskbarSharp.exe" + '"', "");
 
-                    string[] arguments = cfg.Split(" ".ToCharArray());
+                    var arguments = cfg.Split(" ".ToCharArray());
 
                     foreach (var argument in arguments)
                     {
-                        string[] val = Strings.Split(argument, "=");
+                        var val = Strings.Split(argument, "=");
                         Console.WriteLine(val[0]);
                         if (argument.Contains("-tbs="))
                         {
@@ -559,9 +530,6 @@ namespace TaskbarSharp.Configurator
 
         public void Button_Click_1(object sender, RoutedEventArgs e)
         {
-
-            // Kill every other running instance of FalconX
-
             try
             {
                 foreach (Process prog in Process.GetProcesses())
@@ -787,14 +755,12 @@ namespace TaskbarSharp.Configurator
                     Process.Start("TaskbarSharp.exe", parameters);
 
                     ts.RootFolder.RegisterTaskDefinition("TaskbarSharp" + " " + WindowsIdentity.GetCurrent().Name.Replace(@"\", ""), td);
-
                 }
             }
             catch (Exception ex)
             {
                 // MessageBox.Show(ex.Message)
             }
-
         }
 
         public static int WM_DWMCOLORIZATIONCOLORCHANGED = 0x320;
@@ -803,8 +769,6 @@ namespace TaskbarSharp.Configurator
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            // Kill every other running instance of FalconX
-
             try
             {
                 foreach (Process prog in Process.GetProcesses())
@@ -821,14 +785,8 @@ namespace TaskbarSharp.Configurator
 
             Thread.Sleep(50);
 
-
-
             var t1 = new Thread(RevertToZero);
             t1.Start();
-
-
-
-            // ResetTaskbarStyle()
         }
 
         private async void Button_Click_3(object sender, RoutedEventArgs e)
@@ -1089,40 +1047,6 @@ namespace TaskbarSharp.Configurator
                 }
             }
 
-        }
-
-        private void Button_Click_4(object sender, RoutedEventArgs e)
-        {
-
-            try
-            {
-                string address = "https://raw.githubusercontent.com/ChrisAnd1998/FalconX-Center-Taskbar/master/VERSION";
-                var client = new WebClient() { CachePolicy = new System.Net.Cache.RequestCachePolicy(System.Net.Cache.RequestCacheLevel.NoCacheNoStore) };
-                var reader = new StreamReader(client.OpenRead(address));
-
-                string latest = reader.ReadToEnd().ToString();
-
-                if (latest.Contains(Assembly.GetExecutingAssembly().GetName().Version.ToString()))
-                {
-                    this.vers.Text = "You are up to date.";
-                }
-                else if (Operators.CompareString(latest.Substring(0, 7).ToString().Replace(".", ""), Assembly.GetExecutingAssembly().GetName().Version.ToString().Replace(".", ""), false) <= 0)
-                {
-                    this.vers.Text = "This is a Pre-Release! Unstable.";
-                }
-                else
-                {
-                    this.vers.Text = "Update " + latest.Substring(0, 7) + " is available!";
-                    Process.Start("https://chrisandriessen.nl/TaskbarSharp");
-
-                }
-
-                reader.Dispose();
-                client.Dispose();
-            }
-            catch
-            {
-            }
         }
 
         private void Button_Click_5(object sender, RoutedEventArgs e)
@@ -1401,24 +1325,21 @@ namespace TaskbarSharp.Configurator
 
         }
 
-        private void Button_Click_7(object sender, RoutedEventArgs e)
+        private void Button_Click_Restart(object sender, RoutedEventArgs e)
         {
-
-            // Kill every other running instance of FalconX
-
             try
             {
-                foreach (Process prog in Process.GetProcesses())
+                foreach (var process in Process.GetProcesses())
                 {
-                    if (prog.ProcessName == "TaskbarSharp")
+                    if (process.ProcessName == "TaskbarSharp")
                     {
-                        prog.Kill();
+                        process.Kill();
                     }
                 }
             }
             catch (Exception ex)
             {
-
+                MessageBox.Show(ex.Message, "TaskbarSharp Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             Thread.Sleep(50);
@@ -1427,8 +1348,6 @@ namespace TaskbarSharp.Configurator
             t1.Start();
 
             Thread.Sleep(1000);
-
-            // ResetTaskbarStyle()
 
             string parameters = "";
 
@@ -1587,7 +1506,7 @@ namespace TaskbarSharp.Configurator
                 parameters += "-console ";
             }
 
-            Process.Start("TaskbarSharp.exe", parameters);
+            Process.Start(@"..\..\..\TaskbarSharp\bin\Debug\TaskbarSharp.exe", parameters);
         }
 
         private async void Button_Click_8(object sender, RoutedEventArgs e)
