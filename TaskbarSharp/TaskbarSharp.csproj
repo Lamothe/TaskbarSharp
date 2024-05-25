@@ -169,7 +169,6 @@
     <Compile Include="TaskbarCenter.cs" />
     <Compile Include="TaskbarStyle.cs" />
     <Compile Include="TrayIconBuster.cs" />
-    <Compile Include="Win32.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
@@ -209,6 +208,12 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TaskbarSharp.Common\TaskbarSharp.Common.csproj">
+      <Project>{1450ff67-a032-4f74-bdb4-972b407e169d}</Project>
+      <Name>TaskbarSharp.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

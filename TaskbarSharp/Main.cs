@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using TaskbarSharp.Common;
 
 namespace TaskbarSharp
 {
@@ -27,7 +28,7 @@ namespace TaskbarSharp
                 Settings.CenterSecondaryOnly = 0;
                 Settings.AnimationStyle = "cubiceaseinout";
                 Settings.AnimationSpeed = 300;
-                Settings.LoopRefreshRate = 5000;
+                Settings.LoopRefreshRate = 400;
                 Settings.CenterInBetween = 0;
                 Settings.DontCenterTaskbar = 0;
                 Settings.FixToolbarsOnTrayChange = 1;

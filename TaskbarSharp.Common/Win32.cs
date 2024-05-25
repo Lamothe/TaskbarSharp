@@ -1,12 +1,17 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.Text;
+using System;
 using System.Windows.Forms;
 
-namespace TaskbarSharp
+namespace TaskbarSharp.Common
 {
     public class Win32
     {
+        public delegate bool CallBack(IntPtr hwnd, int lParam);
+
+        [DllImport("user32")]
+        public static extern int EnumWindows(CallBack Adress, int y);
+
         [DllImport("user32.dll")]
         public static extern bool ShowWindow(IntPtr hWnd, [MarshalAs(UnmanagedType.I4)] ShowWindowCommands nCmdShow);
 
@@ -136,10 +141,10 @@ namespace TaskbarSharp
         public enum RedrawWindowFlags : uint
         {
             Invalidate = 0x1U,
-            InternalPaint = 0x2U,
+            publicPaint = 0x2U,
             Erase = 0x4U,
             Validate = 0x8U,
-            NoInternalPaint = 0x10U,
+            NopublicPaint = 0x10U,
             NoErase = 0x20U,
             NoChildren = 0x40U,
             AllChildren = 0x80U,
@@ -211,7 +216,7 @@ namespace TaskbarSharp
             public long dwFlags;
         }
 
-        internal enum AccentState
+        public enum AccentState
         {
             ACCENT_DISABLED = 0,
             ACCENT_ENABLE_GRADIENT = 1,
@@ -223,7 +228,7 @@ namespace TaskbarSharp
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        internal struct AccentPolicy
+        public struct AccentPolicy
         {
             public AccentState AccentState;
             public int AccentFlags;
@@ -290,80 +295,17 @@ namespace TaskbarSharp
         public static uint WM_SETTINGCHANGE = 26U;
         public static int SMTO_ABORTIFHUNG = 2;
 
-
-
         public static uint TOPMOST_FLAGS = 0x2 | 0x1;
         public static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
-
-
 
         public static void ShowStartMenu()
         {
             var shell = FindWindow("Shell_TrayWnd", null);
-
-
-            // ' Const keyControl As Byte = &H11
-            // ' Const keyEscape As Byte = &H1B
-            // ' keybd_event(keyControl, 0, 0, UIntPtr.Zero)
-            // ' keybd_event(keyEscape, 0, 0, UIntPtr.Zero)
-            // ' Const KEYEVENTF_KEYUP As UInteger = &H2
-            // ' keybd_event(keyControl, 0, KEYEVENTF_KEYUP, UIntPtr.Zero)
-            // 'keybd_event(keyEscape, 0, KEYEVENTF_KEYUP, UIntPtr.Zero)
-
-            // ' keybd_event(CByte(Keys.LWin), 0, &H0, CType(0, UIntPtr)) : Application.DoEvents() 'Press the Left Win key
-            // 'keybd_event(CByte(Keys.LWin), 0, &H0, CType(0, UIntPtr)) : Application.DoEvents() 'Press the Left Win key
-
-            // ' Dim tt As New RECT
-            // ' GetWindowRect(shell, tt)
-
-            // ' MsgBox(tt.Top)
-
-            // 'SHOWS DESKTOP
-            // 'SendMessage(shell, &H400 + 377, CBool(CType(&H1, IntPtr)), CInt(CType(0, IntPtr)))
-
-
-
-            // '  Dim sClassName As New StringBuilder("", 256)
-            // '  GetClassName(GetActiveWindow(), sClassName, 256)
-
-            // ' PostMessage(shell, &H400 + 465, CType(&H1, IntPtr), CType(&H10001, IntPtr))
-            // ' PostMessage(shell, &H127, CType(&H30001, IntPtr), CType(0, IntPtr))
-            // 'SendMessage(shell, &H400 + 377, CBool(CType(&H100, IntPtr)), CInt(CType(1, IntPtr)))
-
-            // 'PostMessage(shell, &H400 + 243, CType(shell, IntPtr), CType(0, IntPtr))
-            // 'SetFocus(shell)
             keybd_event((byte)Keys.LWin, 0, 0x0U, (UIntPtr)0); // Press the Left Win key
 
 
             keybd_event((byte)Keys.LWin, 0, 0x2U, (UIntPtr)0); // Press the Left Win key
                                                                // '  SetFocus(shell)
-
-
-
-
-
-
-
-            // ' End If
-
-            // '  SetFocus(shell)
-
-
-            // ' keybd_event(CByte(Keys.LWin), 0, &H2, CType(0, UIntPtr)) : Application.DoEvents() 'Press the Left Win key
-            // ' keybd_event(CByte(Keys.LWin), 0, &H2, CType(0, UIntPtr)) : Application.DoEvents() 'Press the Left Win key
-
-            // ' PostMessage(shell, &H112, CType(&HF131, IntPtr), CType(&H1, IntPtr))
-
-            // 'PostMessage(shell, wm_s, CType(&H1, IntPtr), CType(&H10001, IntPtr))
-
-            // ' PostMessage(shell, &H400 + 465, CType(&H1, IntPtr), CType(&H10001, IntPtr))
-            // ' PostMessage(shell, &H400 + 443, CType(&H1, IntPtr), CType(0, IntPtr))
-            // ' PostMessage(shell, &H400 + 377, CType(&H0, IntPtr), CType(0, IntPtr))
-
-
-
-            // ' keybd_event(CByte(Keys.LWin), 0, &H2, CType(0, UIntPtr)) 'Press the Left Win key
-
         }
 
         [DllImport("user32.dll")]
@@ -382,7 +324,6 @@ namespace TaskbarSharp
         [DllImport("user32.dll", EntryPoint = "GetWindowLong")]
         private static extern IntPtr GetWindowLongPtr(HandleRef hWnd, [MarshalAs(UnmanagedType.I4)] WindowLongFlags nIndex);
 
-
         public enum WindowLongFlags : int
         {
             GWL_EXSTYLE = -20,
@@ -397,5 +338,16 @@ namespace TaskbarSharp
             DWLP_DLGPROC = 0x4
         }
 
+        [DllImport("user32")]
+        public static extern bool GetCursorPos(ref PointAPI lpPoint);
+
+        [DllImport("user32")]
+        public static extern short GetAsyncKeyState(int vkey);
+
+        public struct PointAPI
+        {
+            public int x;
+            public int y;
+        }
     }
 }

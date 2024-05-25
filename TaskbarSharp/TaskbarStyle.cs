@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using TaskbarSharp.Common;
 
 namespace TaskbarSharp
 {
@@ -22,7 +23,6 @@ namespace TaskbarSharp
         {
             windowHandles.Clear();
             EnumWindows(Enumerator, 0);
-
 
             bool maintaskbarfound = false;
             bool sectaskbarfound = false;
@@ -57,7 +57,6 @@ namespace TaskbarSharp
             {
                 if (Screen.AllScreens.Count() >= 2)
                 {
-                    // 'MsgBox(Screen.AllScreens.Count)
                     try
                     {
                         windowHandles.Add(Win32.FindWindow("Shell_SecondaryTrayWnd", null));
@@ -67,8 +66,6 @@ namespace TaskbarSharp
                     }
                 }
             }
-
-
 
             return ActiveWindows;
         }
@@ -140,7 +137,6 @@ namespace TaskbarSharp
         {
             do
             {
-
                 int windowsold;
                 int windowsnew;
                 windowsold = maximizedwindows.Count;
@@ -163,12 +159,6 @@ namespace TaskbarSharp
                             {
                                 trays.Remove(tray);
                                 trays.Add(tray);
-
-                                // 'If Not Settings.TaskbarRounding = 0 Then
-                                // 'Dim tt As New Win32.RECT
-                                // 'Win32.GetClientRect(tray, tt)
-                                // 'Win32.SetWindowRgn(CType(tray, IntPtr), Win32.CreateRoundRectRgn(0, 0, tt.Right, tt.Bottom - tt.Top, Settings.TaskbarRounding, Settings.TaskbarRounding), True)
-                                // 'End If
                             }
                         }
                     }
@@ -183,11 +173,6 @@ namespace TaskbarSharp
                             {
                                 trays.Remove(tray);
                                 Win32.PostMessage(tray, 0x31EU, (IntPtr)0x1, (IntPtr)0x0);
-                                // '  If Not Settings.TaskbarRounding = 0 Then
-                                // '  Dim tt As New Win32.RECT
-                                // '  Win32.GetClientRect(tray, tt)
-                                // '  Win32.SetWindowRgn(CType(tray, IntPtr), Win32.CreateRoundRectRgn(0, 0, tt.Right, tt.Bottom - tt.Top, 0, 0), True)
-                                // 'End If
                             }
                         }
                     }
@@ -201,9 +186,7 @@ namespace TaskbarSharp
         {
             try
             {
-
                 GetActiveWindows();
-
 
                 var accent = new Win32.AccentPolicy();
                 int accentStructSize = Marshal.SizeOf(accent);
@@ -241,10 +224,12 @@ namespace TaskbarSharp
                 var accentPtr = Marshal.AllocHGlobal(accentStructSize);
                 Marshal.StructureToPtr(accent, accentPtr, false);
 
-                var data = new Win32.WindowCompositionAttributeData();
-                data.Attribute = Win32.WindowCompositionAttribute.WCA_ACCENT_POLICY;
-                data.SizeOfData = accentStructSize;
-                data.Data = accentPtr;
+                var data = new Win32.WindowCompositionAttributeData
+                {
+                    Attribute = Win32.WindowCompositionAttribute.WCA_ACCENT_POLICY,
+                    SizeOfData = accentStructSize,
+                    Data = accentPtr
+                };
 
                 // Put all TrayWnds into an ArrayList
                 foreach (IntPtr trayWnd in windowHandles)

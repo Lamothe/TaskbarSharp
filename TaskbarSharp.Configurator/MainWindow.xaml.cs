@@ -17,118 +17,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using TaskbarSharp.Common;
 
 namespace TaskbarSharp.Configurator
 {
     public partial class MainWindow
     {
-        [DllImport("user32.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
-        public static extern IntPtr GetParent(IntPtr hWnd);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
-
-        [DllImport("user32.dll")]
-        public static extern int SendMessage(IntPtr hWnd, int wMsg, bool wParam, int lParam);
-
-        [DllImport("user32.dll", EntryPoint = "FindWindow", SetLastError = true, CharSet = CharSet.Auto)]
-        private static extern IntPtr FindWindowByClass(string lpClassName, IntPtr zero);
-
-        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        public static extern IntPtr FindWindowEx(IntPtr parentHandle, IntPtr childAfter, string lclassName, string windowTitle);
-
-        [DllImport("user32")]
-        public static extern bool GetCursorPos(ref PointAPI lpPoint);
-
-        [DllImport("user32")]
-        static extern short GetAsyncKeyState(int vkey);
-
-        [DllImport("user32.dll", EntryPoint = "SetWindowLong")]
-        public static extern int SetWindowLong(IntPtr hWnd, [MarshalAs(UnmanagedType.I4)] WindowStyles nIndex, int dwNewLong);
-
-        public enum WindowStyles
-        {
-            WS_BORDER = 0x800000,
-            WS_CAPTION = 0xC00000,
-            WS_CHILD = 0x40000000,
-            WS_CLIPCHILDREN = 0x2000000,
-            WS_CLIPSIBLINGS = 0x4000000,
-            WS_DISABLED = 0x8000000,
-            WS_DLGFRAME = 0x400000,
-            WS_GROUP = 0x20000,
-            WS_HSCROLL = 0x100000,
-            WS_MAXIMIZE = 0x1000000,
-            WS_MAXIMIZEBOX = 0x10000,
-            WS_MINIMIZE = 0x20000000,
-            WS_MINIMIZEBOX = 0x20000,
-            WS_OVERLAPPED = 0x0,
-            WS_OVERLAPPEDWINDOW = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_SIZEFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
-            WS_SIZEFRAME = 0x40000,
-            WS_SYSMENU = 0x80000,
-            WS_TABSTOP = 0x10000,
-            WS_VISIBLE = 0x10000000,
-            WS_VSCROLL = 0x200000
-        }
-
-        internal struct WindowCompositionAttributeData
-        {
-            public WindowCompositionAttribute Attribute;
-            public IntPtr Data;
-            public int SizeOfData;
-        }
-
-        internal enum WindowCompositionAttribute
-        {
-            WCA_ACCENT_POLICY = 19
-        }
-
-        internal enum AccentState
-        {
-            ACCENT_DISABLED = 0,
-            ACCENT_ENABLE_GRADIENT = 1,
-            ACCENT_ENABLE_TRANSPARENTGRADIENT = 2,
-            ACCENT_ENABLE_BLURBEHIND = 3,
-            ACCENT_ENABLE_TRANSPARANT = 6,
-            ACCENT_ENABLE_ACRYLICBLURBEHIND = 4
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct AccentPolicy
-        {
-            public AccentState AccentState;
-            public int AccentFlags;
-            public int GradientColor;
-            public int AnimationId;
-        }
-
-        [DllImport("user32.dll")]
-        internal static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
-
-        public struct PointAPI
-        {
-            public int x;
-            public int y;
-        }
-
-        public const int GWL_STYLE = -16;
-        public const int GWL_EXSTYLE = -20;
-        public const int WS_MAXIMIZE = 16777216;
-        public const long WS_POPUP = 2147483648L;
-        public const int WS_EX_LAYERED = 524288;
-
-        public static uint SWP_NOSIZE = 1U;
-        public static uint SWP_ASYNCWINDOWPOS = 16384U;
-        public static uint SWP_NOACTIVATE = 16U;
-        public static uint SWP_NOSENDCHANGING = 1024U;
-        public static uint SWP_NOZORDER = 4U;
-
-        public delegate bool CallBack(IntPtr hwnd, int lParam);
-
-        [DllImport("user32")]
-        public static extern int EnumWindows(CallBack Adress, int y);
-        public static System.Collections.ObjectModel.Collection<IntPtr> ActiveWindows = new System.Collections.ObjectModel.Collection<IntPtr>();
+        public static System.Collections.ObjectModel.Collection<IntPtr> ActiveWindows = [];
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
@@ -136,7 +31,7 @@ namespace TaskbarSharp.Configurator
         public static System.Collections.ObjectModel.Collection<IntPtr> GetActiveWindows()
         {
             windowHandles.Clear();
-            EnumWindows(Enumerator, 0);
+            Win32.EnumWindows(Enumerator, 0);
 
             bool maintaskbarfound = false;
             bool sectaskbarfound = false;
@@ -162,7 +57,7 @@ namespace TaskbarSharp.Configurator
                 {
                     string arglpClassName = "Shell_TrayWnd";
                     string arglpWindowName = null;
-                    windowHandles.Add(MainWindow.FindWindow(arglpClassName, arglpWindowName));
+                    windowHandles.Add(Win32.FindWindow(arglpClassName, arglpWindowName));
                 }
                 catch
                 {
@@ -175,15 +70,15 @@ namespace TaskbarSharp.Configurator
                 {
                     string arglpClassName4 = "Shell_SecondaryTrayWnd";
                     string arglpWindowName4 = null;
-                    if (!(MainWindow.FindWindow(arglpClassName4, arglpWindowName4) == (IntPtr)0))
+                    if (!(Win32.FindWindow(arglpClassName4, arglpWindowName4) == (IntPtr)0))
                     {
                         string arglpClassName3 = "Shell_SecondaryTrayWnd";
                         string arglpWindowName3 = null;
-                        if (MainWindow.FindWindow(arglpClassName3, arglpWindowName3) != default)
+                        if (Win32.FindWindow(arglpClassName3, arglpWindowName3) != default)
                         {
                             string arglpClassName1 = "Shell_SecondaryTrayWnd";
                             string arglpWindowName1 = null;
-                            windowHandles.Add(MainWindow.FindWindow(arglpClassName1, arglpWindowName1));
+                            windowHandles.Add(Win32.FindWindow(arglpClassName1, arglpWindowName1));
                         }
                     }
                 }
@@ -935,13 +830,6 @@ namespace TaskbarSharp.Configurator
 
             // ResetTaskbarStyle()
         }
-
-
-
-
-
-
-
 
         private async void Button_Click_3(object sender, RoutedEventArgs e)
         {
@@ -1767,10 +1655,10 @@ namespace TaskbarSharp.Configurator
 
         private void Button_Click_9(object sender, RoutedEventArgs e)
         {
-            Callanim();
+            CallAnimation();
         }
 
-        private void Callanim()
+        private void CallAnimation()
         {
             int xx = (int)Math.Round(this.NumericUpDown4.Value);
             string an = this.ComboBox1.Text;
@@ -2058,7 +1946,7 @@ namespace TaskbarSharp.Configurator
 
 
 
-            calchexcolor2();
+            CalculateHexColor2();
         }
 
         private void Blue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -2070,7 +1958,7 @@ namespace TaskbarSharp.Configurator
 
             this.colorprev.Opacity = this.sAlpha.Value / 100d;
 
-            calchexcolor2();
+            CalculateHexColor2();
         }
 
         private void Green_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -2082,7 +1970,7 @@ namespace TaskbarSharp.Configurator
 
             this.colorprev.Opacity = this.sAlpha.Value / 100d;
 
-            calchexcolor2();
+            CalculateHexColor2();
         }
 
         private void Red_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -2094,11 +1982,10 @@ namespace TaskbarSharp.Configurator
 
             this.colorprev.Opacity = this.sAlpha.Value / 100d;
 
-            calchexcolor2();
+            CalculateHexColor2();
         }
 
-
-        public void calchexcolor2()
+        public void CalculateHexColor2()
         {
             try
             {
@@ -2112,7 +1999,7 @@ namespace TaskbarSharp.Configurator
             }
         }
 
-        public void calchexcolor()
+        public void CalculateHexColor()
         {
             try
             {
@@ -2132,19 +2019,19 @@ namespace TaskbarSharp.Configurator
 
         private void Button_Click_12(object sender, RoutedEventArgs e)
         {
-            var t1 = new Thread(Colorthread);
+            var t1 = new Thread(ColorThread);
             t1.Start();
         }
 
-        public void Colorthread()
+        public void ColorThread()
         {
-            var lpPoint = default(PointAPI);
-            bool x = GetAsyncKeyState(1) == 0;
+            var lpPoint = default(Win32.PointAPI);
+            bool x = Win32.GetAsyncKeyState(1) == 0;
 
             do
             {
                 Thread.Sleep(1);
-                GetCursorPos(ref lpPoint);
+                Win32.GetCursorPos(ref lpPoint);
 
                 Console.WriteLine(GetColorAt(lpPoint.x, lpPoint.y));
 
@@ -2159,7 +2046,7 @@ namespace TaskbarSharp.Configurator
                     });
             }
 
-            while (GetAsyncKeyState(1) == 0);
+            while (Win32.GetAsyncKeyState(1) == 0);
         }
 
         private void Button_Click_13(object sender, RoutedEventArgs e)

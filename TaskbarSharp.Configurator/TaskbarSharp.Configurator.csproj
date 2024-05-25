@@ -261,5 +261,11 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TaskbarSharp.Common\TaskbarSharp.Common.csproj">
+      <Project>{1450FF67-A032-4F74-BDB4-972B407E169D}</Project>
+      <Name>TaskbarSharp.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
