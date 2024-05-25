@@ -18,11 +18,10 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace TaskbarXConfiguratorWPF
+namespace TaskbarSharp.Configurator
 {
     public partial class MainWindow
     {
-
         [DllImport("user32.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
         public static extern IntPtr GetParent(IntPtr hWnd);
 
@@ -70,6 +69,7 @@ namespace TaskbarXConfiguratorWPF
             WS_VISIBLE = 0x10000000,
             WS_VSCROLL = 0x200000
         }
+
         internal struct WindowCompositionAttributeData
         {
             public WindowCompositionAttribute Attribute;
@@ -177,8 +177,6 @@ namespace TaskbarXConfiguratorWPF
                     string arglpWindowName4 = null;
                     if (!(MainWindow.FindWindow(arglpClassName4, arglpWindowName4) == (IntPtr)0))
                     {
-                        string arglpClassName2 = "Shell_SecondaryTrayWnd";
-                        string arglpWindowName2 = null;
                         string arglpClassName3 = "Shell_SecondaryTrayWnd";
                         string arglpWindowName3 = null;
                         if (MainWindow.FindWindow(arglpClassName3, arglpWindowName3) != default)
@@ -212,34 +210,13 @@ namespace TaskbarXConfiguratorWPF
 
         public static void RevertToZero()
         {
-
-            if (AppDomain.CurrentDomain.BaseDirectory.Contains("40210ChrisAndriessen"))
+            try
             {
-                try
-                {
-                    var processInfo = new ProcessStartInfo()
-                    {
-                        WindowStyle = ProcessWindowStyle.Hidden,
-                        FileName = "explorer.exe",
-                        Arguments = " taskbarx:" + '"' + "-stop" + '"'
-                    };
-                    Process.Start(processInfo);
-                }
-                catch
-                {
-                }
+                Process.Start("TaskbarSharp.exe", "-stop");
             }
-            else
+            catch
             {
-                try
-                {
-                    Process.Start("TaskbarX.exe", "-stop");
-                }
-                catch
-                {
-                }
             }
-
         }
 
         private readonly Bitmap bmp = new Bitmap(1, 1);
@@ -396,67 +373,51 @@ namespace TaskbarXConfiguratorWPF
             this.ComboBox2.Items.Add("backeaseoutin");
 
             this.ComboBox2.SelectedItem = "cubiceaseinout";
-
-            if (AppDomain.CurrentDomain.BaseDirectory.Contains("40210ChrisAndriessen"))
-            {
-                this.startbutton_shortcut.Text = "explorer.exe taskbarx: -showstartmenu";
-            }
-            else
-            {
-                this.startbutton_shortcut.Text = '"' + AppDomain.CurrentDomain.BaseDirectory + "TaskbarX.exe" + '"' + " -showstartmenu";
-            }
+            this.startbutton_shortcut.Text = '"' + AppDomain.CurrentDomain.BaseDirectory + "TaskbarSharp.exe" + '"' + " -showstartmenu";
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 
-            if (!AppDomain.CurrentDomain.BaseDirectory.Contains("40210ChrisAndriessen"))
+            try
             {
-                try
+                string address = "https://raw.githubusercontent.com/ChrisAnd1998/FalconX-Center-Taskbar/master/VERSION";
+                var client = new WebClient() { CachePolicy = new System.Net.Cache.RequestCachePolicy(System.Net.Cache.RequestCacheLevel.NoCacheNoStore) };
+                var reader = new StreamReader(client.OpenRead(address));
+
+                string latest = reader.ReadToEnd().ToString();
+
+                if (latest.Contains(Assembly.GetExecutingAssembly().GetName().Version.ToString()))
                 {
-                    string address = "https://raw.githubusercontent.com/ChrisAnd1998/FalconX-Center-Taskbar/master/VERSION";
-                    var client = new WebClient() { CachePolicy = new System.Net.Cache.RequestCachePolicy(System.Net.Cache.RequestCacheLevel.NoCacheNoStore) };
-                    var reader = new StreamReader(client.OpenRead(address));
-
-                    string latest = reader.ReadToEnd().ToString();
-
-                    if (latest.Contains(Assembly.GetExecutingAssembly().GetName().Version.ToString()))
-                    {
-                        this.vers.Text = "You are up to date.";
-                    }
-                    else if (Operators.CompareString(latest.Substring(0, 7).ToString().Replace(".", ""), Assembly.GetExecutingAssembly().GetName().Version.ToString().Replace(".", ""), false) <= 0)
-                    {
-                        this.vers.Text = "This is a Pre-Release! Unstable.";
-                    }
-                    else
-                    {
-                        this.vers.Text = "Update " + latest.Substring(0, 7) + " is available!";
-
-                    }
-
-                    reader.Dispose();
-                    client.Dispose();
+                    this.vers.Text = "You are up to date.";
                 }
-                catch
+                else if (Operators.CompareString(latest.Substring(0, 7).ToString().Replace(".", ""), Assembly.GetExecutingAssembly().GetName().Version.ToString().Replace(".", ""), false) <= 0)
                 {
+                    this.vers.Text = "This is a Pre-Release! Unstable.";
                 }
+                else
+                {
+                    this.vers.Text = "Update " + latest.Substring(0, 7) + " is available!";
+
+                }
+
+                reader.Dispose();
+                client.Dispose();
             }
-            else
+            catch
             {
-                this.bb.Visibility = Visibility.Hidden;
-                this.vers.Visibility = Visibility.Hidden;
             }
 
             try
             {
                 using (var ts = new TaskService())
                 {
-                    var td = ts.GetTask("TaskbarX" + " " + WindowsIdentity.GetCurrent().Name.Replace(@"\", ""));
+                    var td = ts.GetTask("TaskbarSharp" + " " + WindowsIdentity.GetCurrent().Name.Replace(@"\", ""));
 
                     if (td == null)
                     {
                         return;
                     }
 
-                    string cfg = td.Definition.Actions.ToString().Replace('"' + AppDomain.CurrentDomain.BaseDirectory + "TaskbarX.exe" + '"', "");
+                    string cfg = td.Definition.Actions.ToString().Replace('"' + AppDomain.CurrentDomain.BaseDirectory + "TaskbarSharp.exe" + '"', "");
 
                     string[] arguments = cfg.Split(" ".ToCharArray());
 
@@ -710,7 +671,7 @@ namespace TaskbarXConfiguratorWPF
             {
                 foreach (Process prog in Process.GetProcesses())
                 {
-                    if (prog.ProcessName == "TaskbarX")
+                    if (prog.ProcessName == "TaskbarSharp")
                     {
                         prog.Kill();
                     }
@@ -893,8 +854,8 @@ namespace TaskbarXConfiguratorWPF
             {
                 using (var ts = new TaskService())
                 {
-                    ts.RootFolder.DeleteTask("TaskbarX" + " " + WindowsIdentity.GetCurrent().Name.Replace(@"\", ""));
-                    ts.RootFolder.DeleteTask("TaskbarX");
+                    ts.RootFolder.DeleteTask("TaskbarSharp" + " " + WindowsIdentity.GetCurrent().Name.Replace(@"\", ""));
+                    ts.RootFolder.DeleteTask("TaskbarSharp");
                 }
             }
             catch (Exception ex)
@@ -927,29 +888,10 @@ namespace TaskbarXConfiguratorWPF
                     td.Settings.ExecutionTimeLimit = TimeSpan.Zero;
                     td.RegistrationInfo.Author = "Chris Andriessen";
 
-                    if (AppDomain.CurrentDomain.BaseDirectory.Contains("40210ChrisAndriessen"))
-                    {
+                    td.Actions.Add(new ExecAction('"' + AppDomain.CurrentDomain.BaseDirectory + "TaskbarSharp.exe" + '"', parameters, null));
+                    Process.Start("TaskbarSharp.exe", parameters);
 
-                        td.Actions.Add(new ExecAction("explorer.exe", "taskbarx:" + '"' + parameters + '"', null));
-
-                        var processInfo = new ProcessStartInfo()
-                        {
-                            WindowStyle = ProcessWindowStyle.Hidden,
-                            FileName = "explorer.exe",
-                            Arguments = " taskbarx:" + '"' + parameters + '"'
-                        };
-                        Process.Start(processInfo);
-                    }
-                    else
-                    {
-
-                        td.Actions.Add(new ExecAction('"' + AppDomain.CurrentDomain.BaseDirectory + "TaskbarX.exe" + '"', parameters, null));
-
-                        Process.Start("TaskbarX.exe", parameters);
-
-                    }
-
-                    ts.RootFolder.RegisterTaskDefinition("TaskbarX" + " " + WindowsIdentity.GetCurrent().Name.Replace(@"\", ""), td);
+                    ts.RootFolder.RegisterTaskDefinition("TaskbarSharp" + " " + WindowsIdentity.GetCurrent().Name.Replace(@"\", ""), td);
 
                 }
             }
@@ -972,7 +914,7 @@ namespace TaskbarXConfiguratorWPF
             {
                 foreach (Process prog in Process.GetProcesses())
                 {
-                    if (prog.ProcessName == "TaskbarX")
+                    if (prog.ProcessName == "TaskbarSharp")
                     {
                         prog.Kill();
                     }
@@ -1007,8 +949,8 @@ namespace TaskbarXConfiguratorWPF
             {
                 using (var ts = new TaskService())
                 {
-                    ts.RootFolder.DeleteTask("TaskbarX" + " " + WindowsIdentity.GetCurrent().Name.Replace(@"\", ""));
-                    ts.RootFolder.DeleteTask("TaskbarX");
+                    ts.RootFolder.DeleteTask("TaskbarSharp" + " " + WindowsIdentity.GetCurrent().Name.Replace(@"\", ""));
+                    ts.RootFolder.DeleteTask("TaskbarSharp");
                 }
             }
             catch (Exception ex)
@@ -1193,8 +1135,8 @@ namespace TaskbarXConfiguratorWPF
             {
                 using (var ts = new TaskService())
                 {
-                    ts.RootFolder.DeleteTask("TaskbarX" + " " + WindowsIdentity.GetCurrent().Name.Replace(@"\", ""));
-                    ts.RootFolder.DeleteTask("TaskbarX");
+                    ts.RootFolder.DeleteTask("TaskbarSharp" + " " + WindowsIdentity.GetCurrent().Name.Replace(@"\", ""));
+                    ts.RootFolder.DeleteTask("TaskbarSharp");
                 }
             }
             catch (Exception ex)
@@ -1227,19 +1169,9 @@ namespace TaskbarXConfiguratorWPF
                     td.Settings.ExecutionTimeLimit = TimeSpan.Zero;
                     td.RegistrationInfo.Author = "Chris Andriessen";
 
-                    if (AppDomain.CurrentDomain.BaseDirectory.Contains("40210ChrisAndriessen"))
-                    {
+                    td.Actions.Add(new ExecAction(AppDomain.CurrentDomain.BaseDirectory + "TaskbarSharp.exe", parameters, null));
 
-                        td.Actions.Add(new ExecAction("explorer.exe", "taskbarx: " + '"' + parameters + '"', null));
-                    }
-                    else
-                    {
-
-                        td.Actions.Add(new ExecAction(AppDomain.CurrentDomain.BaseDirectory + "TaskbarX.exe", parameters, null));
-
-                    }
-
-                    ts.RootFolder.RegisterTaskDefinition("TaskbarX" + " " + WindowsIdentity.GetCurrent().Name.Replace(@"\", ""), td);
+                    ts.RootFolder.RegisterTaskDefinition("TaskbarSharp" + " " + WindowsIdentity.GetCurrent().Name.Replace(@"\", ""), td);
 
                 }
             }
@@ -1293,7 +1225,7 @@ namespace TaskbarXConfiguratorWPF
                 else
                 {
                     this.vers.Text = "Update " + latest.Substring(0, 7) + " is available!";
-                    Process.Start("https://chrisandriessen.nl/taskbarx");
+                    Process.Start("https://chrisandriessen.nl/TaskbarSharp");
 
                 }
 
@@ -1313,22 +1245,9 @@ namespace TaskbarXConfiguratorWPF
                 using (var ts = new TaskService())
                 {
 
-                    var td = ts.GetTask("TaskbarX" + " " + WindowsIdentity.GetCurrent().Name.Replace(@"\", ""));
+                    var td = ts.GetTask("TaskbarSharp" + " " + WindowsIdentity.GetCurrent().Name.Replace(@"\", ""));
 
-                    string cfg = null;
-
-
-
-                    if (AppDomain.CurrentDomain.BaseDirectory.Contains("40210ChrisAndriessen"))
-                    {
-                        // 'cfg = td.Definition.Actions.ToString.Replace("cmd.exe /c start shell:AppsFolder\40210ChrisAndriessen.FalconX_y1dazs5f5wq00!TaskbarX", "")
-                        cfg = td.Definition.Actions.ToString().Replace("explorer.exe taskbarx:", "");
-                    }
-
-                    else
-                    {
-                        cfg = td.Definition.Actions.ToString().Replace(AppDomain.CurrentDomain.BaseDirectory + "TaskbarX.exe", "");
-                    }
+                    string cfg = td.Definition.Actions.ToString().Replace(AppDomain.CurrentDomain.BaseDirectory + "TaskbarSharp.exe", "");
 
                     string[] arguments = cfg.Split(" ".ToCharArray());
 
@@ -1788,8 +1707,8 @@ namespace TaskbarXConfiguratorWPF
 
             var deleteFileDialog = new ContentDialog()
             {
-                Title = "Uninstall TaskbarX?",
-                Content = "Are you sure you want to uninstall TaskbarX?",
+                Title = "Uninstall TaskbarSharp?",
+                Content = "Are you sure you want to uninstall TaskbarSharp?",
                 PrimaryButtonText = "Yes",
                 CloseButtonText = "No"
             };
@@ -1801,8 +1720,8 @@ namespace TaskbarXConfiguratorWPF
                 {
                     using (var ts = new TaskService())
                     {
-                        ts.RootFolder.DeleteTask("TaskbarX" + " " + WindowsIdentity.GetCurrent().Name.Replace(@"\", ""));
-                        ts.RootFolder.DeleteTask("TaskbarX");
+                        ts.RootFolder.DeleteTask("TaskbarSharp" + " " + WindowsIdentity.GetCurrent().Name.Replace(@"\", ""));
+                        ts.RootFolder.DeleteTask("TaskbarSharp");
                     }
                 }
                 catch (Exception ex)
@@ -1814,7 +1733,7 @@ namespace TaskbarXConfiguratorWPF
                 {
                     foreach (Process prog in Process.GetProcesses())
                     {
-                        if (prog.ProcessName == "TaskbarX")
+                        if (prog.ProcessName == "TaskbarSharp")
                         {
                             prog.Kill();
                         }
@@ -1829,52 +1748,26 @@ namespace TaskbarXConfiguratorWPF
                 var t1 = new Thread(RevertToZero);
                 t1.Start();
 
-                if (AppDomain.CurrentDomain.BaseDirectory.Contains("40210ChrisAndriessen"))
+                var ffFileDialog = new ContentDialog()
                 {
+                    Title = "Ready for removal.",
+                    Content = "The Taskschedule is successfully removed." + Constants.vbNewLine + "You can now remove TaskbarSharp's files.",
+                    PrimaryButtonText = "Ok"
+                };
+                var results2 = await ffFileDialog.ShowAsync();
 
-                    var ggFileDialog = new ContentDialog()
-                    {
-                        Title = "Good bye.",
-                        Content = "Ready for uninstall." + Constants.vbNewLine + "TaskbarX will be removed within a minute once you click Ok...",
-                        PrimaryButtonText = "Ok"
-                    };
-                    var results = await ggFileDialog.ShowAsync();
+                Process.Start(AppDomain.CurrentDomain.BaseDirectory);
 
-                    var processInfo = new ProcessStartInfo()
-                    {
-                        WindowStyle = ProcessWindowStyle.Hidden,
-                        FileName = "powershell.exe",
-                        Arguments = " Get-AppxPackage *40210ChrisAndriessen.FalconX* | Remove-AppxPackage"
-                    };
-                    Process.Start(processInfo);
-                    Environment.Exit(0);
-                }
-                else
-                {
-
-                    var ffFileDialog = new ContentDialog()
-                    {
-                        Title = "Ready for removal.",
-                        Content = "The Taskschedule is successfully removed." + Constants.vbNewLine + "You can now remove TaskbarX's files.",
-                        PrimaryButtonText = "Ok"
-                    };
-                    var results2 = await ffFileDialog.ShowAsync();
-
-                    Process.Start(AppDomain.CurrentDomain.BaseDirectory);
-
-                    Environment.Exit(0);
-                }
+                Environment.Exit(0);
             }
             else
             {
             }
-
         }
 
         private void Button_Click_9(object sender, RoutedEventArgs e)
         {
             Callanim();
-
         }
 
         private void Callanim()
@@ -2431,16 +2324,7 @@ namespace TaskbarXConfiguratorWPF
                 parameters += "-console ";
             }
 
-            if (AppDomain.CurrentDomain.BaseDirectory.Contains("40210ChrisAndriessen"))
-            {
-                // ' TextboxLink.Text = "cmd.exe /c start shell:AppsFolder\40210ChrisAndriessen.FalconX_y1dazs5f5wq00!TaskbarX " & parameters
-                this.TextboxLink.Text = "explorer.exe taskbarx:" + '"' + parameters + '"';
-            }
-            else
-            {
-                this.TextboxLink.Text = '"' + AppDomain.CurrentDomain.BaseDirectory + "TaskbarX.exe" + '"' + " " + parameters;
-            }
-
+            this.TextboxLink.Text = '"' + AppDomain.CurrentDomain.BaseDirectory + "TaskbarSharp.exe" + '"' + " " + parameters;
         }
 
         private void Button_Click_14(object sender, RoutedEventArgs e)

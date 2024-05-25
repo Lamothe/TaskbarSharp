@@ -1,7 +1,7 @@
-﻿<Application x:Class="TaskbarXConfiguratorWPF.Application"
+﻿<Application x:Class="TaskbarSharp.Configurator.Application"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:TaskbarXConfiguratorWPF"
+    xmlns:local="clr-namespace:TaskbarSharp.Configurator"
              StartupUri="MainWindow.xaml"
     xmlns:ui="http://schemas.modernwpf.com/2019">
     <Application.Resources>

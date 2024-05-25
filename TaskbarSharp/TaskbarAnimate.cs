@@ -2,12 +2,10 @@
 using System.Collections;
 using System.Diagnostics;
 
-namespace TaskbarX
+namespace TaskbarSharp
 {
-
     public class TaskbarAnimate
     {
-
         public static ArrayList current = new ArrayList();
 
         public static void Animate(IntPtr hwnd, int oldpos, string orient, EasingDelegate easing, int valueToReach, int duration, bool isPrimary, int width)
@@ -16,14 +14,11 @@ namespace TaskbarX
 
             try
             {
-
                 if (Math.Abs(valueToReach - oldpos) == 0)
                 {
                     // The difference is 0 so there is no need to trigger the animator.
                     return;
                 }
-
-
 
                 if (Settings.RevertZeroBeyondTray == 1)
                 {

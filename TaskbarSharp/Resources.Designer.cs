@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TaskbarX.My.Resources {
+namespace TaskbarSharp.My.Resources {
     using System;
     
     

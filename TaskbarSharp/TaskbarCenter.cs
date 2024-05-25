@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Accessibility;
+using Microsoft.VisualBasic.CompilerServices;
+using Microsoft.Win32;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,16 +10,11 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Accessibility;
-using Microsoft.VisualBasic.CompilerServices;
-using Microsoft.Win32;
 
-namespace TaskbarX
+namespace TaskbarSharp
 {
-
     public class TaskbarCenter
     {
-
         #region Values
 
         public static bool ScreensChanged;

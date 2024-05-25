@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TaskbarXConfiguratorWPF
+namespace TaskbarSharp.Configurator
 {
 
     public delegate double EasingDelegate(double currentTime, double minValue, double maxValue, double duration);

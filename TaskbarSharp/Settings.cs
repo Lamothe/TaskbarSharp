@@ -1,7 +1,5 @@
-﻿
-namespace TaskbarX
+﻿namespace TaskbarSharp
 {
-
     public class Settings
     {
         public static bool Pause;
@@ -43,7 +41,7 @@ namespace TaskbarX
 
         public static int UseUIA;
 
-        // If on battery TaskbarX will override with these
+        // If on battery TaskbarSharp will override with these
         public static string OnBatteryAnimationStyle;
 
         public static int OnBatteryLoopRefreshRate;

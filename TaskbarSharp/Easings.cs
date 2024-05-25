@@ -1,13 +1,11 @@
 ﻿using System;
 
-namespace TaskbarX
+namespace TaskbarSharp
 {
-
     public delegate double EasingDelegate(double currentTime, double minValue, double maxValue, double duration);
 
     public class Easings
     {
-
         public static double Linear(double currentTime, double minHeight, double maxHeight, double duration)
         {
             return maxHeight * currentTime / duration + minHeight;

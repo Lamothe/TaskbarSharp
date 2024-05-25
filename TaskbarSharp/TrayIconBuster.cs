@@ -3,7 +3,7 @@ using System.Collections;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace TaskbarX.TrayIconBuster
+namespace TaskbarSharp.TrayIconBuster
 {
     internal class TrayIconBuster
     {

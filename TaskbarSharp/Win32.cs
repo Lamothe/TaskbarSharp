@@ -3,12 +3,10 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
-namespace TaskbarX
+namespace TaskbarSharp
 {
-
     public class Win32
     {
-
         [DllImport("user32.dll")]
         public static extern bool ShowWindow(IntPtr hWnd, [MarshalAs(UnmanagedType.I4)] ShowWindowCommands nCmdShow);
 

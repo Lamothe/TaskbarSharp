@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{9A2BA8A0-EBA0-0E0B-0349-EB98F3F2B75D}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>TaskbarX.MainType</StartupObject>
+    <StartupObject>TaskbarSharp.MainType</StartupObject>
     <RootNamespace>TaskbarSharp</RootNamespace>
     <AssemblyName>TaskbarSharp</AssemblyName>
     <FileAlignment>512</FileAlignment>

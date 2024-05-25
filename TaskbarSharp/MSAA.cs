@@ -4,7 +4,7 @@ using System.Text;
 using System.Windows.Forms;
 using Accessibility;
 
-namespace TaskbarX
+namespace TaskbarSharp
 {
     public class MSAA
     {

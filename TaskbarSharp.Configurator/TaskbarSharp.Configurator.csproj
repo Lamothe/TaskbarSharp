@@ -6,8 +6,8 @@
     <ProjectGuid>{5972171E-735B-01FA-33C3-FF2F63AA8C2D}</ProjectGuid>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>TaskbarXConfiguratorWPF</RootNamespace>
-    <AssemblyName>TaskbarX.Configurator</AssemblyName>
+    <RootNamespace>TaskbarSharp.Configurator</RootNamespace>
+    <AssemblyName>TaskbarSharp.Configurator</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <MyType>Custom</MyType>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -41,7 +41,7 @@
     <DebugType>full</DebugType>
     <IncrementalBuild>true</IncrementalBuild>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>bin\Debug\TaskbarX.Configurator.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\TaskbarSharp.Configurator.xml</DocumentationFile>
     <NoWarn>42314</NoWarn>
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
     <Prefer32Bit>false</Prefer32Bit>
@@ -54,7 +54,7 @@
     <IncrementalBuild>false</IncrementalBuild>
     <Optimize>true</Optimize>
     <OutputPath>..\..\APPX\TaskbarX\Release\</OutputPath>
-    <DocumentationFile>..\..\APPX\TaskbarX\Release\TaskbarX.Configurator.xml</DocumentationFile>
+    <DocumentationFile>..\..\APPX\TaskbarX\Release\TaskbarSharp.Configurator.xml</DocumentationFile>
     <NoWarn>42314</NoWarn>
     <Prefer32Bit>true</Prefer32Bit>
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
@@ -78,7 +78,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
-    <DocumentationFile>bin\x64\Debug\TaskbarX.Configurator.xml</DocumentationFile>
+    <DocumentationFile>bin\x64\Debug\TaskbarSharp.Configurator.xml</DocumentationFile>
     <NoWarn>42314</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -89,7 +89,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>..\..\APPX\TaskbarX64\Release\</OutputPath>
-    <DocumentationFile>..\..\APPX\TaskbarX64\Release\TaskbarX.Configurator.xml</DocumentationFile>
+    <DocumentationFile>..\..\APPX\TaskbarX64\Release\TaskbarSharp.Configurator.xml</DocumentationFile>
     <Optimize>true</Optimize>
     <NoWarn>42314</NoWarn>
     <DebugType>pdbonly</DebugType>
@@ -102,7 +102,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x86\Debug\</OutputPath>
-    <DocumentationFile>bin\x86\Debug\TaskbarX.Configurator.xml</DocumentationFile>
+    <DocumentationFile>bin\x86\Debug\TaskbarSharp.Configurator.xml</DocumentationFile>
     <NoWarn>42314</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
@@ -113,7 +113,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>..\..\APPX\TaskbarX32\Release\</OutputPath>
-    <DocumentationFile>..\..\APPX\TaskbarX32\Release\TaskbarX.Configurator.xml</DocumentationFile>
+    <DocumentationFile>..\..\APPX\TaskbarX32\Release\TaskbarSharp.Configurator.xml</DocumentationFile>
     <Optimize>true</Optimize>
     <NoWarn>42314</NoWarn>
     <DebugType>pdbonly</DebugType>

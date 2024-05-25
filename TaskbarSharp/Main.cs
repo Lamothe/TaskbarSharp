@@ -1,21 +1,18 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using System;
 using System.Collections;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
-
-
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
-namespace TaskbarX
+namespace TaskbarSharp
 {
     public class MainType
     {
-
         public static NotifyIcon noty = new NotifyIcon();
 
         public static void Main()
@@ -196,10 +193,10 @@ namespace TaskbarX
                     }
                 }
 
-                // Kill every other running instance of TaskbarX
+                // Kill every other running instance of TaskbarSharp
                 try
                 {
-                    foreach (Process prog in Process.GetProcessesByName("TaskbarX"))
+                    foreach (Process prog in Process.GetProcessesByName("TaskbarSharp"))
                     {
                         if (!(prog.Id == Process.GetCurrentProcess().Id))
                         {
@@ -271,7 +268,7 @@ namespace TaskbarX
 
                 if (Settings.ShowTrayIcon == 1)
                 {
-                    noty.Text = "TaskbarX (L = Restart) (M = Config) (R = Stop)";
+                    noty.Text = "TaskbarSharp (L = Restart) (M = Config) (R = Stop)";
                     noty.Icon = My.Resources.Resources.icon;
                     noty.Visible = true;
                 }
@@ -297,10 +294,10 @@ namespace TaskbarX
                 Console.WriteLine(ex.Message);
             }
         }
-        
+
         public static void Toaster(string message)
         {
-            noty.BalloonTipTitle = "TaskbarX";
+            noty.BalloonTipTitle = "TaskbarSharp";
             noty.BalloonTipText = message;
             noty.Visible = true;
             noty.ShowBalloonTip(3000);
@@ -323,31 +320,12 @@ namespace TaskbarX
             }
             else if (e.Button == MouseButtons.Middle)
             {
-                if (AppDomain.CurrentDomain.BaseDirectory.Contains("40210ChrisAndriessen"))
+                try
                 {
-                    try
-                    {
-                        var processInfo = new ProcessStartInfo()
-                        {
-                            WindowStyle = ProcessWindowStyle.Hidden,
-                            FileName = "cmd.exe",
-                            Arguments = @" /c start shell:AppsFolder\40210ChrisAndriessen.FalconX_y1dazs5f5wq00!TaskbarXGUI"
-                        };
-                        Process.Start(processInfo);
-                    }
-                    catch
-                    {
-                    }
+                    Process.Start("TaskbarSharp.Configurator.exe");
                 }
-                else
+                catch
                 {
-                    try
-                    {
-                        Process.Start("TaskbarX Configurator.exe");
-                    }
-                    catch
-                    {
-                    }
                 }
             }
 

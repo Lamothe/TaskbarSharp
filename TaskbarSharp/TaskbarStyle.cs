@@ -1,19 +1,17 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using System;
 using System.Collections;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
-namespace TaskbarX
+namespace TaskbarSharp
 {
-
     public class TaskbarStyle
     {
-
         public delegate bool CallBack(IntPtr hwnd, int lParam);
 
         [DllImport("user32")]
