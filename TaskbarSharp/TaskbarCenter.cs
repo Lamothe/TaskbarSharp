@@ -4,12 +4,10 @@ using Microsoft.Win32;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using TaskbarSharp.Common;
 
 namespace TaskbarSharp;
 
@@ -37,8 +35,10 @@ public class TaskbarCenter
 
     #endregion
 
-    public static void TaskbarCenterer()
+    public static void TaskbarCenterer(object parameter)
     {
+        var settings = parameter as TaskbarSharpSettings;
+
         RevertToZero();
 
         SystemEvents.DisplaySettingsChanged += DPChange;
@@ -47,10 +47,10 @@ public class TaskbarCenter
 
         // Start the Looper
         var t1 = new Thread(Looper);
-        t1.Start();
+        t1.Start(settings);
 
         // Start the TrayLoopFix
-        if (Settings.FixToolbarsOnTrayChange == 1)
+        if (settings.FixToolbarsOnTrayChange)
         {
             var t2 = new Thread(TrayLoopFix);
             t2.Start();
@@ -170,20 +170,10 @@ public class TaskbarCenter
         }
     }
 
-    public static bool revertcycle;
-
     public static void RevertToZero()
     {
         // Put all taskbars back to default position
         GetActiveWindows();
-
-        foreach (Process prog in Process.GetProcesses())
-        {
-            if (prog.ProcessName == "AcrylicPanel")
-            {
-                prog.Kill();
-            }
-        }
 
         var Taskbars = new ArrayList();
 
@@ -282,6 +272,7 @@ public class TaskbarCenter
     {
         Console.WriteLine();
         Thread.Sleep(1000);
+
         // Wait for Shell_TrayWnd
         IntPtr Handle;
         do
@@ -300,8 +291,10 @@ public class TaskbarCenter
 
     #region Looper
 
-    public static void Looper()
+    public static void Looper( object parameter)
     {
+        var settings = parameter as TaskbarSharpSettings;
+
         try
         {
             // This loop will check if the taskbar changes and requires a move
@@ -322,30 +315,6 @@ public class TaskbarCenter
                 if (sClassName.ToString() == "Shell_TrayWnd")
                 {
                     var ReBarWindow32 = Win32.FindWindowEx((IntPtr)Taskbar, (IntPtr)0, "ReBarWindow32", null);
-
-                    if (Settings.TotalPrimaryOpacity != default)
-                    {
-                        Win32.SetWindowLong((IntPtr)Taskbar, (Win32.WindowStyles)Win32.GWL_EXSTYLE, 0x80000);
-                        Win32.SetLayeredWindowAttributes((IntPtr)Taskbar, 0U, (byte)Math.Round(255d / 100d * (byte)Settings.TotalPrimaryOpacity), 0x2U);
-                    }
-
-                    if (Settings.HidePrimaryStartButton == 1)
-                    {
-                        var MStart = Win32.FindWindowEx((IntPtr)Taskbar, (IntPtr)0, "Start", null);
-                        Win32.ShowWindow(MStart, Win32.ShowWindowCommands.Hide);
-                        Win32.SetLayeredWindowAttributes(MStart, 0U, 0, 0x2U);
-                    }
-
-                    if (Settings.HidePrimaryNotifyWnd == 1)
-                    {
-                        var MTray = Win32.FindWindowEx((IntPtr)Taskbar, (IntPtr)0, "TrayNotifyWnd", null);
-                        Win32.ShowWindow(MTray, Win32.ShowWindowCommands.Hide);
-                        Win32.SetWindowLong(MTray, (Win32.WindowStyles)Win32.GWL_STYLE, 0x7E000000);
-                        Win32.SetWindowLong(MTray, (Win32.WindowStyles)Win32.GWL_EXSTYLE, 0x80000);
-                        Win32.SendMessage(MTray, 11, false, 0);
-                        Win32.SetLayeredWindowAttributes(MTray, 0U, 0, 0x2U);
-                    }
-
                     var MSTaskSwWClass = Win32.FindWindowEx(ReBarWindow32, (IntPtr)0, "MSTaskSwWClass", null);
                     MSTaskListWClass = Win32.FindWindowEx(MSTaskSwWClass, (IntPtr)0, "MSTaskListWClass", null);
                 }
@@ -353,27 +322,6 @@ public class TaskbarCenter
                 if (sClassName.ToString() == "Shell_SecondaryTrayWnd")
                 {
                     var WorkerW = Win32.FindWindowEx((IntPtr)Taskbar, (IntPtr)0, "WorkerW", null);
-
-                    if (Settings.TotalSecondaryOpacity != default)
-                    {
-                        Win32.SetWindowLong((IntPtr)Taskbar, (Win32.WindowStyles)Win32.GWL_EXSTYLE, 0x80000);
-                        Win32.SetLayeredWindowAttributes((IntPtr)Taskbar, 0U, (byte)Math.Round(255d / 100d * (byte)Settings.TotalSecondaryOpacity), 0x2U);
-                    }
-
-                    if (Settings.HideSecondaryStartButton == 1)
-                    {
-                        var SStart = Win32.FindWindowEx((IntPtr)Taskbar, (IntPtr)0, "Start", null);
-                        Win32.ShowWindow(SStart, Win32.ShowWindowCommands.Hide);
-                        Win32.SetLayeredWindowAttributes(SStart, 0U, 0, 0x2U);
-                    }
-
-                    if (Settings.HideSecondaryNotifyWnd == 1)
-                    {
-                        var STray = Win32.FindWindowEx((IntPtr)Taskbar, (IntPtr)0, "ClockButton", null);
-                        Win32.ShowWindow(STray, Win32.ShowWindowCommands.Hide);
-                        Win32.SetLayeredWindowAttributes(STray, 0U, 0, 0x2U);
-                    }
-
                     MSTaskListWClass = Win32.FindWindowEx(WorkerW, (IntPtr)0, "MSTaskListWClass", null);
                 }
 
@@ -404,34 +352,7 @@ public class TaskbarCenter
                 {
                     string results = null;
 
-                    if (!(Settings.SkipResolution == 0))
-                    {
-                        if (Screen.PrimaryScreen.Bounds.Width == Settings.SkipResolution)
-                        {
-                            RevertToZero();
-                            break;
-                        }
-                    }
-
-                    if (!(Settings.SkipResolution2 == 0))
-                    {
-                        if (Screen.PrimaryScreen.Bounds.Width == Settings.SkipResolution2)
-                        {
-                            RevertToZero();
-                            break;
-                        }
-                    }
-
-                    if (!(Settings.SkipResolution3 == 0))
-                    {
-                        if (Screen.PrimaryScreen.Bounds.Width == Settings.SkipResolution3)
-                        {
-                            RevertToZero();
-                            break;
-                        }
-                    }
-
-                    if (Settings.CheckFullscreenApp == 1)
+                    if (settings.CheckFullscreenApp)
                     {
                         var activewindow = Win32.GetForegroundWindow();
                         var curmonx = Screen.FromHandle(activewindow);
@@ -442,7 +363,6 @@ public class TaskbarCenter
                         {
                             Console.WriteLine("Fullscreen App detected " + activewindowsize.Bottom + "," + activewindowsize.Top + "," + activewindowsize.Left + "," + activewindowsize.Right);
 
-                            Settings.Pause = true;
                             do
                             {
                                 Thread.Sleep(500);
@@ -453,8 +373,6 @@ public class TaskbarCenter
 
                             while (activewindowsize.Top == curmonx.Bounds.Top & activewindowsize.Bottom == curmonx.Bounds.Bottom & activewindowsize.Left == curmonx.Bounds.Left & activewindowsize.Right == curmonx.Bounds.Right);
                             Console.WriteLine("Fullscreen App deactivated");
-
-                            Settings.Pause = false;
                         }
                     }
 
@@ -547,20 +465,13 @@ public class TaskbarCenter
 
                         // Start the PositionCalculator
                         var t3 = new Thread(InitPositionCalculator);
-                        t3.Start();
+                        t3.Start(settings);
                     }
 
                     // Save current results for next loop
                     oldresults = results;
 
-                    if (SystemInformation.PowerStatus.PowerLineStatus == PowerLineStatus.Offline)
-                    {
-                        Thread.Sleep(Settings.OnBatteryLoopRefreshRate);
-                    }
-                    else
-                    {
-                        Thread.Sleep(Settings.LoopRefreshRate);
-                    }
+                    Thread.Sleep(settings.LoopRefreshRate);
                 }
                 catch (Exception ex)
                 {
@@ -685,8 +596,9 @@ public class TaskbarCenter
 
     #endregion
 
-    public static void InitPositionCalculator()
+    public static void InitPositionCalculator(object parameter)
     {
+        var settings = parameter as TaskbarSharpSettings;
 
         string mm;
         string mm2;
@@ -705,12 +617,14 @@ public class TaskbarCenter
         {
             // Start the PositionCalculator
             var t3 = new Thread(PositionCalculator);
-            t3.Start();
+            t3.Start(settings);
         }
     }
 
-    public static void PositionCalculator()
+    private static void PositionCalculator(object parameter)
     {
+        var settings = parameter as TaskbarSharpSettings;
+
         try
         {
             // Calculate the new positions and pass them through to the animator
@@ -883,89 +797,27 @@ public class TaskbarCenter
                 // Calculate new position
                 if (TrayWndClassName.ToString() == "Shell_TrayWnd")
                 {
-                    if (Settings.CenterInBetween == 1)
+                    if (settings.CenterInBetween)
                     {
                         if (Orientation == "H")
                         {
                             double offset = TrayNotifyPos.width / 2d - TaskbarLeft / 2 + NewsAndInterestsPos.width / 2d;
-                            Position = Math.Abs((int)Math.Round(TrayWndWidth / 2d - TaskbarWidth / 2d - TaskbarLeft - offset)) + Settings.PrimaryTaskbarOffset;
+                            Position = Math.Abs((int)Math.Round(TrayWndWidth / 2d - TaskbarWidth / 2d - TaskbarLeft - offset)) + settings.TaskbarOffset;
                         }
                         else
                         {
                             double offset = TrayNotifyPos.height / 2d - TaskbarLeft / 2 + NewsAndInterestsPos.height / 2d;
-                            Position = Math.Abs((int)Math.Round(TrayWndWidth / 2d - TaskbarWidth / 2d - TaskbarLeft - offset)) + Settings.PrimaryTaskbarOffset;
+                            Position = Math.Abs((int)Math.Round(TrayWndWidth / 2d - TaskbarWidth / 2d - TaskbarLeft - offset)) + settings.TaskbarOffset;
                         }
                     }
                     else
                     {
-                        Position = Math.Abs((int)Math.Round(TrayWndWidth / 2d - TaskbarWidth / 2d - TaskbarLeft)) + Settings.PrimaryTaskbarOffset;
+                        Position = Math.Abs((int)Math.Round(TrayWndWidth / 2d - TaskbarWidth / 2d - TaskbarLeft)) + settings.TaskbarOffset;
                     }
                 }
                 else
                 {
-                    Position = Math.Abs((int)Math.Round(TrayWndWidth / 2d - TaskbarWidth / 2d - TaskbarLeft)) + Settings.SecondaryTaskbarOffset;
-                }
-
-                if (Settings.TaskbarSegments == 1)
-                {
-                    if (Orientation == "H")
-                    {
-                        var ttseg = new Win32.RECT();
-                        Win32.GetClientRect((IntPtr)TaskList, ref ttseg);
-                        var trayseg = new Win32.RECT();
-                        Win32.GetClientRect(Win32.FindWindowEx(TrayWndHandle, (IntPtr)0, "TrayNotifyWnd", null), ref trayseg);
-                        var clockseg = new Win32.RECT();
-                        Win32.GetClientRect(Win32.FindWindowEx(TrayWndHandle, (IntPtr)0, "ClockButton", null), ref clockseg);
-
-                        var startseg = new Win32.RECT();
-                        Win32.GetClientRect(Win32.FindWindowEx(TrayWndHandle, (IntPtr)0, "Start", null), ref startseg);
-
-                        var Tasklist_rgn = Win32.CreateRoundRectRgn(TaskbarLeft + Position + 4, ttseg.Top, TaskbarLeft + Position + TaskbarWidth - 2, ttseg.Bottom + 1, Settings.TaskbarRounding, Settings.TaskbarRounding);
-                        var NotifyTray_rgn = Win32.CreateRoundRectRgn(TrayNotifyPos.left, 0, TrayNotifyPos.left + TrayNotifyPos.width, TrayNotifyPos.top + TrayNotifyPos.height, Settings.TaskbarRounding, Settings.TaskbarRounding);
-                        var Start_rgn = Win32.CreateRoundRectRgn(startseg.Left, 0, startseg.Right, startseg.Bottom, Settings.TaskbarRounding, Settings.TaskbarRounding);
-                        var Clock_rgn = Win32.CreateRoundRectRgn(clockseg.Left, 0, clockseg.Right, clockseg.Bottom, Settings.TaskbarRounding, Settings.TaskbarRounding);
-
-
-                        var Totalreg = Win32.CreateRoundRectRgn(0, 0, 0, 0, 0, 0);
-                        Win32.CombineRgn(Totalreg, Tasklist_rgn, NotifyTray_rgn, 2);
-
-                        if (TrayWndClassName.ToString() == "Shell_TrayWnd")
-                        {
-                            Win32.CombineRgn(Totalreg, Totalreg, Start_rgn, 2);
-                        }
-
-                        Win32.SetWindowRgn(TrayWndHandle, Totalreg, true);
-                    }
-                    else
-                    {
-                        var ttseg = new Win32.RECT();
-                        Win32.GetClientRect((IntPtr)TaskList, ref ttseg);
-                        var trayseg = new Win32.RECT();
-                        Win32.GetClientRect(Win32.FindWindowEx(TrayWndHandle, (IntPtr)0, "TrayNotifyWnd", null), ref trayseg);
-                        var clockseg = new Win32.RECT();
-                        Win32.GetClientRect(Win32.FindWindowEx(TrayWndHandle, (IntPtr)0, "ClockButton", null), ref clockseg);
-
-                        var startseg = new Win32.RECT();
-                        Win32.GetClientRect(Win32.FindWindowEx(TrayWndHandle, (IntPtr)0, "Start", null), ref startseg);
-
-                        var Tasklist_rgn = Win32.CreateRoundRectRgn(ttseg.Left, TaskbarLeft + Position + 4, ttseg.Right, TaskbarLeft + Position + TaskbarWidth - 2, Settings.TaskbarRounding, Settings.TaskbarRounding);
-
-                        var Totalreg = Win32.CreateRoundRectRgn(0, 0, 0, 0, 0, 0);
-                        Win32.CombineRgn(Totalreg, Tasklist_rgn, Tasklist_rgn, 2);
-                        Win32.SetWindowRgn(TrayWndHandle, Totalreg, true);
-                    }
-                }
-                else if (!(Settings.TaskbarRounding == 0))
-                {
-                    Win32.SetWindowRgn(TrayWndHandle, Win32.CreateRoundRectRgn(0, 0, TrayWndPos.width, TrayWndPos.height, Settings.TaskbarRounding, Settings.TaskbarRounding), true);
-                }
-
-                if (Settings.TaskbarSegments == 1)
-                {
-                    if (!(Settings.TaskbarStyle == 0))
-                    {
-                        Win32.SendMessage(TrayWndHandle, Win32.WM_DWMCOMPOSITIONCHANGED, true, 0);
-                    }
+                    Position = Math.Abs((int)Math.Round(TrayWndWidth / 2d - TaskbarWidth / 2d - TaskbarLeft)) + settings.TaskbarOffset;
                 }
 
                 Win32.SetWindowPos((IntPtr)TaskList, IntPtr.Zero, Position, 0, 0, 0, Win32.SWP_NOSIZE | Win32.SWP_ASYNCWINDOWPOS | Win32.SWP_NOACTIVATE | Win32.SWP_NOZORDER | Win32.SWP_NOSENDCHANGING);

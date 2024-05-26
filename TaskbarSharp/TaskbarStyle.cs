@@ -7,13 +7,19 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using TaskbarSharp.Common;
 
 namespace TaskbarSharp;
 
 public class TaskbarStyle
 {
-    public static System.Collections.ObjectModel.Collection<IntPtr> ActiveWindows = new System.Collections.ObjectModel.Collection<IntPtr>();
+    private readonly TaskbarSharpSettings _settings;
+
+    public TaskbarStyle(TaskbarSharpSettings settings)
+    {
+        _settings = settings;
+    }
+
+    public static System.Collections.ObjectModel.Collection<IntPtr> ActiveWindows = [];
 
     public static System.Collections.ObjectModel.Collection<IntPtr> GetActiveWindows()
     {
@@ -129,8 +135,10 @@ public class TaskbarStyle
         return true;
     }
 
-    public static void Tbsm()
+    public static void Tbsm(object parameter)
     {
+        var settings = parameter as TaskbarSharpSettings;
+
         do
         {
             int windowsold;
@@ -178,8 +186,10 @@ public class TaskbarStyle
         while (true);
     }
 
-    public static void TaskbarStyler()
+    public static void TaskbarStyler(object parameter)
     {
+        var settings = parameter as TaskbarSharpSettings;
+
         try
         {
             GetActiveWindows();
@@ -187,17 +197,7 @@ public class TaskbarStyle
             var accent = new Win32.AccentPolicy();
             int accentStructSize = Marshal.SizeOf(accent);
 
-            if (Settings.TaskbarStyle == 1)
-            {
-                accent.AccentState = Win32.AccentState.ACCENT_ENABLE_BLURBEHIND;
-            }
-            else if (Settings.TaskbarStyle == 2)
-            {
-                accent.AccentState = Win32.AccentState.ACCENT_ENABLE_ACRYLICBLURBEHIND;
-            }
-
-            accent.AccentFlags = 2; // enable colorize
-            accent.GradientColor = BitConverter.ToInt32(new byte[] { (byte)Settings.TaskbarStyleRed, (byte)Settings.TaskbarStyleGreen, (byte)Settings.TaskbarStyleBlue, (byte)Math.Round(Settings.TaskbarStyleAlpha * 2.55d) }, 0);
+            accent.AccentState = Win32.AccentState.ACCENT_ENABLE_BLURBEHIND;
 
             // Save accent data
             var accentPtr = Marshal.AllocHGlobal(accentStructSize);
@@ -217,10 +217,10 @@ public class TaskbarStyle
                 traysbackup.Add(trayWnd);
             }
 
-            if (Settings.DefaultTaskbarStyleOnWinMax == 1)
+            if (settings.DefaultTaskbarStyleOnWinMax)
             {
                 var t2 = new Thread(Tbsm);
-                t2.Start();
+                t2.Start(settings);
             }
 
             // Set taskbar style for all TrayWnds each 14 millisecond

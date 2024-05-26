@@ -1,217 +1,46 @@
-﻿using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
+﻿using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using TaskbarSharp.Common;
 
 namespace TaskbarSharp;
 
 public class Program
 {
-    public static NotifyIcon notifyIcon = new NotifyIcon();
+    public static NotifyIcon notifyIcon = new();
 
     public static void Main()
     {
+        var builder = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false);
+
+        var configuration = builder.Build();
+
+        var settings = configuration.GetRequiredSection(nameof(TaskbarSharpSettings)).Get<TaskbarSharpSettings>();
+
         try
         {
-            // Set default settings
-            Settings.TaskbarStyle = 0;
-            Settings.PrimaryTaskbarOffset = 0;
-            Settings.SecondaryTaskbarOffset = 0;
-            Settings.CenterPrimaryOnly = 0;
-            Settings.CenterSecondaryOnly = 0;
-            Settings.AnimationStyle = "cubiceaseinout";
-            Settings.AnimationSpeed = 300;
-            Settings.LoopRefreshRate = 400;
-            Settings.CenterInBetween = 0;
-            Settings.DontCenterTaskbar = 0;
-            Settings.FixToolbarsOnTrayChange = 1;
-            Settings.OnBatteryAnimationStyle = "cubiceaseinout";
-            Settings.OnBatteryLoopRefreshRate = 400;
-            Settings.RevertZeroBeyondTray = 1;
-            Settings.TaskbarRounding = 0;
-            Settings.TaskbarSegments = 0;
-
             bool stopgiven = false;
-
-            // Read the arguments for the settings
-            string[] arguments = Environment.GetCommandLineArgs();
-            foreach (var argument in arguments)
-            {
-                string[] val = Strings.Split(argument, "=");
-                if (argument.Contains("-stop"))
-                {
-                    stopgiven = true;
-                }
-                if (argument.Contains("-showstartmenu"))
-                {
-                    Win32.ShowStartMenu();
-                    Environment.Exit(0);
-                }
-                if (argument.Contains("-console="))
-                {
-                    Win32.AllocConsole();
-                    Settings.ConsoleEnabled = 1;
-                }
-                if (argument.Contains("-tbs="))
-                {
-                    Settings.TaskbarStyle = Conversions.ToInteger(val[1]);
-                }
-
-                if (argument.Contains("-color="))
-                {
-                    string colorval = val[1];
-                    string[] colorsep = colorval.Split(";".ToCharArray());
-
-                    Settings.TaskbarStyleRed = Conversions.ToInteger(colorsep[0]);
-                    Settings.TaskbarStyleGreen = Conversions.ToInteger(colorsep[1]);
-                    Settings.TaskbarStyleBlue = Conversions.ToInteger(colorsep[2]);
-                    Settings.TaskbarStyleAlpha = Conversions.ToInteger(colorsep[3]);
-                }
-
-                if (argument.Contains("-ptbo="))
-                {
-                    Settings.PrimaryTaskbarOffset = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-stbo="))
-                {
-                    Settings.SecondaryTaskbarOffset = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-cpo="))
-                {
-                    Settings.CenterPrimaryOnly = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-cso="))
-                {
-                    Settings.CenterSecondaryOnly = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-as="))
-                {
-                    Settings.AnimationStyle = val[1];
-                }
-                if (argument.Contains("-asp="))
-                {
-                    Settings.AnimationSpeed = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-lr="))
-                {
-                    Settings.LoopRefreshRate = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-cib="))
-                {
-                    Settings.CenterInBetween = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-obas="))
-                {
-                    Settings.OnBatteryAnimationStyle = val[1];
-                }
-                if (argument.Contains("-oblr="))
-                {
-                    Settings.OnBatteryLoopRefreshRate = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-ftotc="))
-                {
-                    Settings.FixToolbarsOnTrayChange = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-rzbt="))
-                {
-                    Settings.RevertZeroBeyondTray = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-sr="))
-                {
-                    Settings.SkipResolution = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-sr2="))
-                {
-                    Settings.SkipResolution2 = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-sr3="))
-                {
-                    Settings.SkipResolution3 = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-dtbsowm="))
-                {
-                    Settings.DefaultTaskbarStyleOnWinMax = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-cfsa="))
-                {
-                    Settings.CheckFullscreenApp = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-dct="))
-                {
-                    Settings.DontCenterTaskbar = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-hps="))
-                {
-                    Settings.HidePrimaryStartButton = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-hss="))
-                {
-                    Settings.HideSecondaryStartButton = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-hpt="))
-                {
-                    Settings.HidePrimaryNotifyWnd = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-hst="))
-                {
-                    Settings.HideSecondaryNotifyWnd = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-sti="))
-                {
-                    // 'Settings.ShowTrayIcon = CInt(val(1))
-                    Settings.ShowTrayIcon = 0;
-                }
-                if (argument.Contains("-tbsom="))
-                {
-                    Settings.TaskbarStyleOnMax = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-stsb="))
-                {
-                    Settings.StickyStartButton = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-tpop="))
-                {
-                    Settings.TotalPrimaryOpacity = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-tsop="))
-                {
-                    Settings.TotalSecondaryOpacity = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-tbr="))
-                {
-                    Settings.TaskbarRounding = Conversions.ToInteger(val[1]);
-                }
-                if (argument.Contains("-tbsg="))
-                {
-                    Settings.TaskbarSegments = Conversions.ToInteger(val[1]);
-                }
-            }
 
             // Kill every other running instance of TaskbarSharp
             try
             {
-                foreach (Process prog in Process.GetProcessesByName("TaskbarSharp"))
+                foreach (var process in Process.GetProcessesByName("TaskbarSharp"))
                 {
-                    if (!(prog.Id == Process.GetCurrentProcess().Id))
+                    if (!(process.Id == Environment.ProcessId))
                     {
-                        prog.Kill();
+                        process.Kill();
                     }
                 }
             }
             catch
             {
-            }
-
-            // If animation speed is lower than 1 then make it 1. Otherwise it will give an error.
-            if (Settings.AnimationSpeed <= 1)
-            {
-                Settings.AnimationSpeed = 1;
             }
 
             // Makes the animations run smoother
@@ -236,16 +65,9 @@ public class Program
                 Handle = MSTaskListWClass;
             }
             // Lock the Taskbar
-            // Win32.PostMessage(Shell_TrayWnd, CUInt(&H111), CType(424, IntPtr), CType(vbNullString, IntPtr))
             while (Handle == default);
 
-
             var Win11Taskbar = Win32.FindWindowEx(Win32.FindWindowByClass("Shell_TrayWnd", (IntPtr)0), (IntPtr)0, "Windows.UI.Composition.DesktopWindowContentBridge", null);
-            if (!(Win11Taskbar == (IntPtr)0))
-            {
-                // Windows 11 Taskbar present
-                Settings.DontCenterTaskbar = (int)Math.Round(Conversion.Val(1));
-            }
 
             if (stopgiven == true)
             {
@@ -255,10 +77,7 @@ public class Program
                 Environment.Exit(0);
             }
 
-            if (Settings.ShowTrayIcon == 1)
-            {
-                TrayIconBuster.TrayIconBuster.RemovePhantomIcons();
-            }
+            TrayIconBuster.TrayIconBuster.RemovePhantomIcons();
 
             // Just empty startup memory before starting
             ClearMemory();
@@ -266,28 +85,19 @@ public class Program
             // Reset the taskbar style...
             ResetTaskbarStyle();
 
-            if (Settings.ShowTrayIcon == 1)
-            {
-                notifyIcon.Text = "TaskbarSharp (L = Restart) (M = Config) (R = Stop)";
-                notifyIcon.Icon = My.Resources.Resources.icon;
-                notifyIcon.Visible = true;
-            }
+            notifyIcon.Text = "TaskbarSharp (L = Restart) (M = Config) (R = Stop)";
+            notifyIcon.Icon = My.Resources.Resources.icon;
+            notifyIcon.Visible = true;
 
             notifyIcon.MouseClick += MnuRef_Click;
 
             // Start the TaskbarCenterer
-            if (!(Settings.DontCenterTaskbar == 1))
-            {
-                var t1 = new Thread(TaskbarCenter.TaskbarCenterer);
-                t1.Start();
-            }
+            var t1 = new Thread(TaskbarCenter.TaskbarCenterer);
+            t1.Start(settings);
 
             // Start the TaskbarStyler if enabled
-            if (Settings.TaskbarStyle == 1 | Settings.TaskbarStyle == 2 | Settings.TaskbarStyle == 3 | Settings.TaskbarStyle == 4 | Settings.TaskbarStyle == 5)
-            {
-                var t2 = new Thread(TaskbarStyle.TaskbarStyler);
-                t2.Start();
-            }
+            var t2 = new Thread(TaskbarStyle.TaskbarStyler);
+            t2.Start(settings);
         }
         catch (Exception ex)
         {
@@ -333,15 +143,15 @@ public class Program
 
     #region Commands
 
-    public static System.Collections.ObjectModel.Collection<IntPtr> ActiveWindows = new System.Collections.ObjectModel.Collection<IntPtr>();
+    public static System.Collections.ObjectModel.Collection<IntPtr> ActiveWindows = [];
 
     public static System.Collections.ObjectModel.Collection<IntPtr> GetActiveWindows()
     {
         windowHandles.Clear();
         Win32.EnumWindows(Enumerator, 0);
 
-        bool maintaskbarfound = false;
-        bool sectaskbarfound = false;
+        bool mainTaskbarFound = false;
+        bool secTaskbarFound = false;
 
         foreach (var Taskbar in windowHandles)
         {
@@ -349,16 +159,16 @@ public class Program
             Win32.GetClassName((IntPtr)Taskbar, sClassName, 256);
             if (sClassName.ToString() == "Shell_TrayWnd")
             {
-                maintaskbarfound = true;
+                mainTaskbarFound = true;
             }
             if (sClassName.ToString() == "Shell_SecondaryTrayWnd")
             {
-                sectaskbarfound = true;
+                secTaskbarFound = true;
             }
-            Console.WriteLine("=" + maintaskbarfound);
+            Console.WriteLine("=" + mainTaskbarFound);
         }
 
-        if (maintaskbarfound == false)
+        if (mainTaskbarFound == false)
         {
             try
             {
@@ -369,7 +179,7 @@ public class Program
             }
         }
 
-        if (sectaskbarfound == false)
+        if (secTaskbarFound == false)
         {
             if (Screen.AllScreens.Count() >= 2)
             {
@@ -383,7 +193,6 @@ public class Program
                 }
             }
         }
-
 
         return ActiveWindows;
     }
@@ -403,52 +212,26 @@ public class Program
 
     public static void ResetTaskbarStyle()
     {
-
-
-
         GetActiveWindows();
-
-
 
         var trays = new ArrayList();
         foreach (IntPtr trayWnd in windowHandles)
-            // 'Console.WriteLine(trayWnd)
+        {
             trays.Add(trayWnd);
+        }
 
         foreach (IntPtr tray in trays)
         {
             var trayptr = tray;
 
-
             Win32.SendMessage(trayptr, Win32.WM_THEMECHANGED, true, 0);
             Win32.SendMessage(trayptr, Win32.WM_DWMCOLORIZATIONCOLORCHANGED, true, 0);
             Win32.SendMessage(trayptr, Win32.WM_DWMCOMPOSITIONCHANGED, true, 0);
 
-
-
             var tt = new Win32.RECT();
             Win32.GetClientRect(trayptr, ref tt);
-
-
-
-            // 'Win32.SetWindowRgn(CType(trayptr, IntPtr), Win32.CreateRoundRectRgn(-1, -1, tt.Right + 1, tt.Bottom - tt.Top + 1, -1, -1), True)
             Win32.SetWindowRgn(trayptr, Win32.CreateRectRgn(tt.Left, tt.Top, tt.Right, tt.Bottom), true);
-
-
-
-
-
-
-
         }
-
-
-    }
-
-    public static void RestartExplorer()
-    {
-        foreach (var MyProcess in Process.GetProcessesByName("explorer"))
-            MyProcess.Kill();
     }
 
     public static int ClearMemory()
@@ -459,13 +242,5 @@ public class Program
         return Win32.SetProcessWorkingSetSize(Process.GetCurrentProcess().Handle, -1, -1);
     }
 
-
-
-
-
-
-
-
     #endregion
-
 }

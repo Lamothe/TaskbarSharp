@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Accessibility;
+using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows.Forms;
-using Accessibility;
-using TaskbarSharp.Common;
 
 namespace TaskbarSharp;
 

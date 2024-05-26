@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace TaskbarSharp.Common;
+namespace TaskbarSharp;
 
 public static class UI
 {
