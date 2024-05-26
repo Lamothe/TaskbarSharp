@@ -106,17 +106,14 @@ namespace TaskbarSharp.Common
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
         public static extern bool SendNotifyMessage(IntPtr hWnd, uint Msg, IntPtr wParam, string lParam);
 
-
         [DllImport("user32.dll")]
         public static extern bool SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);
-
 
         [DllImport("user32.dll")]
         public static extern bool RedrawWindow(IntPtr hWnd, IntPtr lprcUpdate, IntPtr hrgnUpdate, RedrawWindowFlags flags);
 
         [DllImport("gdi32.dll")]
         public static extern int CombineRgn(IntPtr hrgnDest, IntPtr hrgnSrc1, IntPtr hrgnSrc2, int fnCombineMode);
-
 
         public enum DWMWINDOWATTRIBUTE : uint
         {
@@ -136,7 +133,6 @@ namespace TaskbarSharp.Common
             Cloaked,
             FreezeRepresentation
         }
-
 
         public enum RedrawWindowFlags : uint
         {
@@ -302,10 +298,7 @@ namespace TaskbarSharp.Common
         {
             var shell = FindWindow("Shell_TrayWnd", null);
             keybd_event((byte)Keys.LWin, 0, 0x0U, (UIntPtr)0); // Press the Left Win key
-
-
             keybd_event((byte)Keys.LWin, 0, 0x2U, (UIntPtr)0); // Press the Left Win key
-                                                               // '  SetFocus(shell)
         }
 
         [DllImport("user32.dll")]
