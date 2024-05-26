@@ -187,30 +187,13 @@ public class TaskbarStyle
             var accent = new Win32.AccentPolicy();
             int accentStructSize = Marshal.SizeOf(accent);
 
-            // Select accent based on settings
             if (Settings.TaskbarStyle == 1)
-            {
-                accent.AccentState = Win32.AccentState.ACCENT_ENABLE_TRANSPARANT;
-            }
-
-            if (Settings.TaskbarStyle == 2)
             {
                 accent.AccentState = Win32.AccentState.ACCENT_ENABLE_BLURBEHIND;
             }
-
-            if (Settings.TaskbarStyle == 3)
+            else if (Settings.TaskbarStyle == 2)
             {
                 accent.AccentState = Win32.AccentState.ACCENT_ENABLE_ACRYLICBLURBEHIND;
-            }
-
-            if (Settings.TaskbarStyle == 4)
-            {
-                accent.AccentState = Win32.AccentState.ACCENT_ENABLE_TRANSPARENTGRADIENT;
-            }
-
-            if (Settings.TaskbarStyle == 5)
-            {
-                accent.AccentState = Win32.AccentState.ACCENT_ENABLE_GRADIENT;
             }
 
             accent.AccentFlags = 2; // enable colorize

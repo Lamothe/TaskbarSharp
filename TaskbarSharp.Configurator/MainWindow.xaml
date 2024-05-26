@@ -24,11 +24,6 @@
                 <TextBlock Text="Style"  Margin="24,0,0,0" VerticalAlignment="Center" />
             </StackPanel>
 
-            <StackPanel x:Name="animation_Tab" Orientation="Horizontal" Grid.Row="1" Margin="0,0,0,0">
-                <emoji:TextBlock  Text="❤️" Margin="0,0,0,0" FontSize="20" VerticalAlignment="Center" />
-                <TextBlock Text="Animation"  Margin="24,0,0,0" VerticalAlignment="Center" />
-            </StackPanel>
-
             <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,0,0,0">
                 <emoji:TextBlock  Text="🕹️" Margin="0,0,0,0" FontSize="20" VerticalAlignment="Center" />
                 <TextBlock Text="Position"  Margin="24,0,0,0" VerticalAlignment="Center" />
@@ -69,7 +64,6 @@
                     <Image HorizontalAlignment="Left" Height="152" Margin="10,399,0,0" VerticalAlignment="Top" Width="152" Source="grid.png" />
                     <TextBlock Text="Style" FontSize="20" Margin="10,50,0,618" VerticalAlignment="Center" Height="32" Grid.ColumnSpan="2" />
                     <RadioButton  ToolTip="Keep the taskbar background as it has always been." x:Name="RadioButton1" Content="Default " HorizontalAlignment="Left" Margin="11,89,0,0" VerticalAlignment="Top" IsChecked="True" Height="32" Width="120" />
-                    <RadioButton  ToolTip="Make the taskbar background fully Transparent." x:Name="RadioButton2" Content="Transparent" HorizontalAlignment="Left" Margin="11,126,0,0" VerticalAlignment="Top" Height="32" Width="120" />
                     <RadioButton ToolTip="Make the taskbar background Blurred with a gradient color." x:Name="RadioButton3" Content="Blur" HorizontalAlignment="Left" Margin="11,237,0,0" VerticalAlignment="Top" Height="32" Width="120" />
                     <RadioButton ToolTip="Make the taskbar background Acrylic/Fluent with a gradient color." x:Name="RadioButton4" Content="Acrylic (can flicker)" HorizontalAlignment="Left" Margin="11,274,0,0" VerticalAlignment="Top" Height="32" Width="151" />
                     <CheckBox ToolTip="Revert the taskbar to the default background when a window is maximized." x:Name="Checkbox10" Content="Switch back to Default on maximized window" HorizontalAlignment="Left" Margin="11,334,0,0" VerticalAlignment="Top" Width="364" Grid.ColumnSpan="2" Height="32" />
@@ -88,8 +82,6 @@
                     <TextBlock x:Name="tBlue" HorizontalAlignment="Left" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Height="19" Width="87" Margin="320,484,0,0" Grid.Column="1" />
                     <TextBlock x:Name="tAlpha" HorizontalAlignment="Left" TextWrapping="Wrap" Text="0%" VerticalAlignment="Top" Height="19" Width="66" Margin="320,520,0,0" Grid.Column="1" />
                     <Button ToolTip="Pick a color from the screen. (Left click to pick a color on the screen from your mouse cursor.)" FontFamily="Segoe MDL2 Assets" Content="&#xEF3C;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="33" Click="Button_Click_12" Margin="411,400,0,0" Grid.Column="1" />
-                    <RadioButton  ToolTip="Make the taskbar background Transparent with a gradient color." x:Name="RadioButtontc" Content="Transparent Gradient" HorizontalAlignment="Left" Margin="11,163,0,0" VerticalAlignment="Top" Height="32" Width="193" Grid.ColumnSpan="2" />
-                    <RadioButton  ToolTip="Make the taskbar background Opaque with a gradient color." x:Name="RadioButtonoq" Content="Opaque" HorizontalAlignment="Left" Margin="11,200,0,0" VerticalAlignment="Top" Height="32" Width="193" Grid.ColumnSpan="2" />
                     <emoji:TextBlock  Text="🎨" Margin="430,58,10,585" FontSize="40" VerticalAlignment="Center" Grid.Column="1" Height="57" />
                     <TextBox x:Name="hexcolorbox" HorizontalAlignment="Left" Height="23" Margin="390,440,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="76" Grid.Column="1" />
                     <Slider x:Name="tpop" VerticalAlignment="Top" Maximum="100" Foreground="#FF898989" Height="32" Margin="286,130,72,0" Grid.Column="1" />
@@ -103,28 +95,6 @@
                     <TextBlock HorizontalAlignment="Left" Margin="163,228,0,0" TextWrapping="Wrap" Text="Corner Radius" VerticalAlignment="Top" Width="201" Grid.Column="1" />
                     <TextBlock HorizontalAlignment="Left" Margin="251,258,0,0" TextWrapping="Wrap" Text="px" VerticalAlignment="Top" Width="201" Grid.Column="1" />
                     <CheckBox ToolTip="Only show taskbar background on taskbar icons." x:Name="tbsegments" Content="Taskbar Segments" Margin="309,252,0,0" Width="365" Height="32" Grid.Column="1" VerticalAlignment="Top" />
-                </Grid>
-            </TabItem>
-            <TabItem>
-                <Grid Margin="0,0,0,16">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="139*" />
-                        <ColumnDefinition Width="457*" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="Animation" FontSize="20" Margin="10,50,0,478" VerticalAlignment="Center" Height="32" Grid.ColumnSpan="2" />
-                    <ComboBox ToolTip="Select the Animation you want TaskbarSharp to use to move the taskbar." x:Name="ComboBox1" HorizontalAlignment="Left" Margin="10,117,0,0" VerticalAlignment="Top" Width="209" Grid.ColumnSpan="2" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,96,0,0" TextWrapping="Wrap" Text="Animation Style" VerticalAlignment="Top" />
-                    <ComboBox  ToolTip="Select the Animation you want TaskbarSharp to use to move the taskbar when your laptop is running on battery." x:Name="ComboBox2" HorizontalAlignment="Left" Margin="10,183,0,0" VerticalAlignment="Top" Width="209" Grid.ColumnSpan="2" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,162,0,0" TextWrapping="Wrap" Text="Animation Style OnBattery" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="201" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,244,0,0" TextWrapping="Wrap" Text="Animation Speed" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="201" />
-                    <ui:NumberBox  ToolTip="Set the speed of the Animation in milliseconds." x:Name="NumericUpDown4" HorizontalAlignment="Left" Text="300" Margin="10,265,0,0" VerticalAlignment="Top" Width="83" PreviewTextInput="NumberValidationTextBox" />
-                    <TextBlock HorizontalAlignment="Left" Margin="98,273,0,0" TextWrapping="Wrap" Text="ms" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="201" />
-                    <Slider x:Name="Slider1" HorizontalAlignment="Left" Margin="90,334,-6,0" VerticalAlignment="Top" Width="577" Maximum="1000" IsEnabled="False" Grid.ColumnSpan="2" />
-                    <Button ToolTip="Create a visualization of the current selected animation options." Content="Preview" HorizontalAlignment="Left" Margin="10,334,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_9" />
-                    <Rectangle Grid.Column="1" Fill="#999" HorizontalAlignment="Left" Height="14" Margin="223,343,0,0" Stroke="Gray" VerticalAlignment="Top" Width="1" />
-                    <Button Content="&gt;" Grid.Column="1" HorizontalAlignment="Left" Margin="105,117,0,0" VerticalAlignment="Top" Width="30" Click="Button_Click_10" />
-                    <Button Content="&lt;" Grid.Column="1" HorizontalAlignment="Left" Margin="70,117,0,0" VerticalAlignment="Top" Width="30" Click="Button_Click_11" />
-                    <emoji:TextBlock  Text="❤️" Margin="442,58,10,445" FontSize="40" VerticalAlignment="Center" Grid.Column="1" Height="57" />
                 </Grid>
             </TabItem>
             <TabItem>

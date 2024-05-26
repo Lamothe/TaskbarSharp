@@ -215,11 +215,8 @@ namespace TaskbarSharp.Common
         public enum AccentState
         {
             ACCENT_DISABLED = 0,
-            ACCENT_ENABLE_GRADIENT = 1,
-            ACCENT_ENABLE_TRANSPARENTGRADIENT = 2,
-            ACCENT_ENABLE_BLURBEHIND = 3,
-            ACCENT_ENABLE_TRANSPARANT = 6,
-            ACCENT_ENABLE_ACRYLICBLURBEHIND = 4,
+            ACCENT_ENABLE_BLURBEHIND = 1,
+            ACCENT_ENABLE_ACRYLICBLURBEHIND = 2,
             ACCENT_NORMAL = 150
         }
 
