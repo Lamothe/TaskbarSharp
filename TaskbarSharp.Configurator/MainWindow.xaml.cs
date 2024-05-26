@@ -169,10 +169,6 @@ public partial class MainWindow
 
         ListBox1.SelectedIndex = 0;
 
-        sAlpha.Value = 50d;
-        tpop.Value = 100d;
-        tsop.Value = 100d;
-
         tbrounding.Value = 0d;
 
         ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
@@ -212,22 +208,6 @@ public partial class MainWindow
                         }
                     }
 
-                    if (argument.Contains("-color="))
-                    {
-                        string colorval = val[1];
-                        string[] colorsep = colorval.Split(";".ToCharArray());
-
-                        this.sRed.Value = Conversions.ToDouble(colorsep[0]);
-                        this.sGreen.Value = Conversions.ToDouble(colorsep[1]);
-                        this.sBlue.Value = Conversions.ToDouble(colorsep[2]);
-                        this.sAlpha.Value = Conversions.ToDouble(colorsep[3]);
-                    }
-
-                    if (argument.Contains("-tpop="))
-                    {
-                        this.tpop.Value = Conversions.ToDouble(val[1]);
-                    }
-
                     if (argument.Contains("-tbr="))
                     {
                         this.tbrounding.Text = val[1];
@@ -239,11 +219,6 @@ public partial class MainWindow
                         {
                             this.tbsegments.IsChecked = true;
                         }
-                    }
-
-                    if (argument.Contains("-tsop="))
-                    {
-                        this.tsop.Value = Conversions.ToDouble(val[1]);
                     }
 
                     if (argument.Contains("-ptbo="))
@@ -444,8 +419,6 @@ public partial class MainWindow
         {
             parameters += "-tbs=3 ";
         }
-
-        parameters += "-color=" + this.tRed.Text.ToString() + ";" + this.tGreen.Text.ToString() + ";" + this.tBlue.Text.ToString() + ";" + this.tAlpha.Text.ToString().Replace("%", "") + " ";
 
         parameters += "-tpop=" + this.tpopla.Text.ToString().Replace("%", "") + " ";
 
@@ -681,8 +654,6 @@ public partial class MainWindow
             parameters += "-tbs=3 ";
         }
 
-        parameters += "-color=" + this.tRed.Text.ToString() + ";" + this.tGreen.Text.ToString() + ";" + this.tBlue.Text.ToString() + ";" + this.tAlpha.Text.ToString().Replace("%", "") + " ";
-
         parameters += "-tpop=" + this.tpopla.Text.ToString().Replace("%", "") + " ";
 
         parameters += "-tsop=" + this.tsopla.Text.ToString().Replace("%", "") + " ";
@@ -755,7 +726,6 @@ public partial class MainWindow
         {
             parameters += "-rzbt=1 ";
         }
-
 
         if (this.CheckBox4_Copy.IsChecked is { } arg57 && arg57 == false)
         {
@@ -908,16 +878,6 @@ public partial class MainWindow
                     {
                         string colorval = val[1];
                         string[] colorsep = colorval.Split(";".ToCharArray());
-
-                        this.sRed.Value = Conversions.ToDouble(colorsep[0]);
-                        this.sGreen.Value = Conversions.ToDouble(colorsep[1]);
-                        this.sBlue.Value = Conversions.ToDouble(colorsep[2]);
-                        this.sAlpha.Value = Conversions.ToDouble(colorsep[3]);
-                    }
-
-                    if (argument.Contains("-tpop="))
-                    {
-                        this.tpop.Value = Conversions.ToDouble(val[1]);
                     }
 
                     if (argument.Contains("-tbr="))
@@ -931,11 +891,6 @@ public partial class MainWindow
                         {
                             this.tbsegments.IsChecked = true;
                         }
-                    }
-
-                    if (argument.Contains("-tsop="))
-                    {
-                        this.tsop.Value = Conversions.ToDouble(val[1]);
                     }
 
                     if (argument.Contains("-ptbo="))
@@ -1108,12 +1063,6 @@ public partial class MainWindow
         this.NumericUpDown7.Text = "0";
         this.NumericUpDown7_Copy.Text = "0";
         this.NumericUpDown7_Copy1.Text = "0";
-        this.sAlpha.Value = 50d;
-        this.tpop.Value = 100d;
-        this.tsop.Value = 100d;
-        this.sRed.Value = 0d;
-        this.sGreen.Value = 0d;
-        this.sBlue.Value = 0d;
     }
 
     private void Button_Click_Restart(object sender, RoutedEventArgs e)
@@ -1155,10 +1104,7 @@ public partial class MainWindow
             parameters += "-tbs=3 ";
         }
 
-        parameters += "-color=" + this.tRed.Text.ToString() + ";" + this.tGreen.Text.ToString() + ";" + this.tBlue.Text.ToString() + ";" + this.tAlpha.Text.ToString().Replace("%", "") + " ";
-
         parameters += "-tpop=" + this.tpopla.Text.ToString().Replace("%", "") + " ";
-
         parameters += "-tsop=" + this.tsopla.Text.ToString().Replace("%", "") + " ";
 
         if (this.tbrounding.Text != default)
@@ -1331,265 +1277,5 @@ public partial class MainWindow
 
             Environment.Exit(0);
         }
-        else
-        {
-        }
-    }
-
-    private void Alpha_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-    {
-        int val = (int)Math.Round(this.sAlpha.Value);
-        this.tAlpha.Text = val.ToString() + "%";
-
-        this.colorprev.Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb((byte)Math.Round(this.sRed.Value), (byte)Math.Round(this.sGreen.Value), (byte)Math.Round(this.sBlue.Value)));
-
-        this.colorprev.Opacity = this.sAlpha.Value / 100d;
-
-
-
-        CalculateHexColor2();
-    }
-
-    private void Blue_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-    {
-        int val = (int)Math.Round(this.sBlue.Value);
-        this.tBlue.Text = val.ToString();
-
-        this.colorprev.Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb((byte)Math.Round(this.sRed.Value), (byte)Math.Round(this.sGreen.Value), (byte)Math.Round(this.sBlue.Value)));
-
-        this.colorprev.Opacity = this.sAlpha.Value / 100d;
-
-        CalculateHexColor2();
-    }
-
-    private void Green_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-    {
-        int val = (int)Math.Round(this.sGreen.Value);
-        this.tGreen.Text = val.ToString();
-
-        this.colorprev.Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb((byte)Math.Round(this.sRed.Value), (byte)Math.Round(this.sGreen.Value), (byte)Math.Round(this.sBlue.Value)));
-
-        this.colorprev.Opacity = this.sAlpha.Value / 100d;
-
-        CalculateHexColor2();
-    }
-
-    private void Red_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-    {
-        int val = (int)Math.Round(this.sRed.Value);
-        this.tRed.Text = val.ToString();
-
-        this.colorprev.Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb((byte)Math.Round(this.sRed.Value), (byte)Math.Round(this.sGreen.Value), (byte)Math.Round(this.sBlue.Value)));
-
-        this.colorprev.Opacity = this.sAlpha.Value / 100d;
-
-        CalculateHexColor2();
-    }
-
-    public void CalculateHexColor2()
-    {
-        try
-        {
-            var myColor = System.Drawing.Color.FromArgb((int)Math.Round(this.sRed.Value), (int)Math.Round(this.sGreen.Value), (int)Math.Round(this.sBlue.Value));
-            string hex = myColor.R.ToString("X2") + myColor.G.ToString("X2") + myColor.B.ToString("X2");
-
-            this.hexcolorbox.Text = "#" + hex;
-        }
-        catch
-        {
-        }
-    }
-
-    public void CalculateHexColor()
-    {
-        try
-        {
-            var color = ColorTranslator.FromHtml(this.hexcolorbox.Text);
-            int r = Convert.ToInt16(color.R);
-            int g = Convert.ToInt16(color.G);
-            int b = Convert.ToInt16(color.B);
-
-            this.sRed.Value = (double)r;
-            this.sGreen.Value = (double)g;
-            this.sBlue.Value = (double)b;
-        }
-        catch
-        {
-        }
-    }
-
-    private void Button_Click_12(object sender, RoutedEventArgs e)
-    {
-        var t1 = new Thread(ColorThread);
-        t1.Start();
-    }
-
-    public void ColorThread()
-    {
-        var lpPoint = default(Win32.PointAPI);
-        bool x = Win32.GetAsyncKeyState(1) == 0;
-
-        do
-        {
-            Thread.Sleep(1);
-            Win32.GetCursorPos(ref lpPoint);
-
-            Console.WriteLine(GetColorAt(lpPoint.x, lpPoint.y));
-
-            var colorp = GetColorAt(lpPoint.x, lpPoint.y);
-
-            this.Dispatcher.Invoke(() =>
-                {
-                    // sAlpha.Value = colorp.A
-                    this.sRed.Value = (double)colorp.R;
-                    this.sGreen.Value = (double)colorp.G;
-                    this.sBlue.Value = (double)colorp.B;
-                });
-        }
-
-        while (Win32.GetAsyncKeyState(1) == 0);
-    }
-
-    private void Button_Click_13(object sender, RoutedEventArgs e)
-    {
-        string parameters = "";
-
-        if (this.RadioButton1.IsChecked is { } arg89 && arg89 == true)
-        {
-            parameters += "-tbs=0 ";
-        }
-        if (this.RadioButton3.IsChecked is { } arg91 && arg91 == true)
-        {
-            parameters += "-tbs=2 ";
-        }
-        if (this.RadioButton4.IsChecked is { } arg92 && arg92 == true)
-        {
-            parameters += "-tbs=3 ";
-        }
-
-        parameters += "-color=" + this.tRed.Text.ToString() + ";" + this.tGreen.Text.ToString() + ";" + this.tBlue.Text.ToString() + ";" + this.tAlpha.Text.ToString().Replace("%", "") + " ";
-
-        parameters += "-tpop=" + this.tpopla.Text.ToString().Replace("%", "") + " ";
-
-        parameters += "-tsop=" + this.tsopla.Text.ToString().Replace("%", "") + " ";
-
-        if (this.tbrounding.Text != default)
-        {
-            parameters += "-tbr=" + this.tbrounding.Text + " ";
-        }
-
-        if (this.tbsegments.IsChecked is { } arg95 && arg95 == true)
-        {
-            parameters += "-tbsg=1 ";
-        }
-
-        if (this.NumericUpDown1.Text != default)
-        {
-            parameters += "-ptbo=" + this.NumericUpDown1.Text + " ";
-        }
-        if (this.NumericUpDown2.Text != default)
-        {
-            parameters += "-stbo=" + this.NumericUpDown2.Text + " ";
-        }
-
-        if (this.CheckBox1.IsChecked is { } arg96 && arg96 == true)
-        {
-            parameters += "-cib=1 ";
-        }
-
-        if (this.NumericUpDown3.Text != default)
-        {
-            parameters += "-lr=" + this.NumericUpDown3.Text + " ";
-        }
-
-        if (this.NumericUpDown5.Text != default)
-        {
-            parameters += "-oblr=" + this.NumericUpDown5.Text + " ";
-        }
-
-        if (this.NumericUpDown7.Text != default)
-        {
-            parameters += "-sr=" + this.NumericUpDown7.Text + " ";
-        }
-
-        if (this.NumericUpDown7_Copy.Text != default)
-        {
-            parameters += "-sr2=" + this.NumericUpDown7_Copy.Text + " ";
-        }
-
-        if (this.NumericUpDown7_Copy1.Text != default)
-        {
-            parameters += "-sr3=" + this.NumericUpDown7_Copy1.Text + " ";
-        }
-
-
-        if (this.CheckBox2.IsChecked is { } arg97 && arg97 == true)
-        {
-            parameters += "-cpo=1 ";
-        }
-
-        if (this.CheckBox3.IsChecked is { } arg98 && arg98 == true)
-        {
-            parameters += "-cso=1 ";
-        }
-
-        if (this.CheckBox4.IsChecked is { } arg99 && arg99 == true)
-        {
-            parameters += "-ftotc=1 ";
-        }
-
-        if (this.CheckBox4_Copy.IsChecked is { } arg100 && arg100 == true)
-        {
-            parameters += "-rzbt=1 ";
-        }
-
-        if (this.CheckBox4_Copy.IsChecked is { } arg101 && arg101 == false)
-        {
-            parameters += "-rzbt=0 ";
-        }
-
-        if (this.Checkbox10.IsChecked is { } arg102 && arg102 == true)
-        {
-            parameters += "-dtbsowm=1 ";
-        }
-        if (this.Checkbox9.IsChecked is { } arg103 && arg103 == true)
-        {
-            parameters += "-cfsa=1 ";
-        }
-        if (this.CheckBox11.IsChecked is { } arg104 && arg104 == true)
-        {
-            parameters += "-dct=1 ";
-        }
-        if (this.Checkbox12.IsChecked is { } arg105 && arg105 == true)
-        {
-            parameters += "-hps=1 ";
-        }
-        if (this.Checkbox13.IsChecked is { } arg106 && arg106 == true)
-        {
-            parameters += "-hss=1 ";
-        }
-        if (this.Checkbox14.IsChecked is { } arg107 && arg107 == true)
-        {
-            parameters += "-hpt=1 ";
-        }
-        if (this.Checkbox15.IsChecked is { } arg108 && arg108 == true)
-        {
-            parameters += "-hst=1 ";
-        }
-        if (this.Checkbox16.IsChecked is { } arg109 && arg109 == true)
-        {
-            parameters += "-sti=1 ";
-        }
-        if (this.checkboxconsole.IsChecked is { } arg110 && arg110 == true)
-        {
-            parameters += "-console ";
-        }
-
-        this.TextboxLink.Text = '"' + AppDomain.CurrentDomain.BaseDirectory + "TaskbarSharp.exe" + '"' + " " + parameters;
-    }
-
-    private void Button_Click_14(object sender, RoutedEventArgs e)
-    {
-        Process.Start("https://docs.microsoft.com/en-us/windows/win32/winauto/microsoft-active-accessibility-and-ui-automation-compared");
     }
 }

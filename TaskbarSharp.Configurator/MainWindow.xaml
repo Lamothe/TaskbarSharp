@@ -61,36 +61,14 @@
                         <ColumnDefinition Width="166*" />
                         <ColumnDefinition Width="495*" />
                     </Grid.ColumnDefinitions>
-                    <Image HorizontalAlignment="Left" Height="152" Margin="10,399,0,0" VerticalAlignment="Top" Width="152" Source="grid.png" />
                     <TextBlock Text="Style" FontSize="20" Margin="10,50,0,618" VerticalAlignment="Center" Height="32" Grid.ColumnSpan="2" />
                     <RadioButton  ToolTip="Keep the taskbar background as it has always been." x:Name="RadioButton1" Content="Default " HorizontalAlignment="Left" Margin="11,89,0,0" VerticalAlignment="Top" IsChecked="True" Height="32" Width="120" />
                     <RadioButton ToolTip="Make the taskbar background Blurred with a gradient color." x:Name="RadioButton3" Content="Blur" HorizontalAlignment="Left" Margin="11,237,0,0" VerticalAlignment="Top" Height="32" Width="120" />
                     <RadioButton ToolTip="Make the taskbar background Acrylic/Fluent with a gradient color." x:Name="RadioButton4" Content="Acrylic (can flicker)" HorizontalAlignment="Left" Margin="11,274,0,0" VerticalAlignment="Top" Height="32" Width="151" />
                     <CheckBox ToolTip="Revert the taskbar to the default background when a window is maximized." x:Name="Checkbox10" Content="Switch back to Default on maximized window" HorizontalAlignment="Left" Margin="11,334,0,0" VerticalAlignment="Top" Width="364" Grid.ColumnSpan="2" Height="32" />
-                    <Slider x:Name="sRed" HorizontalAlignment="Left" VerticalAlignment="Top" Width="255" Maximum="255" ValueChanged="Red_ValueChanged" Foreground="#FFD70000" Height="32" Margin="56,403,0,0" Grid.Column="1" />
-
-                    <Rectangle x:Name="colorprev" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="150"  VerticalAlignment="Top" Width="150" Margin="11,400,0,0" />
-                    <Slider x:Name="sGreen" HorizontalAlignment="Left" VerticalAlignment="Top" Width="255" Maximum="255" ValueChanged="Green_ValueChanged" Foreground="#FF29B01C" Height="32" Margin="56,440,0,0" Grid.Column="1" />
-                    <Slider x:Name="sBlue" VerticalAlignment="Top" Maximum="255" ValueChanged="Blue_ValueChanged" Foreground="#FF0023FF" Height="32" Margin="56,477,184,0" Grid.Column="1" />
-                    <Slider x:Name="sAlpha" VerticalAlignment="Top" Maximum="100" ValueChanged="Alpha_ValueChanged" Foreground="#FF898989" Height="32" Margin="56,514,184,0" Grid.Column="1" />
-                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Red" VerticalAlignment="Top" Height="19" Width="24" Margin="9,410,0,0" Grid.Column="1" />
-                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Green" VerticalAlignment="Top" Height="19" Width="42" Margin="9,447,0,0" Grid.Column="1" />
-                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Blue" VerticalAlignment="Top" Height="19" Width="27" Margin="9,484,0,0" Grid.Column="1" />
-                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Alpha" VerticalAlignment="Top" Height="19" Width="36" Margin="9,521,0,0" Grid.Column="1" />
-                    <TextBlock x:Name="tRed" HorizontalAlignment="Left" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Height="19" Width="51" Margin="320,410,0,0" Grid.Column="1" />
-                    <TextBlock x:Name="tGreen" HorizontalAlignment="Left" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Height="19" Width="66" Margin="320,447,0,0" Grid.Column="1" />
-                    <TextBlock x:Name="tBlue" HorizontalAlignment="Left" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Height="19" Width="87" Margin="320,484,0,0" Grid.Column="1" />
-                    <TextBlock x:Name="tAlpha" HorizontalAlignment="Left" TextWrapping="Wrap" Text="0%" VerticalAlignment="Top" Height="19" Width="66" Margin="320,520,0,0" Grid.Column="1" />
-                    <Button ToolTip="Pick a color from the screen. (Left click to pick a color on the screen from your mouse cursor.)" FontFamily="Segoe MDL2 Assets" Content="&#xEF3C;" HorizontalAlignment="Left" VerticalAlignment="Top" Width="33" Click="Button_Click_12" Margin="411,400,0,0" Grid.Column="1" />
                     <emoji:TextBlock  Text="🎨" Margin="430,58,10,585" FontSize="40" VerticalAlignment="Center" Grid.Column="1" Height="57" />
-                    <TextBox x:Name="hexcolorbox" HorizontalAlignment="Left" Height="23" Margin="390,440,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="76" Grid.Column="1" />
-                    <Slider x:Name="tpop" VerticalAlignment="Top" Maximum="100" Foreground="#FF898989" Height="32" Margin="286,130,72,0" Grid.Column="1" />
-                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Primary taskbar" VerticalAlignment="Top" Height="19" Width="97" Margin="180,136,0,0" Grid.Column="1" />
                     <TextBlock x:Name="tpopla" HorizontalAlignment="Left" TextWrapping="Wrap" Text="0%" VerticalAlignment="Top" Height="19" Width="66" Margin="432,136,-3,0" Grid.Column="1" />
-                    <Slider x:Name="tsop" VerticalAlignment="Top" Maximum="100"  Foreground="#FF898989" Height="32" Margin="286,167,72,0" Grid.Column="1" />
-                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Secondary taskbar" VerticalAlignment="Top" Height="19" Width="114" Margin="163,173,0,0" Grid.Column="1" />
                     <TextBlock x:Name="tsopla" HorizontalAlignment="Left" TextWrapping="Wrap" Text="0%" VerticalAlignment="Top" Height="19" Width="66" Margin="432,173,-3,0" Grid.Column="1" />
-                    <Label Content="Total Opacity" Grid.Column="1" HorizontalAlignment="Left" Margin="190,99,0,0" VerticalAlignment="Top" FontWeight="Bold" />
                     <ui:NumberBox ToolTip="Set the radius of the taskbar(s) corners in pixels." x:Name="tbrounding" Text="0" HorizontalAlignment="Left" Margin="163,252,0,0" VerticalAlignment="Top" Width="83" PreviewTextInput="NumberValidationTextBox" Grid.Column="1" />
                     <TextBlock HorizontalAlignment="Left" Margin="163,228,0,0" TextWrapping="Wrap" Text="Corner Radius" VerticalAlignment="Top" Width="201" Grid.Column="1" />
                     <TextBlock HorizontalAlignment="Left" Margin="251,258,0,0" TextWrapping="Wrap" Text="px" VerticalAlignment="Top" Width="201" Grid.Column="1" />
@@ -139,7 +117,6 @@
                     <emoji:TextBlock  Text="🚥" Margin="442,58,10,445" FontSize="40" VerticalAlignment="Center" Grid.Column="1" Height="57" />
                     <TextBox x:Name="TextboxLink" HorizontalAlignment="Left" Height="116" Margin="10,329,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="359" Grid.ColumnSpan="2" />
                     <TextBlock HorizontalAlignment="Left" Margin="10,305,0,0" TextWrapping="Wrap" Text="Shortcut link" VerticalAlignment="Top" />
-                    <Button ToolTip="I want to create my own shortcut.. Generate the parameters." Content="Generate" HorizontalAlignment="Left" Margin="10,473,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.778,0.442" Click="Button_Click_13" />
                     <emoji:TextBlock HorizontalAlignment="Left" Margin="10,523,0,0" TextWrapping="Wrap" Text="⚠️ If you want to create your own start-up shortcut then make sure to Remove the Taskschedule above and don't use the Apply button. The Apply button creates the Taskschedule again." VerticalAlignment="Top" Grid.ColumnSpan="2" />
                 </Grid>
             </TabItem>
@@ -180,7 +157,6 @@
                     <emoji:TextBlock  Text="🦾" Margin="442,58,10,479" FontSize="40" VerticalAlignment="Center" Grid.Column="1" Height="57" />
                     <RadioButton ToolTip="Use Microsoft Active Accessibility to retrieve data from the taskbar." Content="MSAA" HorizontalAlignment="Left" Margin="10,91,0,0" VerticalAlignment="Top" IsChecked="True" IsEnabled="False" />
                     <RadioButton ToolTip="Use UI Automation to retrieve data from the taskbar." Content="UIAutomation" HorizontalAlignment="Left" Margin="10,128,0,0" VerticalAlignment="Top" IsEnabled="False" />
-                    <Button Content="?" Grid.Column="1" HorizontalAlignment="Left" Margin="10,107,0,0" VerticalAlignment="Top" Width="33" Click="Button_Click_14" />
                 </Grid>
             </TabItem>
             <TabItem>
@@ -225,10 +201,8 @@
 
         <Button ToolTip="Apply settings, start-up task and restart TaskbarSharp." Content="Apply" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="87" Margin="750,357,0,-357" Style="{StaticResource AccentButtonStyle}" Click="Button_Click_1" />
         <Button ToolTip="Close the Configurator." Content="Close" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="87" Margin="658,301,0,-301" Click="Button_Click" />
-        <Button ToolTip="Stop the TaskbarSharp background service. And put the icons back to the left." Content="Stop TaskbarSharp" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="121" Margin="510,245,0,-245" Click="Button_Click_2" />
-        <Button ToolTip="Reset all settings back to default. Click 'Apply' to confirm." FontFamily="Segoe MDL2 Assets" Content="&#xE777;"  FontSize="19" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="38" Margin="-2,190,0,-190" Click="Button_Click_6" />
-        <Button ToolTip="Reload current applied settings." FontFamily="Segoe MDL2 Assets" Content="&#xE895;"  FontSize="19" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="38" Margin="41,134,0,-134" Click="Button_Click_5" />
-        <Button ToolTip="Restart the TaskbarSharp background service." Content="Restart TaskbarSharp" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="121" Margin="384,77,0,-77" Click="Button_Click_Restart" />
-        <CheckBox  ToolTip="Show console output for debugging." x:Name="checkboxconsole" Content="Show Console" HorizontalAlignment="Left" Height="32" VerticalAlignment="Top" Width="51" RenderTransformOrigin="0.5,0.5" Margin="183,21,0,-21" />
+        <Button ToolTip="Stop the TaskbarSharp background service. And put the icons back to the left." Content="Stop TaskbarSharp" Height="32" VerticalAlignment="Bottom" Width="151" Margin="2,0,0,-277" Click="Button_Click_2" />
+        <Button ToolTip="Restart the TaskbarSharp background service." Content="Restart TaskbarSharp" Height="32" VerticalAlignment="Top" Width="151" Margin="3,175,0,0" Click="Button_Click_Restart" />
+        <CheckBox  ToolTip="Show console output for debugging." x:Name="checkboxconsole" Content="Show Console" Height="32" VerticalAlignment="Top" Width="51" RenderTransformOrigin="0.5,0.5" Margin="192,-18,0,0" />
     </ui:SimpleStackPanel>
 </Window>
