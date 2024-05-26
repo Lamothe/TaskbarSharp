@@ -175,96 +175,6 @@ public partial class MainWindow
 
         tbrounding.Value = 0d;
 
-        ComboBox1.Items.Add("none");
-        ComboBox1.Items.Add("linear");
-        ComboBox1.Items.Add("expoeaseout");
-        ComboBox1.Items.Add("expoeasein");
-        ComboBox1.Items.Add("expoeaseinout");
-        ComboBox1.Items.Add("expoeaseoutin");
-        ComboBox1.Items.Add("circeaseout");
-        ComboBox1.Items.Add("circeasein");
-        ComboBox1.Items.Add("circeaseinout");
-        ComboBox1.Items.Add("circeaseoutin");
-        ComboBox1.Items.Add("quadeaseout");
-        ComboBox1.Items.Add("quadeasein");
-        ComboBox1.Items.Add("quadeaseinout");
-        ComboBox1.Items.Add("quadeaseoutin");
-        ComboBox1.Items.Add("sineeaseout");
-        ComboBox1.Items.Add("sineeasein");
-        ComboBox1.Items.Add("sineeaseinout");
-        ComboBox1.Items.Add("sineeaseoutin");
-        ComboBox1.Items.Add("cubiceaseout");
-        ComboBox1.Items.Add("cubiceasein");
-        ComboBox1.Items.Add("cubiceaseinout");
-        ComboBox1.Items.Add("cubiceaseoutin");
-        ComboBox1.Items.Add("quarteaseout");
-        ComboBox1.Items.Add("quarteasein");
-        ComboBox1.Items.Add("quarteaseinout");
-        ComboBox1.Items.Add("quarteaseoutin");
-        ComboBox1.Items.Add("quinteaseout");
-        ComboBox1.Items.Add("quinteasein");
-        ComboBox1.Items.Add("quinteaseinout");
-        ComboBox1.Items.Add("quinteaseoutin");
-        ComboBox1.Items.Add("elasticeaseout");
-        ComboBox1.Items.Add("elasticeasein");
-        ComboBox1.Items.Add("elasticeaseinout");
-        ComboBox1.Items.Add("elasticeaseoutin");
-        ComboBox1.Items.Add("bounceeaseout");
-        ComboBox1.Items.Add("bounceeasein");
-        ComboBox1.Items.Add("bounceeaseinout");
-        ComboBox1.Items.Add("bounceeaseoutin");
-        ComboBox1.Items.Add("backeaseout");
-        ComboBox1.Items.Add("backeasein");
-        ComboBox1.Items.Add("backeaseinout");
-        ComboBox1.Items.Add("backeaseoutin");
-
-        ComboBox1.SelectedItem = "cubiceaseinout";
-
-        ComboBox2.Items.Add("none");
-        ComboBox2.Items.Add("linear");
-        ComboBox2.Items.Add("expoeaseout");
-        ComboBox2.Items.Add("expoeasein");
-        ComboBox2.Items.Add("expoeaseinout");
-        ComboBox2.Items.Add("expoeaseoutin");
-        ComboBox2.Items.Add("circeaseout");
-        ComboBox2.Items.Add("circeasein");
-        ComboBox2.Items.Add("circeaseinout");
-        ComboBox2.Items.Add("circeaseoutin");
-        ComboBox2.Items.Add("quadeaseout");
-        ComboBox2.Items.Add("quadeasein");
-        ComboBox2.Items.Add("quadeaseinout");
-        ComboBox2.Items.Add("quadeaseoutin");
-        ComboBox2.Items.Add("sineeaseout");
-        ComboBox2.Items.Add("sineeasein");
-        ComboBox2.Items.Add("sineeaseinout");
-        ComboBox2.Items.Add("sineeaseoutin");
-        ComboBox2.Items.Add("cubiceaseout");
-        ComboBox2.Items.Add("cubiceasein");
-        ComboBox2.Items.Add("cubiceaseinout");
-        ComboBox2.Items.Add("cubiceaseoutin");
-        ComboBox2.Items.Add("quarteaseout");
-        ComboBox2.Items.Add("quarteasein");
-        ComboBox2.Items.Add("quarteaseinout");
-        ComboBox2.Items.Add("quarteaseoutin");
-        ComboBox2.Items.Add("quinteaseout");
-        ComboBox2.Items.Add("quinteasein");
-        ComboBox2.Items.Add("quinteaseinout");
-        ComboBox2.Items.Add("quinteaseoutin");
-        ComboBox2.Items.Add("elasticeaseout");
-        ComboBox2.Items.Add("elasticeasein");
-        ComboBox2.Items.Add("elasticeaseinout");
-        ComboBox2.Items.Add("elasticeaseoutin");
-        ComboBox2.Items.Add("bounceeaseout");
-        ComboBox2.Items.Add("bounceeasein");
-        ComboBox2.Items.Add("bounceeaseinout");
-        ComboBox2.Items.Add("bounceeaseoutin");
-        ComboBox2.Items.Add("backeaseout");
-        ComboBox2.Items.Add("backeasein");
-        ComboBox2.Items.Add("backeaseinout");
-        ComboBox2.Items.Add("backeaseoutin");
-
-        ComboBox2.SelectedItem = "cubiceaseinout";
-
         ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 
         try
@@ -294,25 +204,12 @@ public partial class MainWindow
                         }
                         if (Conversions.ToInteger(val[1]) == 1)
                         {
-                            this.RadioButton2.IsChecked = true;
+                            this.RadioButton3.IsChecked = true;
                         }
                         if (Conversions.ToInteger(val[1]) == 2)
                         {
-                            this.RadioButton3.IsChecked = true;
-                        }
-                        if (Conversions.ToInteger(val[1]) == 3)
-                        {
                             this.RadioButton4.IsChecked = true;
                         }
-                        if (Conversions.ToInteger(val[1]) == 4)
-                        {
-                            this.RadioButtontc.IsChecked = true;
-                        }
-                        if (Conversions.ToInteger(val[1]) == 5)
-                        {
-                            this.RadioButtonoq.IsChecked = true;
-                        }
-
                     }
 
                     if (argument.Contains("-color="))
@@ -371,15 +268,6 @@ public partial class MainWindow
                             this.CheckBox3.IsChecked = true;
                         }
                     }
-                    if (argument.Contains("-as="))
-                    {
-                        this.ComboBox1.SelectedItem = val[1];
-
-                    }
-                    if (argument.Contains("-asp="))
-                    {
-                        this.NumericUpDown4.Text = val[1];
-                    }
                     if (argument.Contains("-sr="))
                     {
                         this.NumericUpDown7.Text = val[1];
@@ -402,10 +290,6 @@ public partial class MainWindow
                         {
                             this.CheckBox1.IsChecked = true;
                         }
-                    }
-                    if (argument.Contains("-obas="))
-                    {
-                        this.ComboBox2.SelectedItem = val[1];
                     }
                     if (argument.Contains("-oblr="))
                     {
@@ -536,6 +420,7 @@ public partial class MainWindow
         }
         catch (Exception ex)
         {
+            UI.ShowError(ex);
         }
 
         Thread.Sleep(50);
@@ -551,10 +436,6 @@ public partial class MainWindow
         {
             parameters += "-tbs=0 ";
         }
-        if (this.RadioButton2.IsChecked is { } arg24 && arg24 == true)
-        {
-            parameters += "-tbs=1 ";
-        }
         if (this.RadioButton3.IsChecked is { } arg25 && arg25 == true)
         {
             parameters += "-tbs=2 ";
@@ -563,30 +444,12 @@ public partial class MainWindow
         {
             parameters += "-tbs=3 ";
         }
-        if (this.RadioButtontc.IsChecked is { } arg27 && arg27 == true)
-        {
-            parameters += "-tbs=4 ";
-        }
-        if (this.RadioButtonoq.IsChecked is { } arg28 && arg28 == true)
-        {
-            parameters += "-tbs=5 ";
-        }
 
         parameters += "-color=" + this.tRed.Text.ToString() + ";" + this.tGreen.Text.ToString() + ";" + this.tBlue.Text.ToString() + ";" + this.tAlpha.Text.ToString().Replace("%", "") + " ";
 
         parameters += "-tpop=" + this.tpopla.Text.ToString().Replace("%", "") + " ";
 
         parameters += "-tsop=" + this.tsopla.Text.ToString().Replace("%", "") + " ";
-
-        if (this.ComboBox1.SelectedItem is not null)
-        {
-            parameters += "-as=" + this.ComboBox1.SelectedItem.ToString().ToLower() + " ";
-        }
-
-        if (this.ComboBox2.SelectedItem is not null)
-        {
-            parameters += "-obas=" + this.ComboBox2.SelectedItem.ToString().ToLower() + " ";
-        }
 
         if (this.tbrounding.Text != default)
         {
@@ -596,11 +459,6 @@ public partial class MainWindow
         if (this.tbsegments.IsChecked is { } arg29 && arg29 == true)
         {
             parameters += "-tbsg=1 ";
-        }
-
-        if (this.NumericUpDown4.Text != default)
-        {
-            parameters += "-asp=" + this.NumericUpDown4.Text + " ";
         }
 
         if (this.NumericUpDown1.Text != default)
@@ -714,7 +572,7 @@ public partial class MainWindow
         }
         catch (Exception ex)
         {
-            // MessageBox.Show(ex.Message)
+            UI.ShowError(ex);
         }
 
         try
@@ -750,7 +608,7 @@ public partial class MainWindow
         }
         catch (Exception ex)
         {
-            // MessageBox.Show(ex.Message)
+            UI.ShowError(ex);
         }
     }
 
@@ -814,10 +672,6 @@ public partial class MainWindow
         {
             parameters += "-tbs=0 ";
         }
-        if (this.RadioButton2.IsChecked is { } arg46 && arg46 == true)
-        {
-            parameters += "-tbs=1 ";
-        }
         if (this.RadioButton3.IsChecked is { } arg47 && arg47 == true)
         {
             parameters += "-tbs=2 ";
@@ -826,35 +680,12 @@ public partial class MainWindow
         {
             parameters += "-tbs=3 ";
         }
-        if (this.RadioButtontc.IsChecked is { } arg49 && arg49 == true)
-        {
-            parameters += "-tbs=4 ";
-        }
-        if (this.RadioButtonoq.IsChecked is { } arg50 && arg50 == true)
-        {
-            parameters += "-tbs=5 ";
-        }
 
         parameters += "-color=" + this.tRed.Text.ToString() + ";" + this.tGreen.Text.ToString() + ";" + this.tBlue.Text.ToString() + ";" + this.tAlpha.Text.ToString().Replace("%", "") + " ";
 
         parameters += "-tpop=" + this.tpopla.Text.ToString().Replace("%", "") + " ";
 
         parameters += "-tsop=" + this.tsopla.Text.ToString().Replace("%", "") + " ";
-
-        if (this.ComboBox1.SelectedItem is not null)
-        {
-            parameters += "-as=" + this.ComboBox1.SelectedItem.ToString().ToLower() + " ";
-        }
-
-        if (this.ComboBox2.SelectedItem is not null)
-        {
-            parameters += "-obas=" + this.ComboBox2.SelectedItem.ToString().ToLower() + " ";
-        }
-
-        if (this.NumericUpDown4.Text != default)
-        {
-            parameters += "-asp=" + this.NumericUpDown4.Text + " ";
-        }
 
         if (this.tbrounding.Text != default)
         {
@@ -978,14 +809,13 @@ public partial class MainWindow
         }
         catch (Exception ex)
         {
-            // MessageBox.Show(ex.Message)
+            UI.ShowError(ex);
         }
 
         try
         {
             using (var ts = new TaskService())
             {
-
                 var td = ts.NewTask();
                 int delay = Conversions.ToInteger(this.NumericUpDown6.Text);
 
@@ -1014,7 +844,7 @@ public partial class MainWindow
         }
         catch (Exception ex)
         {
-            // MessageBox.Show(ex.Message)
+            UI.ShowError(ex);
         }
 
         var deleteFileDialog = new ContentDialog()
@@ -1066,26 +896,12 @@ public partial class MainWindow
                         }
                         if (Conversions.ToInteger(val[1]) == 1)
                         {
-                            this.RadioButton2.IsChecked = true;
+                            this.RadioButton3.IsChecked = true;
                         }
                         if (Conversions.ToInteger(val[1]) == 2)
                         {
-                            this.RadioButton3.IsChecked = true;
-                        }
-                        if (Conversions.ToInteger(val[1]) == 3)
-                        {
                             this.RadioButton4.IsChecked = true;
                         }
-
-                        if (Conversions.ToInteger(val[1]) == 4)
-                        {
-                            this.RadioButtontc.IsChecked = true;
-                        }
-                        if (Conversions.ToInteger(val[1]) == 5)
-                        {
-                            this.RadioButtonoq.IsChecked = true;
-                        }
-
                     }
 
                     if (argument.Contains("-color="))
@@ -1144,15 +960,7 @@ public partial class MainWindow
                             this.CheckBox3.IsChecked = true;
                         }
                     }
-                    if (argument.Contains("-as="))
-                    {
-                        this.ComboBox1.SelectedItem = val[1];
 
-                    }
-                    if (argument.Contains("-asp="))
-                    {
-                        this.NumericUpDown4.Text = val[1];
-                    }
                     if (argument.Contains("-sr="))
                     {
                         this.NumericUpDown7.Text = val[1];
@@ -1175,10 +983,6 @@ public partial class MainWindow
                         {
                             this.CheckBox1.IsChecked = true;
                         }
-                    }
-                    if (argument.Contains("-obas="))
-                    {
-                        this.ComboBox2.SelectedItem = val[1];
                     }
                     if (argument.Contains("-oblr="))
                     {
@@ -1283,9 +1087,6 @@ public partial class MainWindow
     {
         this.RadioButton1.IsChecked = true;
         this.Checkbox10.IsChecked = false;
-        this.ComboBox1.SelectedItem = "cubiceaseinout";
-        this.ComboBox2.SelectedItem = "cubiceaseinout";
-        this.NumericUpDown4.Text = "300";
         this.NumericUpDown1.Text = "0";
         this.NumericUpDown2.Text = "0";
         this.CheckBox1.IsChecked = false;
@@ -1313,7 +1114,6 @@ public partial class MainWindow
         this.sRed.Value = 0d;
         this.sGreen.Value = 0d;
         this.sBlue.Value = 0d;
-
     }
 
     private void Button_Click_Restart(object sender, RoutedEventArgs e)
@@ -1330,7 +1130,7 @@ public partial class MainWindow
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "TaskbarSharp Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            UI.ShowError(ex);
         }
 
         Thread.Sleep(50);
@@ -1346,10 +1146,6 @@ public partial class MainWindow
         {
             parameters += "-tbs=0 ";
         }
-        if (this.RadioButton2.IsChecked is { } arg68 && arg68 == true)
-        {
-            parameters += "-tbs=1 ";
-        }
         if (this.RadioButton3.IsChecked is { } arg69 && arg69 == true)
         {
             parameters += "-tbs=2 ";
@@ -1358,30 +1154,12 @@ public partial class MainWindow
         {
             parameters += "-tbs=3 ";
         }
-        if (this.RadioButtontc.IsChecked is { } arg71 && arg71 == true)
-        {
-            parameters += "-tbs=4 ";
-        }
-        if (this.RadioButtonoq.IsChecked is { } arg72 && arg72 == true)
-        {
-            parameters += "-tbs=5 ";
-        }
 
         parameters += "-color=" + this.tRed.Text.ToString() + ";" + this.tGreen.Text.ToString() + ";" + this.tBlue.Text.ToString() + ";" + this.tAlpha.Text.ToString().Replace("%", "") + " ";
 
         parameters += "-tpop=" + this.tpopla.Text.ToString().Replace("%", "") + " ";
 
         parameters += "-tsop=" + this.tsopla.Text.ToString().Replace("%", "") + " ";
-
-        if (this.ComboBox1.SelectedItem is not null)
-        {
-            parameters += "-as=" + this.ComboBox1.SelectedItem.ToString().ToLower() + " ";
-        }
-
-        if (this.ComboBox2.SelectedItem is not null)
-        {
-            parameters += "-obas=" + this.ComboBox2.SelectedItem.ToString().ToLower() + " ";
-        }
 
         if (this.tbrounding.Text != default)
         {
@@ -1391,11 +1169,6 @@ public partial class MainWindow
         if (this.tbsegments.IsChecked is { } arg73 && arg73 == true)
         {
             parameters += "-tbsg=1 ";
-        }
-
-        if (this.NumericUpDown4.Text != default)
-        {
-            parameters += "-asp=" + this.NumericUpDown4.Text + " ";
         }
 
         if (this.NumericUpDown1.Text != default)
@@ -1563,288 +1336,6 @@ public partial class MainWindow
         }
     }
 
-    private void Button_Click_9(object sender, RoutedEventArgs e)
-    {
-        CallAnimation();
-    }
-
-    private void CallAnimation()
-    {
-        int xx = (int)Math.Round(this.NumericUpDown4.Value);
-        string an = this.ComboBox1.Text;
-
-        if (an == "linear")
-        {
-            var t1 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.Linear, 500, xx));
-            t1.Start();
-        }
-        else if (an == "none")
-        {
-        }
-        // Dim t0 As Thread = New Thread(Sub() Animate(CType(0, IntPtr), 0, "", AddressOf Easings.Linear, 500, 1))
-        // t0.Start()
-        else if (an == "expoeaseout")
-        {
-            var t2 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.ExpoEaseOut, 500, xx));
-            t2.Start();
-        }
-        else if (an == "expoeasein")
-        {
-            var t3 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.ExpoEaseIn, 500, xx));
-            t3.Start();
-        }
-        else if (an == "expoeaseinout")
-        {
-            var t4 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.ExpoEaseInOut, 500, xx));
-            t4.Start();
-        }
-        else if (an == "expoeaseoutin")
-        {
-            var t5 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.ExpoEaseOutIn, 500, xx));
-            t5.Start();
-        }
-        else if (an == "circeaseout")
-        {
-            var t6 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.CircEaseOut, 500, xx));
-            t6.Start();
-        }
-        else if (an == "circeasein")
-        {
-            var t7 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.CircEaseIn, 500, xx));
-            t7.Start();
-        }
-        else if (an == "circeaseinout")
-        {
-            var t8 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.CircEaseInOut, 500, xx));
-            t8.Start();
-        }
-        else if (an == "circeaseoutin")
-        {
-            var t9 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.CircEaseOutIn, 500, xx));
-            t9.Start();
-        }
-        else if (an == "quadeaseout")
-        {
-            var t10 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.QuadEaseOut, 500, xx));
-            t10.Start();
-        }
-        else if (an == "quadeasein")
-        {
-            var t11 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.QuadEaseIn, 500, xx));
-            t11.Start();
-        }
-        else if (an == "quadeaseinout")
-        {
-            var t12 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.QuadEaseInOut, 500, xx));
-            t12.Start();
-        }
-        else if (an == "quadeaseoutin")
-        {
-            var t13 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.QuadEaseOutIn, 500, xx));
-            t13.Start();
-        }
-        else if (an == "sineeaseout")
-        {
-            var t14 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.SineEaseOut, 500, xx));
-            t14.Start();
-        }
-        else if (an == "sineeasein")
-        {
-            var t15 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.SineEaseIn, 500, xx));
-            t15.Start();
-        }
-        else if (an == "sineeaseinout")
-        {
-            var t16 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.SineEaseInOut, 500, xx));
-            t16.Start();
-        }
-        else if (an == "sineeaseoutin")
-        {
-            var t17 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.SineEaseOutIn, 500, xx));
-            t17.Start();
-        }
-        else if (an == "cubiceaseout")
-        {
-            var t18 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.CubicEaseOut, 500, xx));
-            t18.Start();
-        }
-        else if (an == "cubiceasein")
-        {
-            var t19 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.CubicEaseIn, 500, xx));
-            t19.Start();
-        }
-        else if (an == "cubiceaseinout")
-        {
-            var t20 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.CubicEaseInOut, 500, xx));
-            t20.Start();
-        }
-        else if (an == "cubiceaseoutin")
-        {
-            var t21 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.CubicEaseOutIn, 500, xx));
-            t21.Start();
-        }
-        else if (an == "quarteaseout")
-        {
-            var t22 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.QuartEaseOut, 500, xx));
-            t22.Start();
-        }
-        else if (an == "quarteasein")
-        {
-            var t23 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.QuartEaseIn, 500, xx));
-            t23.Start();
-        }
-        else if (an == "quarteaseinout")
-        {
-            var t24 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.QuartEaseInOut, 500, xx));
-            t24.Start();
-        }
-        else if (an == "quarteaseoutin")
-        {
-            var t25 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.QuartEaseOutIn, 500, xx));
-            t25.Start();
-        }
-        else if (an == "quinteaseout")
-        {
-            var t26 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.QuintEaseOut, 500, xx));
-            t26.Start();
-        }
-        else if (an == "quinteasein")
-        {
-            var t27 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.QuintEaseIn, 500, xx));
-            t27.Start();
-        }
-        else if (an == "quinteaseinout")
-        {
-            var t28 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.QuintEaseInOut, 500, xx));
-            t28.Start();
-        }
-        else if (an == "quinteaseoutin")
-        {
-            var t29 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.QuintEaseOutIn, 500, xx));
-            t29.Start();
-        }
-        else if (an == "elasticeaseout")
-        {
-            var t30 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.ElasticEaseOut, 500, xx));
-            t30.Start();
-        }
-        else if (an == "elasticeasein")
-        {
-            var t31 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.ElasticEaseIn, 500, xx));
-            t31.Start();
-        }
-        else if (an == "elasticeaseinout")
-        {
-            var t32 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.ElasticEaseInOut, 500, xx));
-            t32.Start();
-        }
-        else if (an == "elasticeaseoutin")
-        {
-            var t33 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.ElasticEaseOutIn, 500, xx));
-            t33.Start();
-        }
-        else if (an == "bounceeaseout")
-        {
-            var t34 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.BounceEaseOut, 500, xx));
-            t34.Start();
-        }
-        else if (an == "bounceeasein")
-        {
-            var t35 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.BounceEaseIn, 500, xx));
-            t35.Start();
-        }
-        else if (an == "bounceeaseinout")
-        {
-            var t36 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.BounceEaseInOut, 500, xx));
-            t36.Start();
-        }
-        else if (an == "bounceeaseoutin")
-        {
-            var t37 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.BounceEaseOutIn, 500, xx));
-            t37.Start();
-        }
-        else if (an == "backeaseout")
-        {
-            var t38 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.BackEaseOut, 500, xx));
-            t38.Start();
-        }
-        else if (an == "backeasein")
-        {
-            var t39 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.BackEaseIn, 500, xx));
-            t39.Start();
-        }
-        else if (an == "backeaseinout")
-        {
-            var t40 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.BackEaseInOut, 500, xx));
-            t40.Start();
-        }
-        else if (an == "backeaseoutin")
-        {
-            var t41 = new Thread(() => Animate((IntPtr)0, 0, "", Easings.BackEaseOutIn, 500, xx));
-            t41.Start();
-        }
-    }
-
-    private void Animate(IntPtr hwnd, int oldpos, string orient, EasingDelegate easing, int valueToReach, int duration)
-    {
-
-        try
-        {
-
-            var sw = new Stopwatch();
-            int originalValue = oldpos;
-            int elapsed = new int();
-            int minValue = Math.Min(originalValue, valueToReach);
-            int maxValue = Math.Abs(valueToReach - originalValue);
-            bool increasing = originalValue < valueToReach;
-
-            elapsed = 0;
-            sw.Start();
-
-            while (!(elapsed >= duration))
-            {
-                elapsed = (int)sw.ElapsedMilliseconds;
-
-                int newValue = (int)Math.Round(Math.Truncate(easing(elapsed, minValue, maxValue, duration)));
-
-                if (!increasing)
-                {
-                    newValue = originalValue + valueToReach - newValue;
-                }
-
-                this.Dispatcher.Invoke(() => this.Slider1.Value = (double)newValue);
-
-                Console.WriteLine(newValue);
-
-            }
-
-            sw.Stop();
-
-            this.Dispatcher.Invoke(() => this.Slider1.Value = 0d);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-
-    }
-
-    private void Button_Click_10(object sender, RoutedEventArgs e)
-    {
-        if (!(this.ComboBox1.SelectedIndex == this.ComboBox1.Items.Count))
-        {
-            this.ComboBox1.SelectedIndex = this.ComboBox1.SelectedIndex + 1;
-        }
-    }
-
-    private void Button_Click_11(object sender, RoutedEventArgs e)
-    {
-        if (!(this.ComboBox1.SelectedIndex == 0))
-        {
-            this.ComboBox1.SelectedIndex = this.ComboBox1.SelectedIndex - 1;
-        }
-    }
-
     private void Alpha_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
         int val = (int)Math.Round(this.sAlpha.Value);
@@ -1967,10 +1458,6 @@ public partial class MainWindow
         {
             parameters += "-tbs=0 ";
         }
-        if (this.RadioButton2.IsChecked is { } arg90 && arg90 == true)
-        {
-            parameters += "-tbs=1 ";
-        }
         if (this.RadioButton3.IsChecked is { } arg91 && arg91 == true)
         {
             parameters += "-tbs=2 ";
@@ -1979,25 +1466,12 @@ public partial class MainWindow
         {
             parameters += "-tbs=3 ";
         }
-        if (this.RadioButtontc.IsChecked is { } arg93 && arg93 == true)
-        {
-            parameters += "-tbs=4 ";
-        }
-        if (this.RadioButtonoq.IsChecked is { } arg94 && arg94 == true)
-        {
-            parameters += "-tbs=5 ";
-        }
 
         parameters += "-color=" + this.tRed.Text.ToString() + ";" + this.tGreen.Text.ToString() + ";" + this.tBlue.Text.ToString() + ";" + this.tAlpha.Text.ToString().Replace("%", "") + " ";
 
         parameters += "-tpop=" + this.tpopla.Text.ToString().Replace("%", "") + " ";
 
         parameters += "-tsop=" + this.tsopla.Text.ToString().Replace("%", "") + " ";
-
-        if (this.ComboBox1.SelectedItem is not null)
-        {
-            parameters += "-as=" + this.ComboBox1.SelectedItem.ToString().ToLower() + " ";
-        }
 
         if (this.tbrounding.Text != default)
         {
@@ -2007,16 +1481,6 @@ public partial class MainWindow
         if (this.tbsegments.IsChecked is { } arg95 && arg95 == true)
         {
             parameters += "-tbsg=1 ";
-        }
-
-        if (this.ComboBox2.SelectedItem is not null)
-        {
-            parameters += "-obas=" + this.ComboBox2.SelectedItem.ToString().ToLower() + " ";
-        }
-
-        if (this.NumericUpDown4.Text != default)
-        {
-            parameters += "-asp=" + this.NumericUpDown4.Text + " ";
         }
 
         if (this.NumericUpDown1.Text != default)

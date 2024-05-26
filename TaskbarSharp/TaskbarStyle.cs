@@ -66,12 +66,12 @@ public class TaskbarStyle
         return ActiveWindows;
     }
 
-    public static ArrayList windowHandles = new ArrayList();
-    public static ArrayList maximizedwindows = new ArrayList();
-    public static ArrayList trays = new ArrayList();
-    public static ArrayList traysbackup = new ArrayList();
-    public static ArrayList normalwindows = new ArrayList();
-    public static ArrayList resetted = new ArrayList();
+    public static ArrayList windowHandles = [];
+    public static ArrayList maximizedwindows = [];
+    public static ArrayList trays = [];
+    public static ArrayList traysbackup = [];
+    public static ArrayList normalwindows = [];
+    public static ArrayList resetted = [];
 
     public static bool Enumerator(IntPtr hwnd, int lParam)
     {
@@ -124,7 +124,7 @@ public class TaskbarStyle
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "TaskbarSharp Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            UI.ShowError(ex);
         }
         return true;
     }
@@ -236,14 +236,14 @@ public class TaskbarStyle
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "TaskbarSharp Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    UI.ShowError(ex);
                 }
             }
             while (true);
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "TaskbarSharp Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            UI.ShowError(ex);
         }
     }
 

@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using Accessibility;
+using TaskbarSharp.Common;
 
 namespace TaskbarSharp;
 
@@ -34,7 +35,7 @@ public class MSAA
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "TaskbarSharp Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            UI.ShowError(ex);
             childCount = 0;
         }
 

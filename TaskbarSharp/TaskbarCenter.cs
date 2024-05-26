@@ -380,7 +380,7 @@ public class TaskbarCenter
 
                 if (MSTaskListWClass == IntPtr.Zero)
                 {
-                    MessageBox.Show("TaskbarSharp: Could not find the handle of the taskbar. Your current version or build of Windows may not be supported.");
+                    UI.ShowError("TaskbarSharp: Could not find the handle of the taskbar. Your current version or build of Windows may not be supported.");
                     Environment.Exit(0);
                 }
 
@@ -492,7 +492,7 @@ public class TaskbarCenter
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show(ex.Message, "TaskbarSharp Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            UI.ShowError(ex);
 
                             // Current taskbar is empty go to next taskbar.
                         }
@@ -586,7 +586,7 @@ public class TaskbarCenter
         }
         catch (Exception ex)
         {
-            MessageBox.Show("@Looper2 | " + ex.Message);
+            UI.ShowError(ex);
         }
     }
 
