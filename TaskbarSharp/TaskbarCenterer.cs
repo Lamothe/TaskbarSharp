@@ -1,20 +1,17 @@
 ﻿using Accessibility;
-using Microsoft.VisualBasic.CompilerServices;
-using Microsoft.Win32;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TaskbarSharp;
 
-public class TaskbarCenter
+public static class TaskbarCenterer
 {
-    #region Values
-
     public static bool ScreensChanged;
 
     public static int TaskbarCount;
@@ -28,36 +25,6 @@ public class TaskbarCenter
 
     public static string initposcalc;
     public static bool initposcalcready;
-
-    public static bool isanimating;
-
-    public static UserPreferenceChangedEventHandler UserPref = new UserPreferenceChangedEventHandler(HandlePrefChange);
-
-    #endregion
-
-    public static void TaskbarCenterer(object parameter)
-    {
-        var settings = parameter as TaskbarSharpSettings;
-
-        RevertToZero();
-
-        SystemEvents.DisplaySettingsChanged += DPChange;
-
-        SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
-
-        // Start the Looper
-        var t1 = new Thread(Looper);
-        t1.Start(settings);
-
-        // Start the TrayLoopFix
-        if (settings.FixToolbarsOnTrayChange)
-        {
-            var t2 = new Thread(TrayLoopFix);
-            t2.Start();
-        }
-    }
-
-    #region Commands
 
     public static System.Collections.ObjectModel.Collection<IntPtr> ActiveWindows = new System.Collections.ObjectModel.Collection<IntPtr>();
 
@@ -142,159 +109,8 @@ public class TaskbarCenter
         return rect;
     }
 
-    public static void SetPos()
+    public static void Looper(TaskbarSharpSettings settings)
     {
-        if (setposori == "H")
-        {
-            do
-            {
-                Win32.SetWindowPos(setposhwnd, IntPtr.Zero, setpospos, 0, 0, 0, Win32.SWP_NOSIZE | Win32.SWP_ASYNCWINDOWPOS | Win32.SWP_NOACTIVATE | Win32.SWP_NOZORDER | Win32.SWP_NOSENDCHANGING);
-                if (isanimating == true)
-                {
-                    break;
-                }
-            }
-            while (trayfixed != true);
-        }
-        else
-        {
-            do
-            {
-                Win32.SetWindowPos(setposhwnd, IntPtr.Zero, 0, setpospos, 0, 0, Win32.SWP_NOSIZE | Win32.SWP_ASYNCWINDOWPOS | Win32.SWP_NOACTIVATE | Win32.SWP_NOZORDER | Win32.SWP_NOSENDCHANGING);
-                if (isanimating == true)
-                {
-                    break;
-                }
-            }
-            while (trayfixed != true);
-        }
-    }
-
-    public static void RevertToZero()
-    {
-        // Put all taskbars back to default position
-        GetActiveWindows();
-
-        var Taskbars = new ArrayList();
-
-        foreach (var Taskbar in windowHandles)
-        {
-            var sClassName = new StringBuilder("", 256);
-            Win32.GetClassName((IntPtr)Taskbar, sClassName, 256);
-
-            var MSTaskListWClass = IntPtr.Zero;
-
-            if (sClassName.ToString() == "Shell_TrayWnd")
-            {
-                var ReBarWindow32 = Win32.FindWindowEx((IntPtr)Taskbar, (IntPtr)0, "ReBarWindow32", null);
-                var MStart = Win32.FindWindowEx((IntPtr)Taskbar, (IntPtr)0, "Start", null);
-                Win32.ShowWindow(MStart, Win32.ShowWindowCommands.Show);
-
-                var MTray = Win32.FindWindowEx((IntPtr)Taskbar, (IntPtr)0, "TrayNotifyWnd", null);
-                Win32.SetWindowLong(MTray, (Win32.WindowStyles)Win32.GWL_STYLE, 0x56000000);
-                Win32.SetWindowLong(MTray, (Win32.WindowStyles)Win32.GWL_EXSTYLE, 0x2000);
-                Win32.SendMessage(MTray, 11, true, 0);
-                Win32.ShowWindow(MTray, Win32.ShowWindowCommands.Show);
-
-                var MSTaskSwWClass = Win32.FindWindowEx(ReBarWindow32, (IntPtr)0, "MSTaskSwWClass", null);
-                MSTaskListWClass = Win32.FindWindowEx(MSTaskSwWClass, (IntPtr)0, "MSTaskListWClass", null);
-            }
-
-            if (sClassName.ToString() == "Shell_SecondaryTrayWnd")
-            {
-                var WorkerW = Win32.FindWindowEx((IntPtr)Taskbar, (IntPtr)0, "WorkerW", null);
-                var SStart = Win32.FindWindowEx((IntPtr)Taskbar, (IntPtr)0, "Start", null);
-                Win32.ShowWindow(SStart, Win32.ShowWindowCommands.Show);
-                var STray = Win32.FindWindowEx((IntPtr)Taskbar, (IntPtr)0, "ClockButton", null);
-                Win32.ShowWindow(STray, Win32.ShowWindowCommands.Show);
-                MSTaskListWClass = Win32.FindWindowEx(WorkerW, (IntPtr)0, "MSTaskListWClass", null);
-            }
-
-            if (MSTaskListWClass != IntPtr.Zero)
-            {
-                Taskbars.Add(MSTaskListWClass);
-            }
-        }
-
-        foreach (var TaskList in Taskbars)
-        {
-            Win32.SendMessage(Win32.GetParent(Win32.GetParent((IntPtr)TaskList)), 11, true, 0);
-            Win32.SetWindowPos((IntPtr)TaskList, IntPtr.Zero, 0, 0, 0, 0, Win32.SWP_NOSIZE | Win32.SWP_ASYNCWINDOWPOS | Win32.SWP_NOACTIVATE | Win32.SWP_NOZORDER | Win32.SWP_NOSENDCHANGING);
-        }
-    }
-
-    #endregion
-
-    #region Events
-
-    public static void HandlePrefChange(object sender, UserPreferenceChangedEventArgs e)
-    {
-        // ' Console.WriteLine(e.Category)
-        if (e.Category == UserPreferenceCategory.General)
-        {
-
-            Console.WriteLine();
-            Thread.Sleep(1000);
-            // Wait for Shell_TrayWnd
-            IntPtr Handle;
-            do
-            {
-                Console.WriteLine("Waiting for Shell_TrayWnd");
-
-                Thread.Sleep(250);
-                Handle = Win32.FindWindowByClass("Shell_TrayWnd", (IntPtr)0);
-            }
-            while (Handle == default);
-
-            Application.Restart();
-        }
-    }
-
-    public static void DPChange(object sender, EventArgs e)
-    {
-        Console.WriteLine();
-        Thread.Sleep(1000);
-        // Wait for Shell_TrayWnd
-        IntPtr Handle;
-        do
-        {
-            Console.WriteLine("Waiting for Shell_TrayWnd");
-
-            Thread.Sleep(250);
-            Handle = Win32.FindWindowByClass("Shell_TrayWnd", (IntPtr)0);
-        }
-        while (Handle == default);
-
-        Application.Restart();
-    }
-
-    public static void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
-    {
-        Console.WriteLine();
-        Thread.Sleep(1000);
-
-        // Wait for Shell_TrayWnd
-        IntPtr Handle;
-        do
-        {
-            Console.WriteLine("Waiting for Shell_TrayWnd");
-
-            Thread.Sleep(250);
-            Handle = Win32.FindWindowByClass("Shell_TrayWnd", (IntPtr)0);
-        }
-        while (Handle == default);
-
-        Application.Restart();
-    }
-
-    #endregion
-
-    #region Looper
-
-    public static void Looper( object parameter)
-    {
-        var settings = parameter as TaskbarSharpSettings;
-
         try
         {
             // This loop will check if the taskbar changes and requires a move
@@ -414,42 +230,17 @@ public class TaskbarCenter
                             // Current taskbar is empty go to next taskbar.
                         }
 
-                        string Orientation;
                         int TaskbarCount;
                         int TrayWndSize;
 
-                        // Get current taskbar orientation (H = Horizontal | V = Vertical)
-                        if (tH >= tW)
-                        {
-                            Orientation = "V";
-                        }
-                        else
-                        {
-                            Orientation = "H";
-                        }
-
                         // Get the end position of the last icon in the taskbar
-                        if (Orientation == "H")
-                        {
-                            TaskbarCount = cL + cW;
-                        }
-                        else
-                        {
-                            TaskbarCount = cT + cH;
-                        }
+                        TaskbarCount = cL + cW;
 
                         // Gets the width of the whole taskbars placeholder
-                        if (Orientation == "H")
-                        {
-                            TrayWndSize = tW;
-                        }
-                        else
-                        {
-                            TrayWndSize = tH;
-                        }
+                        TrayWndSize = tW;
 
                         // Put the results into a string ready to be matched for differences with last loop
-                        results = results + Orientation + TaskbarCount + TrayWndSize;
+                        results = results + "H" + TaskbarCount + TrayWndSize;
 
                         initposcalcready = true;
 
@@ -464,9 +255,9 @@ public class TaskbarCenter
                         initposcalc = results;
 
                         // Start the PositionCalculator
-                        var t3 = new Thread(InitPositionCalculator);
-                        t3.Start(settings);
                     }
+                    Task.Run(() => PositionCalculator(settings));
+
 
                     // Save current results for next loop
                     oldresults = results;
@@ -475,7 +266,7 @@ public class TaskbarCenter
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("@Looper1 | " + ex.Message);
+                    UI.ShowError(ex);
 
                     // Lost taskbar handles restart application
                     if (ex.ToString().Contains("NullReference") | ex.ToString().Contains("Missing method"))
@@ -500,131 +291,8 @@ public class TaskbarCenter
         }
     }
 
-    #endregion
-
-    #region TrayLoopFix
-
-    public static void TrayLoopFix()
+    private static void PositionCalculator(TaskbarSharpSettings settings)
     {
-
-        try
-        {
-            var Shell_TrayWnd = Win32.FindWindowByClass("Shell_TrayWnd", (IntPtr)0);
-            var TrayNotifyWnd = Win32.FindWindowEx(Shell_TrayWnd, (IntPtr)0, "TrayNotifyWnd", null);
-            var ReBarWindow32 = Win32.FindWindowEx(Shell_TrayWnd, (IntPtr)0, "ReBarWindow32", null);
-            var MSTaskSwWClass = Win32.FindWindowEx(ReBarWindow32, (IntPtr)0, "MSTaskSwWClass", null);
-            var MSTaskListWClass = Win32.FindWindowEx(MSTaskSwWClass, (IntPtr)0, "MSTaskListWClass", null);
-
-            var accessible = MSAA.GetAccessibleObjectFromHandle(MSTaskListWClass);
-
-            var accessible2 = MSAA.GetAccessibleObjectFromHandle(TrayNotifyWnd);
-
-            var accessible3 = MSAA.GetAccessibleObjectFromHandle(MSTaskSwWClass);
-
-            var OldTrayNotifyWidth = default(int);
-            do
-            {
-
-                var RebarPos = GetLocation(accessible3, 0);
-                var TrayNotifyPos = GetLocation(accessible2, 0);
-                var TaskListPos = GetLocation(accessible, 0);
-
-                Win32.SendMessage(ReBarWindow32, 11, false, 0);
-                Win32.SendMessage(Win32.GetParent(Shell_TrayWnd), 11, false, 0);
-
-                int TrayNotifyWidth = 0;
-                string TrayOrientation;
-
-                // If the TrayNotifyWnd updates then refresh the taskbar
-                if (TaskListPos.height >= TaskListPos.width)
-                {
-                    TrayOrientation = "V";
-                }
-                else
-                {
-                    TrayOrientation = "H";
-                }
-
-                TrayNotifyWidth = TrayNotifyPos.width;
-
-                if (!(TrayNotifyWidth == OldTrayNotifyWidth))
-                {
-                    if (!(OldTrayNotifyWidth == 0))
-                    {
-                        if (!(TaskListPos.left == 0))
-                        {
-                            if (TrayNotifyPos.left == 3)
-                            {
-                                // 
-                                return;
-                            }
-
-                            int pos = Math.Abs(TaskListPos.left - RebarPos.left);
-
-                            trayfixed = false;
-
-                            setposhwnd = MSTaskListWClass;
-                            setpospos = pos;
-                            setposori = TrayOrientation;
-
-                            var t1 = new Thread(SetPos);
-                            t1.Start();
-
-                            Thread.Sleep(5);
-                            Win32.SendMessage(ReBarWindow32, 11, true, 0);
-                            Thread.Sleep(5);
-                            Win32.SendMessage(ReBarWindow32, 11, false, 0);
-                            Thread.Sleep(5);
-                            trayfixed = true;
-
-                        }
-                    }
-                }
-
-                OldTrayNotifyWidth = TrayNotifyWidth;
-
-                Thread.Sleep(400);
-            }
-
-            while (true);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("@TrayLoopFix | " + ex.Message);
-        }
-    }
-
-    #endregion
-
-    public static void InitPositionCalculator(object parameter)
-    {
-        var settings = parameter as TaskbarSharpSettings;
-
-        string mm;
-        string mm2;
-
-        mm = initposcalc;
-
-        do
-        {
-            Thread.Sleep(10);
-        }
-        while (initposcalcready != true);
-
-        mm2 = initposcalc;
-
-        if ((mm ?? "") == (mm2 ?? ""))
-        {
-            // Start the PositionCalculator
-            var t3 = new Thread(PositionCalculator);
-            t3.Start(settings);
-        }
-    }
-
-    private static void PositionCalculator(object parameter)
-    {
-        var settings = parameter as TaskbarSharpSettings;
-
         try
         {
             // Calculate the new positions and pass them through to the animator
@@ -667,7 +335,6 @@ public class TaskbarCenter
             // Calculate Position for every taskbar and trigger the animator
             var LastChildPos = default(RectangleX);
             var TrayNotifyPos = default(RectangleX);
-            var NewsAndInterestsPos = default(RectangleX);
             foreach (var TaskList in Taskbars)
             {
                 var sClassName = new StringBuilder("", 256);
@@ -694,7 +361,6 @@ public class TaskbarCenter
                 var RebarClassName = new StringBuilder("", 256);
                 Win32.GetClassName(RebarHandle, RebarClassName, 256);
 
-                string Orientation;
                 int TaskbarWidth;
                 int TrayWndLeft;
                 int TrayWndWidth;
@@ -703,8 +369,7 @@ public class TaskbarCenter
                 int Position;
                 int curleft;
                 int curleft2;
-                IntPtr NewsAndInterestsHandle;
-                
+
                 var TrayWndHandle = Win32.GetParent(Win32.GetParent((IntPtr)TaskList));
 
                 var TrayWndClassName = new StringBuilder("", 256);
@@ -720,14 +385,6 @@ public class TaskbarCenter
                     var accessible4 = MSAA.GetAccessibleObjectFromHandle(TrayNotify);
                     TrayNotifyPos = GetLocation(accessible4, 0);
 
-                    var NewsAndInterests = Win32.FindWindowEx(TrayWndHandle, (IntPtr)0, "DynamicContent1", null);
-                    if (!(Conversions.ToInteger(NewsAndInterests.ToString()) == Conversions.ToInteger("0")))
-                    {
-                        NewsAndInterestsHandle = NewsAndInterests;
-                        var accessible5 = MSAA.GetAccessibleObjectFromHandle(NewsAndInterests);
-                        NewsAndInterestsPos = GetLocation(accessible5, 0);
-                    }
-
                     Win32.SendMessage(Win32.GetParent(TrayWndHandle), 11, false, 0);
                 }
 
@@ -742,78 +399,25 @@ public class TaskbarCenter
                 {
                     curleft = TaskListPos.left;
                     TaskListPos = GetLocation(accessible, 0);
-                    
+
                     Thread.Sleep(30);
                     curleft2 = TaskListPos.left;
                 }
                 while (curleft != curleft2);
 
-                // Get current taskbar orientation (H = Horizontal | V = Vertical)
-                if (TaskListPos.height >= TaskListPos.width)
-                {
-                    Orientation = "V";
-                }
-                else
-                {
-                    Orientation = "H";
-                }
-
                 // Calculate the exact width of the total icons
-                try
-                {
-                    if (Orientation == "H")
-                    {
-                        TaskbarWidth = LastChildPos.left - TaskListPos.left; // 'TaskbarTotalHeight
-                    }
-                    else
-                    {
-                        TaskbarWidth = LastChildPos.top - TaskListPos.top;
-                    }
-                }
-                catch
-                {
-                    TaskbarWidth = 0;
-                    // Taskbar is empty just skip
-                }
+                TaskbarWidth = LastChildPos.left - TaskListPos.left; // 'TaskbarTotalHeight
 
                 // Get info needed to calculate the position
-                if (Orientation == "H")
-                {
-                    TrayWndLeft = Math.Abs(TrayWndPos.left);
-                    TrayWndWidth = Math.Abs(TrayWndPos.width);
-                    RebarWndLeft = Math.Abs(RebarPos.left);
-                    TaskbarLeft = Math.Abs(RebarWndLeft - TrayWndLeft);
-                }
-                else
-                {
-                    TrayWndLeft = Math.Abs(TrayWndPos.top);
-                    TrayWndWidth = Math.Abs(TrayWndPos.height);
-                    RebarWndLeft = Math.Abs(RebarPos.top);
-                    TaskbarLeft = Math.Abs(RebarWndLeft - TrayWndLeft);
-                }
-
-                Console.WriteLine("!" + NewsAndInterestsPos.width);
+                TrayWndLeft = Math.Abs(TrayWndPos.left);
+                TrayWndWidth = Math.Abs(TrayWndPos.width);
+                RebarWndLeft = Math.Abs(RebarPos.left);
+                TaskbarLeft = Math.Abs(RebarWndLeft - TrayWndLeft);
 
                 // Calculate new position
                 if (TrayWndClassName.ToString() == "Shell_TrayWnd")
                 {
-                    if (settings.CenterInBetween)
-                    {
-                        if (Orientation == "H")
-                        {
-                            double offset = TrayNotifyPos.width / 2d - TaskbarLeft / 2 + NewsAndInterestsPos.width / 2d;
-                            Position = Math.Abs((int)Math.Round(TrayWndWidth / 2d - TaskbarWidth / 2d - TaskbarLeft - offset)) + settings.TaskbarOffset;
-                        }
-                        else
-                        {
-                            double offset = TrayNotifyPos.height / 2d - TaskbarLeft / 2 + NewsAndInterestsPos.height / 2d;
-                            Position = Math.Abs((int)Math.Round(TrayWndWidth / 2d - TaskbarWidth / 2d - TaskbarLeft - offset)) + settings.TaskbarOffset;
-                        }
-                    }
-                    else
-                    {
-                        Position = Math.Abs((int)Math.Round(TrayWndWidth / 2d - TaskbarWidth / 2d - TaskbarLeft)) + settings.TaskbarOffset;
-                    }
+                    Position = Math.Abs((int)Math.Round(TrayWndWidth / 2d - TaskbarLeft));
                 }
                 else
                 {
@@ -825,7 +429,7 @@ public class TaskbarCenter
         }
         catch (Exception ex)
         {
-            Console.WriteLine("@Calculator | " + ex.Message);
+            UI.ShowError(ex);
         }
     }
 }

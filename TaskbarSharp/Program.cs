@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Win32;
 using System;
 using System.Collections;
 using System.Diagnostics;
@@ -6,13 +7,19 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TaskbarSharp;
 
 public class Program
 {
-    public static NotifyIcon notifyIcon = new();
+    private static NotifyIcon notifyIcon = new();
+
+    private static Form mainForm = new Form
+    {
+        Visible = false
+    };
 
     public static void Main()
     {
@@ -26,8 +33,6 @@ public class Program
 
         try
         {
-            bool stopgiven = false;
-
             // Kill every other running instance of TaskbarSharp
             try
             {
@@ -67,42 +72,58 @@ public class Program
             // Lock the Taskbar
             while (Handle == default);
 
-            var Win11Taskbar = Win32.FindWindowEx(Win32.FindWindowByClass("Shell_TrayWnd", (IntPtr)0), (IntPtr)0, "Windows.UI.Composition.DesktopWindowContentBridge", null);
-
-            if (stopgiven == true)
-            {
-                notifyIcon.Visible = false;
-                TaskbarCenter.RevertToZero();
-                ResetTaskbarStyle();
-                Environment.Exit(0);
-            }
-
-            TrayIconBuster.TrayIconBuster.RemovePhantomIcons();
-
-            // Just empty startup memory before starting
-            ClearMemory();
-
-            // Reset the taskbar style...
-            ResetTaskbarStyle();
-
-            notifyIcon.Text = "TaskbarSharp (L = Restart) (M = Config) (R = Stop)";
+            notifyIcon.Text = "TaskbarSharp";
             notifyIcon.Icon = My.Resources.Resources.icon;
             notifyIcon.Visible = true;
+            notifyIcon.MouseClick += NotifyIcon_MouseClick;
+            notifyIcon.ContextMenuStrip = new ContextMenuStrip();
+            notifyIcon.ContextMenuStrip.Items.Add("Toast", null, NotifyIconContextMenuToast_Click);
+            notifyIcon.ContextMenuStrip.Items.Add("Restart", null, NotifyIconContextMenuRestart_Click);
+            notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
+            notifyIcon.ContextMenuStrip.Items.Add("Exit", null, NotifyIconContextMenuExit_Click);
 
-            notifyIcon.MouseClick += MnuRef_Click;
+            SystemEvents.DisplaySettingsChanged += (s, e) => Application.Restart();
+            SystemEvents.SessionSwitch += (s, e) => Application.Restart();
 
-            // Start the TaskbarCenterer
-            var t1 = new Thread(TaskbarCenter.TaskbarCenterer);
-            t1.Start(settings);
-
-            // Start the TaskbarStyler if enabled
-            var t2 = new Thread(TaskbarStyle.TaskbarStyler);
-            t2.Start(settings);
+            Task.Run(() => TaskbarCenterer.Looper(settings));
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            UI.ShowError(ex);
         }
+
+        mainForm.Activated += MainForm_Activated;
+        Application.Run(new ApplicationContext(mainForm));
+        
+        notifyIcon.Visible = false;
+    }
+
+    private static void MainForm_Activated(object sender, EventArgs e)
+    {
+        (sender as Form).Hide();
+    }
+
+    private static void NotifyIcon_MouseClick(object sender, MouseEventArgs e)
+    {
+        notifyIcon.ContextMenuStrip.Show();
+    }
+
+    private static void NotifyIconContextMenuRestart_Click(object sender, EventArgs e)
+    {
+        Application.Restart();
+    }
+
+    private static void NotifyIconContextMenuExit_Click(object sender, EventArgs e)
+    {
+        Application.Exit();
+    }
+
+    private static void NotifyIconContextMenuToast_Click(object sender, EventArgs e)
+    {
+        notifyIcon.BalloonTipTitle = "TaskbarSharp";
+        notifyIcon.BalloonTipText = "Hello!";
+        notifyIcon.Visible = true;
+        notifyIcon.ShowBalloonTip(3000);
     }
 
     public static void Toaster(string message)
@@ -112,36 +133,6 @@ public class Program
         notifyIcon.Visible = true;
         notifyIcon.ShowBalloonTip(3000);
     }
-
-    public static void MnuRef_Click(object sender, MouseEventArgs e)
-    {
-
-        if (e.Button == MouseButtons.Left)
-        {
-            notifyIcon.Visible = false;
-            Application.Restart();
-        }
-        else if (e.Button == MouseButtons.Right)
-        {
-            notifyIcon.Visible = false;
-            TaskbarCenter.RevertToZero();
-            ResetTaskbarStyle();
-            Environment.Exit(0);
-        }
-        else if (e.Button == MouseButtons.Middle)
-        {
-            try
-            {
-                Process.Start("TaskbarSharp.Configurator.exe");
-            }
-            catch
-            {
-            }
-        }
-
-    }
-
-    #region Commands
 
     public static System.Collections.ObjectModel.Collection<IntPtr> ActiveWindows = [];
 
@@ -183,7 +174,6 @@ public class Program
         {
             if (Screen.AllScreens.Count() >= 2)
             {
-                // 'MsgBox(Screen.AllScreens.Count)
                 try
                 {
                     windowHandles.Add(Win32.FindWindow("Shell_SecondaryTrayWnd", null));
@@ -209,38 +199,4 @@ public class Program
     }
 
     public static ArrayList windowHandles = new ArrayList();
-
-    public static void ResetTaskbarStyle()
-    {
-        GetActiveWindows();
-
-        var trays = new ArrayList();
-        foreach (IntPtr trayWnd in windowHandles)
-        {
-            trays.Add(trayWnd);
-        }
-
-        foreach (IntPtr tray in trays)
-        {
-            var trayptr = tray;
-
-            Win32.SendMessage(trayptr, Win32.WM_THEMECHANGED, true, 0);
-            Win32.SendMessage(trayptr, Win32.WM_DWMCOLORIZATIONCOLORCHANGED, true, 0);
-            Win32.SendMessage(trayptr, Win32.WM_DWMCOMPOSITIONCHANGED, true, 0);
-
-            var tt = new Win32.RECT();
-            Win32.GetClientRect(trayptr, ref tt);
-            Win32.SetWindowRgn(trayptr, Win32.CreateRectRgn(tt.Left, tt.Top, tt.Right, tt.Bottom), true);
-        }
-    }
-
-    public static int ClearMemory()
-    {
-        GC.Collect();
-        GC.WaitForPendingFinalizers();
-        GC.Collect();
-        return Win32.SetProcessWorkingSetSize(Process.GetCurrentProcess().Handle, -1, -1);
-    }
-
-    #endregion
 }
