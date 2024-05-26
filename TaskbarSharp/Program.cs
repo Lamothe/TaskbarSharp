@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -12,7 +11,7 @@ using TaskbarSharp.Common;
 
 namespace TaskbarSharp
 {
-    public class MainType
+    public class Program
     {
         public static NotifyIcon noty = new NotifyIcon();
 
@@ -334,17 +333,12 @@ namespace TaskbarSharp
 
         #region Commands
 
-        [DllImport("user32")]
-        public static extern int EnumWindows(CallBack Adress, int y);
-
-        public delegate bool CallBack(IntPtr hwnd, int lParam);
-
         public static System.Collections.ObjectModel.Collection<IntPtr> ActiveWindows = new System.Collections.ObjectModel.Collection<IntPtr>();
 
         public static System.Collections.ObjectModel.Collection<IntPtr> GetActiveWindows()
         {
             windowHandles.Clear();
-            EnumWindows(Enumerator, 0);
+            Win32.EnumWindows(Enumerator, 0);
 
             bool maintaskbarfound = false;
             bool sectaskbarfound = false;

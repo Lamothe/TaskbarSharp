@@ -13,16 +13,12 @@ namespace TaskbarSharp
 {
     public class TaskbarStyle
     {
-        public delegate bool CallBack(IntPtr hwnd, int lParam);
-
-        [DllImport("user32")]
-        public static extern int EnumWindows(CallBack Adress, int y);
         public static System.Collections.ObjectModel.Collection<IntPtr> ActiveWindows = new System.Collections.ObjectModel.Collection<IntPtr>();
 
         public static System.Collections.ObjectModel.Collection<IntPtr> GetActiveWindows()
         {
             windowHandles.Clear();
-            EnumWindows(Enumerator, 0);
+            Win32.EnumWindows(Enumerator, 0);
 
             bool maintaskbarfound = false;
             bool sectaskbarfound = false;
@@ -143,7 +139,7 @@ namespace TaskbarSharp
 
                 maximizedwindows.Clear();
                 Thread.Sleep(250);
-                EnumWindows(Enumerator2, 0);
+                Win32.EnumWindows(Enumerator2, 0);
 
                 windowsnew = maximizedwindows.Count;
 

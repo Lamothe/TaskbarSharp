@@ -6,9 +6,7 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Net;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
@@ -168,8 +166,6 @@ namespace TaskbarSharp.Configurator
                 };
                 var result = await adminDialog.ShowAsync();
             }
-
-            // Checkbox10.Visibility = Visibility.Hidden
 
             this.ListBox1.SelectedIndex = 0;
 

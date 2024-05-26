@@ -6,7 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -60,17 +59,12 @@ namespace TaskbarSharp
 
         #region Commands
 
-        [DllImport("user32")]
-        public static extern int EnumWindows(CallBack Adress, int y);
-
-        public delegate bool CallBack(IntPtr hwnd, int lParam);
-
         public static System.Collections.ObjectModel.Collection<IntPtr> ActiveWindows = new System.Collections.ObjectModel.Collection<IntPtr>();
 
         public static System.Collections.ObjectModel.Collection<IntPtr> GetActiveWindows()
         {
             windowHandles.Clear();
-            EnumWindows(Enumerator, 0);
+            Win32.EnumWindows(Enumerator, 0);
 
             bool maintaskbarfound = false;
             bool sectaskbarfound = false;
@@ -115,7 +109,6 @@ namespace TaskbarSharp
                     }
                 }
             }
-
 
             return ActiveWindows;
         }
@@ -177,19 +170,6 @@ namespace TaskbarSharp
             }
         }
 
-        public static void Animate(IntPtr hwnd, int oldpos, string orient, EasingDelegate easing, int valueToReach, int duration, bool isPrimary, int width)
-        {
-            try
-            {
-                var t1 = new Thread(() => TaskbarAnimate.Animate(hwnd, oldpos, orient, easing, valueToReach, duration, isPrimary, width));
-                t1.Start();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("@Animation Call | " + ex.Message);
-            }
-        }
-
         public static bool revertcycle;
 
         public static void RevertToZero()
@@ -209,7 +189,6 @@ namespace TaskbarSharp
 
             foreach (var Taskbar in windowHandles)
             {
-
                 var sClassName = new StringBuilder("", 256);
                 Win32.GetClassName((IntPtr)Taskbar, sClassName, 256);
 
@@ -229,7 +208,6 @@ namespace TaskbarSharp
 
                     var MSTaskSwWClass = Win32.FindWindowEx(ReBarWindow32, (IntPtr)0, "MSTaskSwWClass", null);
                     MSTaskListWClass = Win32.FindWindowEx(MSTaskSwWClass, (IntPtr)0, "MSTaskListWClass", null);
-
                 }
 
                 if (sClassName.ToString() == "Shell_SecondaryTrayWnd")
@@ -320,7 +298,6 @@ namespace TaskbarSharp
         }
 
         #endregion
-
 
         #region Looper
 
@@ -518,7 +495,6 @@ namespace TaskbarSharp
                                 MessageBox.Show(ex.Message, "TaskbarSharp Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                                 // Current taskbar is empty go to next taskbar.
-                                // 'Continue For
                             }
 
                             string Orientation;
@@ -605,7 +581,6 @@ namespace TaskbarSharp
                             Thread.Sleep(1000);
                             Application.Restart();
                         }
-
                     }
                 }
             }
@@ -710,8 +685,6 @@ namespace TaskbarSharp
         }
 
         #endregion
-
-        #region PositionCalculator
 
         public static void InitPositionCalculator()
         {
@@ -986,7 +959,6 @@ namespace TaskbarSharp
                     else if (!(Settings.TaskbarRounding == 0))
                     {
                         Win32.SetWindowRgn(TrayWndHandle, Win32.CreateRoundRectRgn(0, 0, TrayWndPos.width, TrayWndPos.height, Settings.TaskbarRounding, Settings.TaskbarRounding), true);
-
                     }
 
                     if (Settings.TaskbarSegments == 1)
@@ -997,148 +969,7 @@ namespace TaskbarSharp
                         }
                     }
 
-                    // Trigger the animator
-                    if (SystemInformation.PowerStatus.PowerLineStatus == PowerLineStatus.Offline)
-                    {
-                        if (Settings.CenterPrimaryOnly == 1)
-                        {
-                            if (TrayWndClassName.ToString() == "Shell_TrayWnd")
-                            {
-                                if (Orientation == "H")
-                                {
-                                    if (Settings.OnBatteryAnimationStyle == "none")
-                                    {
-                                        Win32.SetWindowPos((IntPtr)TaskList, IntPtr.Zero, Position, 0, 0, 0, Win32.SWP_NOSIZE | Win32.SWP_ASYNCWINDOWPOS | Win32.SWP_NOACTIVATE | Win32.SWP_NOZORDER | Win32.SWP_NOSENDCHANGING);
-                                    }
-                                    DaAnimator(Settings.OnBatteryAnimationStyle, (IntPtr)TaskList, TaskListPos.left, RebarPos.left, "H", Position, true, TaskbarWidth);
-                                }
-                                else if (Settings.OnBatteryAnimationStyle == "none")
-                                {
-                                    Win32.SetWindowPos((IntPtr)TaskList, IntPtr.Zero, 0, Position, 0, 0, Win32.SWP_NOSIZE | Win32.SWP_ASYNCWINDOWPOS | Win32.SWP_NOACTIVATE | Win32.SWP_NOZORDER | Win32.SWP_NOSENDCHANGING);
-                                }
-                                else
-                                {
-                                    DaAnimator(Settings.OnBatteryAnimationStyle, (IntPtr)TaskList, TaskListPos.top, RebarPos.top, "V", Position, true, TaskbarWidth);
-                                }
-                            }
-                        }
-                        else if (Settings.CenterSecondaryOnly == 1)
-                        {
-                            if (TrayWndClassName.ToString() == "Shell_SecondaryTrayWnd")
-                            {
-                                if (Orientation == "H")
-                                {
-                                    if (Settings.OnBatteryAnimationStyle == "none")
-                                    {
-                                        Win32.SetWindowPos((IntPtr)TaskList, IntPtr.Zero, Position, 0, 0, 0, Win32.SWP_NOSIZE | Win32.SWP_ASYNCWINDOWPOS | Win32.SWP_NOACTIVATE | Win32.SWP_NOZORDER | Win32.SWP_NOSENDCHANGING);
-                                    }
-                                    else
-                                    {
-                                        DaAnimator(Settings.OnBatteryAnimationStyle, (IntPtr)TaskList, TaskListPos.left, RebarPos.left, "H", Position, false, TaskbarWidth);
-                                    }
-                                }
-                                else if (Settings.OnBatteryAnimationStyle == "none")
-                                {
-                                    Win32.SetWindowPos((IntPtr)TaskList, IntPtr.Zero, 0, Position, 0, 0, Win32.SWP_NOSIZE | Win32.SWP_ASYNCWINDOWPOS | Win32.SWP_NOACTIVATE | Win32.SWP_NOZORDER | Win32.SWP_NOSENDCHANGING);
-                                }
-                                else
-                                {
-                                    DaAnimator(Settings.OnBatteryAnimationStyle, (IntPtr)TaskList, TaskListPos.top, RebarPos.top, "V", Position, false, TaskbarWidth);
-                                }
-                            }
-                        }
-                        else if (Orientation == "H")
-                        {
-                            if (Settings.OnBatteryAnimationStyle == "none")
-                            {
-                                Win32.SetWindowPos((IntPtr)TaskList, IntPtr.Zero, Position, 0, 0, 0, Win32.SWP_NOSIZE | Win32.SWP_ASYNCWINDOWPOS | Win32.SWP_NOACTIVATE | Win32.SWP_NOZORDER | Win32.SWP_NOSENDCHANGING);
-                            }
-                            else
-                            {
-                                DaAnimator(Settings.OnBatteryAnimationStyle, (IntPtr)TaskList, TaskListPos.left, RebarPos.left, "H", Position, false, TaskbarWidth);
-                            }
-                        }
-                        else if (Settings.OnBatteryAnimationStyle == "none")
-                        {
-                            Win32.SetWindowPos((IntPtr)TaskList, IntPtr.Zero, 0, Position, 0, 0, Win32.SWP_NOSIZE | Win32.SWP_ASYNCWINDOWPOS | Win32.SWP_NOACTIVATE | Win32.SWP_NOZORDER | Win32.SWP_NOSENDCHANGING);
-                        }
-                        else
-                        {
-                            DaAnimator(Settings.OnBatteryAnimationStyle, (IntPtr)TaskList, TaskListPos.top, RebarPos.top, "V", Position, false, TaskbarWidth);
-                        }
-                    }
-
-                    else if (Settings.CenterPrimaryOnly == 1)
-                    {
-                        if (TrayWndClassName.ToString() == "Shell_TrayWnd")
-                        {
-                            if (Orientation == "H")
-                            {
-                                if (Settings.AnimationStyle == "none")
-                                {
-                                    Win32.SetWindowPos((IntPtr)TaskList, IntPtr.Zero, Position, 0, 0, 0, Win32.SWP_NOSIZE | Win32.SWP_ASYNCWINDOWPOS | Win32.SWP_NOACTIVATE | Win32.SWP_NOZORDER | Win32.SWP_NOSENDCHANGING);
-                                }
-                                else
-                                {
-                                    DaAnimator(Settings.AnimationStyle, (IntPtr)TaskList, TaskListPos.left, RebarPos.left, "H", Position, true, TaskbarWidth);
-                                }
-                            }
-                            else if (Settings.AnimationStyle == "none")
-                            {
-                                Win32.SetWindowPos((IntPtr)TaskList, IntPtr.Zero, 0, Position, 0, 0, Win32.SWP_NOSIZE | Win32.SWP_ASYNCWINDOWPOS | Win32.SWP_NOACTIVATE | Win32.SWP_NOZORDER | Win32.SWP_NOSENDCHANGING);
-                            }
-                            else
-                            {
-                                DaAnimator(Settings.AnimationStyle, (IntPtr)TaskList, TaskListPos.top, RebarPos.top, "V", Position, true, TaskbarWidth);
-                            }
-                        }
-                    }
-                    else if (Settings.CenterSecondaryOnly == 1)
-                    {
-                        if (TrayWndClassName.ToString() == "Shell_SecondaryTrayWnd")
-                        {
-                            if (Orientation == "H")
-                            {
-                                if (Settings.AnimationStyle == "none")
-                                {
-                                    Win32.SetWindowPos((IntPtr)TaskList, IntPtr.Zero, Position, 0, 0, 0, Win32.SWP_NOSIZE | Win32.SWP_ASYNCWINDOWPOS | Win32.SWP_NOACTIVATE | Win32.SWP_NOZORDER | Win32.SWP_NOSENDCHANGING);
-                                }
-                                else
-                                {
-                                    DaAnimator(Settings.AnimationStyle, (IntPtr)TaskList, TaskListPos.left, RebarPos.left, "H", Position, false, TaskbarWidth);
-                                }
-                            }
-                            else if (Settings.AnimationStyle == "none")
-                            {
-                                Win32.SetWindowPos((IntPtr)TaskList, IntPtr.Zero, 0, Position, 0, 0, Win32.SWP_NOSIZE | Win32.SWP_ASYNCWINDOWPOS | Win32.SWP_NOACTIVATE | Win32.SWP_NOZORDER | Win32.SWP_NOSENDCHANGING);
-                            }
-                            else
-                            {
-                                DaAnimator(Settings.AnimationStyle, (IntPtr)TaskList, TaskListPos.top, RebarPos.top, "V", Position, false, TaskbarWidth);
-                            }
-                        }
-                    }
-                    else if (Orientation == "H")
-                    {
-                        if (Settings.AnimationStyle == "none")
-                        {
-                            Win32.SetWindowPos((IntPtr)TaskList, IntPtr.Zero, Position, 0, 0, 0, Win32.SWP_NOSIZE | Win32.SWP_ASYNCWINDOWPOS | Win32.SWP_NOACTIVATE | Win32.SWP_NOZORDER | Win32.SWP_NOSENDCHANGING);
-                        }
-                        else
-                        {
-                            DaAnimator(Settings.AnimationStyle, (IntPtr)TaskList, TaskListPos.left, RebarPos.left, "H", Position, false, TaskbarWidth);
-                        }
-                    }
-                    else if (Settings.AnimationStyle == "none")
-                    {
-                        Win32.SetWindowPos((IntPtr)TaskList, IntPtr.Zero, 0, Position, 0, 0, Win32.SWP_NOSIZE | Win32.SWP_ASYNCWINDOWPOS | Win32.SWP_NOACTIVATE | Win32.SWP_NOZORDER | Win32.SWP_NOSENDCHANGING);
-                    }
-                    else
-                    {
-                        DaAnimator(Settings.AnimationStyle, (IntPtr)TaskList, TaskListPos.top, RebarPos.top, "V", Position, false, TaskbarWidth);
-
-                    }
-
+                    Win32.SetWindowPos((IntPtr)TaskList, IntPtr.Zero, Position, 0, 0, 0, Win32.SWP_NOSIZE | Win32.SWP_ASYNCWINDOWPOS | Win32.SWP_NOACTIVATE | Win32.SWP_NOZORDER | Win32.SWP_NOSENDCHANGING);
                 }
             }
             catch (Exception ex)
@@ -1146,176 +977,5 @@ namespace TaskbarSharp
                 Console.WriteLine("@Calculator | " + ex.Message);
             }
         }
-
-        private static void DaAnimator(string animationStyle, IntPtr taskList, int taskListc, int rebarc, string orient, int position, bool isprimary, int width)
-        {
-            if (animationStyle == "linear")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.Linear, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "expoeaseout")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.ExpoEaseOut, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "expoeasein")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.ExpoEaseIn, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "expoeaseinout")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.ExpoEaseInOut, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "expoeaseoutin")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.ExpoEaseOutIn, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "circeaseout")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.CircEaseOut, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "circeasein")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.CircEaseIn, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "circeaseinout")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.CircEaseInOut, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "circeaseoutin")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.CircEaseOutIn, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "quadeaseout")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.QuadEaseOut, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "quadeasein")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.QuadEaseIn, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "quadeaseinout")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.QuadEaseInOut, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "quadeaseoutin")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.QuadEaseOutIn, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "sineeaseout")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.SineEaseOut, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "sineeasein")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.SineEaseIn, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "sineeaseinout")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.SineEaseInOut, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "sineeaseoutin")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.SineEaseOutIn, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "cubiceaseout")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.CubicEaseOut, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "cubiceasein")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.CubicEaseIn, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "cubiceaseinout")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.CubicEaseInOut, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "cubiceaseoutin")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.CubicEaseOutIn, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "quarteaseout")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.QuartEaseOut, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "quarteasein")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.QuartEaseIn, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "quarteaseinout")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.QuartEaseInOut, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "quarteaseoutin")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.QuartEaseOutIn, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "quinteaseout")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.QuintEaseOut, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "quinteasein")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.QuintEaseIn, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "quinteaseinout")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.QuintEaseInOut, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "quinteaseoutin")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.QuintEaseOutIn, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "elasticeaseout")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.ElasticEaseOut, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "elasticeasein")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.ElasticEaseIn, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "elasticeaseinout")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.ElasticEaseInOut, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "elasticeaseoutin")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.ElasticEaseOutIn, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "bounceeaseout")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.BounceEaseOut, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "bounceeasein")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.BounceEaseIn, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "bounceeaseinout")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.BounceEaseInOut, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "bounceeaseoutin")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.BounceEaseOutIn, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "backeaseout")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.BackEaseOut, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "backeasein")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.BackEaseIn, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "backeaseinout")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.BackEaseInOut, position, Settings.AnimationSpeed, isprimary, width);
-            }
-            else if (animationStyle == "backeaseoutin")
-            {
-                Animate(taskList, taskListc - rebarc, orient, Easings.BackEaseOutIn, position, Settings.AnimationSpeed, isprimary, width);
-            }
-        }
-
-        #endregion
-
     }
 }
