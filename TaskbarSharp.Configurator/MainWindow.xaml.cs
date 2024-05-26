@@ -128,9 +128,9 @@ public partial class MainWindow
 
     private async void Window_Loaded(object sender, EventArgs e)
     {
-        this.InitializeComponent();
+        InitializeComponent();
 
-        if (this.Background.ToString() == "#FF000000")
+        if (Background.ToString() == "#FF000000")
         {
             var mySolidColorBrush = new SolidColorBrush();
             mySolidColorBrush.Color = System.Windows.Media.Color.FromArgb(255, 10, 10, 10);
@@ -141,7 +141,7 @@ public partial class MainWindow
             ListBox1.Background = mySolidColorBrush2;
         }
 
-        if (this.Background.ToString() == "#FFFFFFFF")
+        if (Background.ToString() == "#FFFFFFFF")
         {
             var mySolidColorBrush = new SolidColorBrush();
             mySolidColorBrush.Color = System.Windows.Media.Color.FromArgb(255, 240, 240, 240);
@@ -196,96 +196,96 @@ public partial class MainWindow
                     {
                         if (Conversions.ToInteger(val[1]) == 0)
                         {
-                            this.RadioButton1.IsChecked = true;
+                            RadioButton1.IsChecked = true;
                         }
                         if (Conversions.ToInteger(val[1]) == 1)
                         {
-                            this.RadioButton3.IsChecked = true;
+                            RadioButton3.IsChecked = true;
                         }
                         if (Conversions.ToInteger(val[1]) == 2)
                         {
-                            this.RadioButton4.IsChecked = true;
+                            RadioButton4.IsChecked = true;
                         }
                     }
 
                     if (argument.Contains("-tbr="))
                     {
-                        this.tbrounding.Text = val[1];
+                        tbrounding.Text = val[1];
                     }
 
                     if (argument.Contains("-tbsg="))
                     {
                         if (val[1] == "1")
                         {
-                            this.tbsegments.IsChecked = true;
+                            tbsegments.IsChecked = true;
                         }
                     }
 
                     if (argument.Contains("-ptbo="))
                     {
-                        this.NumericUpDown1.Text = val[1];
+                        NumericUpDown1.Text = val[1];
                     }
                     if (argument.Contains("-stbo="))
                     {
-                        this.NumericUpDown2.Text = val[1];
+                        NumericUpDown2.Text = val[1];
                     }
                     if (argument.Contains("-cpo="))
                     {
                         if (val[1] == "1")
                         {
-                            this.CheckBox2.IsChecked = true;
+                            CheckBox2.IsChecked = true;
                         }
                     }
                     if (argument.Contains("-cso="))
                     {
                         if (val[1] == "1")
                         {
-                            this.CheckBox3.IsChecked = true;
+                            CheckBox3.IsChecked = true;
                         }
                     }
                     if (argument.Contains("-sr="))
                     {
-                        this.NumericUpDown7.Text = val[1];
+                        NumericUpDown7.Text = val[1];
                     }
                     if (argument.Contains("-sr2="))
                     {
-                        this.NumericUpDown7_Copy.Text = val[1];
+                        NumericUpDown7_Copy.Text = val[1];
                     }
                     if (argument.Contains("-sr3="))
                     {
-                        this.NumericUpDown7_Copy1.Text = val[1];
+                        NumericUpDown7_Copy1.Text = val[1];
                     }
                     if (argument.Contains("-lr="))
                     {
-                        this.NumericUpDown3.Text = val[1];
+                        NumericUpDown3.Text = val[1];
                     }
                     if (argument.Contains("-cib="))
                     {
                         if (val[1] == "1")
                         {
-                            this.CheckBox1.IsChecked = true;
+                            CheckBox1.IsChecked = true;
                         }
                     }
                     if (argument.Contains("-oblr="))
                     {
-                        this.NumericUpDown5.Text = val[1];
+                        NumericUpDown5.Text = val[1];
                     }
                     if (argument.Contains("-ftotc="))
                     {
                         if (val[1] == "1")
                         {
-                            this.CheckBox4.IsChecked = true;
+                            CheckBox4.IsChecked = true;
                         }
                     }
                     if (argument.Contains("-rzbt="))
                     {
                         if (val[1] == "1")
                         {
-                            this.CheckBox4_Copy.IsChecked = true;
+                            CheckBox4_Copy.IsChecked = true;
                         }
                         if (val[1] == "0")
                         {
-                            this.CheckBox4_Copy.IsChecked = false;
+                            CheckBox4_Copy.IsChecked = false;
                         }
                     }
 
@@ -293,61 +293,61 @@ public partial class MainWindow
                     {
                         if (val[1] == "1")
                         {
-                            this.Checkbox10.IsChecked = true;
+                            Checkbox10.IsChecked = true;
                         }
                     }
                     if (argument.Contains("-cfsa="))
                     {
                         if (val[1] == "1")
                         {
-                            this.Checkbox9.IsChecked = true;
+                            Checkbox9.IsChecked = true;
                         }
                     }
                     if (argument.Contains("-dct="))
                     {
                         if (val[1] == "1")
                         {
-                            this.CheckBox11.IsChecked = true;
+                            CheckBox11.IsChecked = true;
                         }
                     }
                     if (argument.Contains("-hps="))
                     {
                         if (val[1] == "1")
                         {
-                            this.Checkbox12.IsChecked = true;
+                            Checkbox12.IsChecked = true;
                         }
                     }
                     if (argument.Contains("-hss="))
                     {
                         if (val[1] == "1")
                         {
-                            this.Checkbox13.IsChecked = true;
+                            Checkbox13.IsChecked = true;
                         }
                     }
                     if (argument.Contains("-hpt="))
                     {
                         if (val[1] == "1")
                         {
-                            this.Checkbox14.IsChecked = true;
+                            Checkbox14.IsChecked = true;
                         }
                     }
                     if (argument.Contains("-hst="))
                     {
                         if (val[1] == "1")
                         {
-                            this.Checkbox15.IsChecked = true;
+                            Checkbox15.IsChecked = true;
                         }
                     }
                     if (argument.Contains("-sti="))
                     {
                         if (val[1] == "1")
                         {
-                            this.Checkbox16.IsChecked = true;
+                            Checkbox16.IsChecked = true;
                         }
                     }
                     if (argument.Contains("-console"))
                     {
-                        this.checkboxconsole.IsChecked = true;
+                        checkboxconsole.IsChecked = true;
                     }
 
                 }
@@ -357,7 +357,7 @@ public partial class MainWindow
                 LogonTrigger lg = (LogonTrigger)td.Definition.Triggers[0];
                 var times = lg.Delay;
 
-                this.NumericUpDown6.Value = (double)times.Seconds;
+                NumericUpDown6.Value = (double)times.Seconds;
             }
         }
         catch (Exception ex)
@@ -372,13 +372,13 @@ public partial class MainWindow
         ListBox item = (ListBox)sender;
         int index = item.SelectedIndex;
 
-        this.TabControl1.SelectedIndex = index;
+        TabControl1.SelectedIndex = index;
 
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-        this.Close();
+        Close();
     }
 
     public void Button_Click_1(object sender, RoutedEventArgs e)
@@ -407,130 +407,130 @@ public partial class MainWindow
 
         string parameters = "";
 
-        if (this.RadioButton1.IsChecked is { } arg23 && arg23 == true)
+        if (RadioButton1.IsChecked is { } arg23 && arg23 == true)
         {
             parameters += "-tbs=0 ";
         }
-        if (this.RadioButton3.IsChecked is { } arg25 && arg25 == true)
+        if (RadioButton3.IsChecked is { } arg25 && arg25 == true)
         {
             parameters += "-tbs=2 ";
         }
-        if (this.RadioButton4.IsChecked is { } arg26 && arg26 == true)
+        if (RadioButton4.IsChecked is { } arg26 && arg26 == true)
         {
             parameters += "-tbs=3 ";
         }
 
-        parameters += "-tpop=" + this.tpopla.Text.ToString().Replace("%", "") + " ";
+        parameters += "-tpop=" + tpopla.Text.ToString().Replace("%", "") + " ";
 
-        parameters += "-tsop=" + this.tsopla.Text.ToString().Replace("%", "") + " ";
+        parameters += "-tsop=" + tsopla.Text.ToString().Replace("%", "") + " ";
 
-        if (this.tbrounding.Text != default)
+        if (tbrounding.Text != default)
         {
-            parameters += "-tbr=" + this.tbrounding.Text + " ";
+            parameters += "-tbr=" + tbrounding.Text + " ";
         }
 
-        if (this.tbsegments.IsChecked is { } arg29 && arg29 == true)
+        if (tbsegments.IsChecked is { } arg29 && arg29 == true)
         {
             parameters += "-tbsg=1 ";
         }
 
-        if (this.NumericUpDown1.Text != default)
+        if (NumericUpDown1.Text != default)
         {
-            parameters += "-ptbo=" + this.NumericUpDown1.Text + " ";
+            parameters += "-ptbo=" + NumericUpDown1.Text + " ";
         }
-        if (this.NumericUpDown2.Text != default)
+        if (NumericUpDown2.Text != default)
         {
-            parameters += "-stbo=" + this.NumericUpDown2.Text + " ";
+            parameters += "-stbo=" + NumericUpDown2.Text + " ";
         }
 
-        if (this.CheckBox1.IsChecked is { } arg30 && arg30 == true)
+        if (CheckBox1.IsChecked is { } arg30 && arg30 == true)
         {
             parameters += "-cib=1 ";
         }
 
-        if (this.NumericUpDown3.Text != default)
+        if (NumericUpDown3.Text != default)
         {
-            parameters += "-lr=" + this.NumericUpDown3.Text + " ";
+            parameters += "-lr=" + NumericUpDown3.Text + " ";
         }
 
-        if (this.NumericUpDown5.Text != default)
+        if (NumericUpDown5.Text != default)
         {
-            parameters += "-oblr=" + this.NumericUpDown5.Text + " ";
+            parameters += "-oblr=" + NumericUpDown5.Text + " ";
         }
 
-        if (this.NumericUpDown7.Text != default)
+        if (NumericUpDown7.Text != default)
         {
-            parameters += "-sr=" + this.NumericUpDown7.Text + " ";
+            parameters += "-sr=" + NumericUpDown7.Text + " ";
         }
 
-        if (this.NumericUpDown7_Copy.Text != default)
+        if (NumericUpDown7_Copy.Text != default)
         {
-            parameters += "-sr2=" + this.NumericUpDown7_Copy.Text + " ";
+            parameters += "-sr2=" + NumericUpDown7_Copy.Text + " ";
         }
 
-        if (this.NumericUpDown7_Copy1.Text != default)
+        if (NumericUpDown7_Copy1.Text != default)
         {
-            parameters += "-sr3=" + this.NumericUpDown7_Copy1.Text + " ";
+            parameters += "-sr3=" + NumericUpDown7_Copy1.Text + " ";
         }
 
-        if (this.CheckBox2.IsChecked is { } arg31 && arg31 == true)
+        if (CheckBox2.IsChecked is { } arg31 && arg31 == true)
         {
             parameters += "-cpo=1 ";
         }
 
-        if (this.CheckBox3.IsChecked is { } arg32 && arg32 == true)
+        if (CheckBox3.IsChecked is { } arg32 && arg32 == true)
         {
             parameters += "-cso=1 ";
         }
 
-        if (this.CheckBox4.IsChecked is { } arg33 && arg33 == true)
+        if (CheckBox4.IsChecked is { } arg33 && arg33 == true)
         {
             parameters += "-ftotc=1 ";
         }
 
-        if (this.CheckBox4_Copy.IsChecked is { } arg34 && arg34 == true)
+        if (CheckBox4_Copy.IsChecked is { } arg34 && arg34 == true)
         {
             parameters += "-rzbt=1 ";
         }
 
-        if (this.CheckBox4_Copy.IsChecked is { } arg35 && arg35 == false)
+        if (CheckBox4_Copy.IsChecked is { } arg35 && arg35 == false)
         {
             parameters += "-rzbt=0 ";
         }
 
-        if (this.Checkbox10.IsChecked is { } arg36 && arg36 == true)
+        if (Checkbox10.IsChecked is { } arg36 && arg36 == true)
         {
             parameters += "-dtbsowm=1 ";
         }
-        if (this.Checkbox9.IsChecked is { } arg37 && arg37 == true)
+        if (Checkbox9.IsChecked is { } arg37 && arg37 == true)
         {
             parameters += "-cfsa=1 ";
         }
-        if (this.CheckBox11.IsChecked is { } arg38 && arg38 == true)
+        if (CheckBox11.IsChecked is { } arg38 && arg38 == true)
         {
             parameters += "-dct=1 ";
         }
-        if (this.Checkbox12.IsChecked is { } arg39 && arg39 == true)
+        if (Checkbox12.IsChecked is { } arg39 && arg39 == true)
         {
             parameters += "-hps=1 ";
         }
-        if (this.Checkbox13.IsChecked is { } arg40 && arg40 == true)
+        if (Checkbox13.IsChecked is { } arg40 && arg40 == true)
         {
             parameters += "-hss=1 ";
         }
-        if (this.Checkbox14.IsChecked is { } arg41 && arg41 == true)
+        if (Checkbox14.IsChecked is { } arg41 && arg41 == true)
         {
             parameters += "-hpt=1 ";
         }
-        if (this.Checkbox15.IsChecked is { } arg42 && arg42 == true)
+        if (Checkbox15.IsChecked is { } arg42 && arg42 == true)
         {
             parameters += "-hst=1 ";
         }
-        if (this.Checkbox16.IsChecked is { } arg43 && arg43 == true)
+        if (Checkbox16.IsChecked is { } arg43 && arg43 == true)
         {
             parameters += "-sti=1 ";
         }
-        if (this.checkboxconsole.IsChecked is { } arg44 && arg44 == true)
+        if (checkboxconsole.IsChecked is { } arg44 && arg44 == true)
         {
             parameters += "-console ";
         }
@@ -554,7 +554,7 @@ public partial class MainWindow
             {
 
                 var td = ts.NewTask();
-                int delay = Conversions.ToInteger(this.NumericUpDown6.Text);
+                int delay = Conversions.ToInteger(NumericUpDown6.Text);
 
                 td.RegistrationInfo.Description = "Center taskbar icons";
 
@@ -641,130 +641,130 @@ public partial class MainWindow
 
         string parameters = "";
 
-        if (this.RadioButton1.IsChecked is { } arg45 && arg45 == true)
+        if (RadioButton1.IsChecked is { } arg45 && arg45 == true)
         {
             parameters += "-tbs=0 ";
         }
-        if (this.RadioButton3.IsChecked is { } arg47 && arg47 == true)
+        if (RadioButton3.IsChecked is { } arg47 && arg47 == true)
         {
             parameters += "-tbs=2 ";
         }
-        if (this.RadioButton4.IsChecked is { } arg48 && arg48 == true)
+        if (RadioButton4.IsChecked is { } arg48 && arg48 == true)
         {
             parameters += "-tbs=3 ";
         }
 
-        parameters += "-tpop=" + this.tpopla.Text.ToString().Replace("%", "") + " ";
+        parameters += "-tpop=" + tpopla.Text.ToString().Replace("%", "") + " ";
 
-        parameters += "-tsop=" + this.tsopla.Text.ToString().Replace("%", "") + " ";
+        parameters += "-tsop=" + tsopla.Text.ToString().Replace("%", "") + " ";
 
-        if (this.tbrounding.Text != default)
+        if (tbrounding.Text != default)
         {
-            parameters += "-tbr=" + this.tbrounding.Text + " ";
+            parameters += "-tbr=" + tbrounding.Text + " ";
         }
 
-        if (this.tbsegments.IsChecked is { } arg51 && arg51 == true)
+        if (tbsegments.IsChecked is { } arg51 && arg51 == true)
         {
             parameters += "-tbsg=1 ";
         }
 
-        if (this.NumericUpDown1.Text != default)
+        if (NumericUpDown1.Text != default)
         {
-            parameters += "-ptbo=" + this.NumericUpDown1.Text + " ";
+            parameters += "-ptbo=" + NumericUpDown1.Text + " ";
         }
-        if (this.NumericUpDown2.Text != default)
+        if (NumericUpDown2.Text != default)
         {
-            parameters += "-stbo=" + this.NumericUpDown2.Text + " ";
+            parameters += "-stbo=" + NumericUpDown2.Text + " ";
         }
 
-        if (this.CheckBox1.IsChecked is { } arg52 && arg52 == true)
+        if (CheckBox1.IsChecked is { } arg52 && arg52 == true)
         {
             parameters += "-cib=1 ";
         }
 
-        if (this.NumericUpDown3.Text != default)
+        if (NumericUpDown3.Text != default)
         {
-            parameters += "-lr=" + this.NumericUpDown3.Text + " ";
+            parameters += "-lr=" + NumericUpDown3.Text + " ";
         }
 
-        if (this.NumericUpDown5.Text != default)
+        if (NumericUpDown5.Text != default)
         {
-            parameters += "-oblr=" + this.NumericUpDown5.Text + " ";
+            parameters += "-oblr=" + NumericUpDown5.Text + " ";
         }
 
-        if (this.NumericUpDown7.Text != default)
+        if (NumericUpDown7.Text != default)
         {
-            parameters += "-sr=" + this.NumericUpDown7.Text + " ";
+            parameters += "-sr=" + NumericUpDown7.Text + " ";
         }
 
-        if (this.NumericUpDown7_Copy.Text != default)
+        if (NumericUpDown7_Copy.Text != default)
         {
-            parameters += "-sr2=" + this.NumericUpDown7_Copy.Text + " ";
+            parameters += "-sr2=" + NumericUpDown7_Copy.Text + " ";
         }
 
-        if (this.NumericUpDown7_Copy1.Text != default)
+        if (NumericUpDown7_Copy1.Text != default)
         {
-            parameters += "-sr3=" + this.NumericUpDown7_Copy1.Text + " ";
+            parameters += "-sr3=" + NumericUpDown7_Copy1.Text + " ";
         }
 
-        if (this.CheckBox2.IsChecked is { } arg53 && arg53 == true)
+        if (CheckBox2.IsChecked is { } arg53 && arg53 == true)
         {
             parameters += "-cpo=1 ";
         }
 
-        if (this.CheckBox3.IsChecked is { } arg54 && arg54 == true)
+        if (CheckBox3.IsChecked is { } arg54 && arg54 == true)
         {
             parameters += "-cso=1 ";
         }
 
-        if (this.CheckBox4.IsChecked is { } arg55 && arg55 == true)
+        if (CheckBox4.IsChecked is { } arg55 && arg55 == true)
         {
             parameters += "-ftotc=1 ";
         }
 
-        if (this.CheckBox4_Copy.IsChecked is { } arg56 && arg56 == true)
+        if (CheckBox4_Copy.IsChecked is { } arg56 && arg56 == true)
         {
             parameters += "-rzbt=1 ";
         }
 
-        if (this.CheckBox4_Copy.IsChecked is { } arg57 && arg57 == false)
+        if (CheckBox4_Copy.IsChecked is { } arg57 && arg57 == false)
         {
             parameters += "-rzbt=0 ";
         }
 
-        if (this.Checkbox10.IsChecked is { } arg58 && arg58 == true)
+        if (Checkbox10.IsChecked is { } arg58 && arg58 == true)
         {
             parameters += "-dtbsowm=1 ";
         }
-        if (this.Checkbox9.IsChecked is { } arg59 && arg59 == true)
+        if (Checkbox9.IsChecked is { } arg59 && arg59 == true)
         {
             parameters += "-cfsa=1 ";
         }
-        if (this.CheckBox11.IsChecked is { } arg60 && arg60 == true)
+        if (CheckBox11.IsChecked is { } arg60 && arg60 == true)
         {
             parameters += "-dct=1 ";
         }
-        if (this.Checkbox12.IsChecked is { } arg61 && arg61 == true)
+        if (Checkbox12.IsChecked is { } arg61 && arg61 == true)
         {
             parameters += "-hps=1 ";
         }
-        if (this.Checkbox13.IsChecked is { } arg62 && arg62 == true)
+        if (Checkbox13.IsChecked is { } arg62 && arg62 == true)
         {
             parameters += "-hss=1 ";
         }
-        if (this.Checkbox14.IsChecked is { } arg63 && arg63 == true)
+        if (Checkbox14.IsChecked is { } arg63 && arg63 == true)
         {
             parameters += "-hpt=1 ";
         }
-        if (this.Checkbox15.IsChecked is { } arg64 && arg64 == true)
+        if (Checkbox15.IsChecked is { } arg64 && arg64 == true)
         {
             parameters += "-hst=1 ";
         }
-        if (this.Checkbox16.IsChecked is { } arg65 && arg65 == true)
+        if (Checkbox16.IsChecked is { } arg65 && arg65 == true)
         {
             parameters += "-sti=1 ";
         }
-        if (this.checkboxconsole.IsChecked is { } arg66 && arg66 == true)
+        if (checkboxconsole.IsChecked is { } arg66 && arg66 == true)
         {
             parameters += "-console ";
         }
@@ -787,7 +787,7 @@ public partial class MainWindow
             using (var ts = new TaskService())
             {
                 var td = ts.NewTask();
-                int delay = Conversions.ToInteger(this.NumericUpDown6.Text);
+                int delay = Conversions.ToInteger(NumericUpDown6.Text);
 
                 td.RegistrationInfo.Description = "Center taskbar icons";
 
@@ -862,15 +862,15 @@ public partial class MainWindow
                     {
                         if (Conversions.ToInteger(val[1]) == 0)
                         {
-                            this.RadioButton1.IsChecked = true;
+                            RadioButton1.IsChecked = true;
                         }
                         if (Conversions.ToInteger(val[1]) == 1)
                         {
-                            this.RadioButton3.IsChecked = true;
+                            RadioButton3.IsChecked = true;
                         }
                         if (Conversions.ToInteger(val[1]) == 2)
                         {
-                            this.RadioButton4.IsChecked = true;
+                            RadioButton4.IsChecked = true;
                         }
                     }
 
@@ -882,144 +882,144 @@ public partial class MainWindow
 
                     if (argument.Contains("-tbr="))
                     {
-                        this.tbrounding.Text = val[1];
+                        tbrounding.Text = val[1];
                     }
 
                     if (argument.Contains("-tbsg="))
                     {
                         if (val[1] == "1")
                         {
-                            this.tbsegments.IsChecked = true;
+                            tbsegments.IsChecked = true;
                         }
                     }
 
                     if (argument.Contains("-ptbo="))
                     {
-                        this.NumericUpDown1.Text = val[1];
+                        NumericUpDown1.Text = val[1];
                     }
                     if (argument.Contains("-stbo="))
                     {
-                        this.NumericUpDown2.Text = val[1];
+                        NumericUpDown2.Text = val[1];
                     }
                     if (argument.Contains("-cpo="))
                     {
                         if (val[1] == "1")
                         {
-                            this.CheckBox2.IsChecked = true;
+                            CheckBox2.IsChecked = true;
                         }
                     }
                     if (argument.Contains("-cso="))
                     {
                         if (val[1] == "1")
                         {
-                            this.CheckBox3.IsChecked = true;
+                            CheckBox3.IsChecked = true;
                         }
                     }
 
                     if (argument.Contains("-sr="))
                     {
-                        this.NumericUpDown7.Text = val[1];
+                        NumericUpDown7.Text = val[1];
                     }
                     if (argument.Contains("-sr2="))
                     {
-                        this.NumericUpDown7_Copy.Text = val[1];
+                        NumericUpDown7_Copy.Text = val[1];
                     }
                     if (argument.Contains("-sr3="))
                     {
-                        this.NumericUpDown7_Copy1.Text = val[1];
+                        NumericUpDown7_Copy1.Text = val[1];
                     }
                     if (argument.Contains("-lr="))
                     {
-                        this.NumericUpDown3.Text = val[1];
+                        NumericUpDown3.Text = val[1];
                     }
                     if (argument.Contains("-cib="))
                     {
                         if (val[1] == "1")
                         {
-                            this.CheckBox1.IsChecked = true;
+                            CheckBox1.IsChecked = true;
                         }
                     }
                     if (argument.Contains("-oblr="))
                     {
-                        this.NumericUpDown5.Text = val[1];
+                        NumericUpDown5.Text = val[1];
                     }
                     if (argument.Contains("-ftotc="))
                     {
                         if (val[1] == "1")
                         {
-                            this.CheckBox4.IsChecked = true;
+                            CheckBox4.IsChecked = true;
                         }
                     }
                     if (argument.Contains("-rzbt="))
                     {
                         if (val[1] == "1")
                         {
-                            this.CheckBox4_Copy.IsChecked = true;
+                            CheckBox4_Copy.IsChecked = true;
                         }
                         if (val[1] == "0")
                         {
-                            this.CheckBox4_Copy.IsChecked = false;
+                            CheckBox4_Copy.IsChecked = false;
                         }
                     }
                     if (argument.Contains("-dtbsowm="))
                     {
                         if (val[1] == "1")
                         {
-                            this.Checkbox10.IsChecked = true;
+                            Checkbox10.IsChecked = true;
                         }
                     }
                     if (argument.Contains("-cfsa="))
                     {
                         if (val[1] == "1")
                         {
-                            this.Checkbox9.IsChecked = true;
+                            Checkbox9.IsChecked = true;
                         }
                     }
                     if (argument.Contains("-dct="))
                     {
                         if (val[1] == "1")
                         {
-                            this.CheckBox11.IsChecked = true;
+                            CheckBox11.IsChecked = true;
                         }
                     }
                     if (argument.Contains("-hps="))
                     {
                         if (val[1] == "1")
                         {
-                            this.Checkbox12.IsChecked = true;
+                            Checkbox12.IsChecked = true;
                         }
                     }
                     if (argument.Contains("-hss="))
                     {
                         if (val[1] == "1")
                         {
-                            this.Checkbox13.IsChecked = true;
+                            Checkbox13.IsChecked = true;
                         }
                     }
                     if (argument.Contains("-hpt="))
                     {
                         if (val[1] == "1")
                         {
-                            this.Checkbox14.IsChecked = true;
+                            Checkbox14.IsChecked = true;
                         }
                     }
                     if (argument.Contains("-hst="))
                     {
                         if (val[1] == "1")
                         {
-                            this.Checkbox15.IsChecked = true;
+                            Checkbox15.IsChecked = true;
                         }
                     }
                     if (argument.Contains("-sti="))
                     {
                         if (val[1] == "1")
                         {
-                            this.Checkbox16.IsChecked = true;
+                            Checkbox16.IsChecked = true;
                         }
                     }
                     if (argument.Contains("-console"))
                     {
-                        this.checkboxconsole.IsChecked = true;
+                        checkboxconsole.IsChecked = true;
                     }
 
                 }
@@ -1029,7 +1029,7 @@ public partial class MainWindow
                 LogonTrigger lg = (LogonTrigger)td.Definition.Triggers[0];
                 var times = lg.Delay;
 
-                this.NumericUpDown6.Value = (double)times.Seconds;
+                NumericUpDown6.Value = (double)times.Seconds;
             }
         }
         catch
@@ -1040,29 +1040,29 @@ public partial class MainWindow
 
     private void Button_Click_6(object sender, RoutedEventArgs e)
     {
-        this.RadioButton1.IsChecked = true;
-        this.Checkbox10.IsChecked = false;
-        this.NumericUpDown1.Text = "0";
-        this.NumericUpDown2.Text = "0";
-        this.CheckBox1.IsChecked = false;
-        this.NumericUpDown6.Text = "6";
-        this.CheckBox2.IsChecked = false;
-        this.CheckBox3.IsChecked = false;
-        this.CheckBox4.IsChecked = true;
-        this.CheckBox4_Copy.IsChecked = true;
-        this.Checkbox9.IsChecked = false;
-        this.CheckBox11.IsChecked = false;
-        this.Checkbox12.IsChecked = false;
-        this.Checkbox13.IsChecked = false;
-        this.Checkbox14.IsChecked = false;
-        this.Checkbox15.IsChecked = false;
-        this.Checkbox16.IsChecked = false;
-        this.checkboxconsole.IsChecked = false;
-        this.NumericUpDown3.Text = "400";
-        this.NumericUpDown5.Text = "400";
-        this.NumericUpDown7.Text = "0";
-        this.NumericUpDown7_Copy.Text = "0";
-        this.NumericUpDown7_Copy1.Text = "0";
+        RadioButton1.IsChecked = true;
+        Checkbox10.IsChecked = false;
+        NumericUpDown1.Text = "0";
+        NumericUpDown2.Text = "0";
+        CheckBox1.IsChecked = false;
+        NumericUpDown6.Text = "6";
+        CheckBox2.IsChecked = false;
+        CheckBox3.IsChecked = false;
+        CheckBox4.IsChecked = true;
+        CheckBox4_Copy.IsChecked = true;
+        Checkbox9.IsChecked = false;
+        CheckBox11.IsChecked = false;
+        Checkbox12.IsChecked = false;
+        Checkbox13.IsChecked = false;
+        Checkbox14.IsChecked = false;
+        Checkbox15.IsChecked = false;
+        Checkbox16.IsChecked = false;
+        checkboxconsole.IsChecked = false;
+        NumericUpDown3.Text = "400";
+        NumericUpDown5.Text = "400";
+        NumericUpDown7.Text = "0";
+        NumericUpDown7_Copy.Text = "0";
+        NumericUpDown7_Copy1.Text = "0";
     }
 
     private void Button_Click_Restart(object sender, RoutedEventArgs e)
@@ -1091,132 +1091,132 @@ public partial class MainWindow
 
         string parameters = "";
 
-        if (this.RadioButton1.IsChecked is { } arg67 && arg67 == true)
+        if (RadioButton1.IsChecked is { } arg67 && arg67 == true)
         {
             parameters += "-tbs=0 ";
         }
-        if (this.RadioButton3.IsChecked is { } arg69 && arg69 == true)
+        if (RadioButton3.IsChecked is { } arg69 && arg69 == true)
         {
             parameters += "-tbs=2 ";
         }
-        if (this.RadioButton4.IsChecked is { } arg70 && arg70 == true)
+        if (RadioButton4.IsChecked is { } arg70 && arg70 == true)
         {
             parameters += "-tbs=3 ";
         }
 
-        parameters += "-tpop=" + this.tpopla.Text.ToString().Replace("%", "") + " ";
-        parameters += "-tsop=" + this.tsopla.Text.ToString().Replace("%", "") + " ";
+        parameters += "-tpop=" + tpopla.Text.ToString().Replace("%", "") + " ";
+        parameters += "-tsop=" + tsopla.Text.ToString().Replace("%", "") + " ";
 
-        if (this.tbrounding.Text != default)
+        if (tbrounding.Text != default)
         {
-            parameters += "-tbr=" + this.tbrounding.Text + " ";
+            parameters += "-tbr=" + tbrounding.Text + " ";
         }
 
-        if (this.tbsegments.IsChecked is { } arg73 && arg73 == true)
+        if (tbsegments.IsChecked is { } arg73 && arg73 == true)
         {
             parameters += "-tbsg=1 ";
         }
 
-        if (this.NumericUpDown1.Text != default)
+        if (NumericUpDown1.Text != default)
         {
-            parameters += "-ptbo=" + this.NumericUpDown1.Text + " ";
+            parameters += "-ptbo=" + NumericUpDown1.Text + " ";
         }
-        if (this.NumericUpDown2.Text != default)
+        if (NumericUpDown2.Text != default)
         {
-            parameters += "-stbo=" + this.NumericUpDown2.Text + " ";
+            parameters += "-stbo=" + NumericUpDown2.Text + " ";
         }
 
-        if (this.CheckBox1.IsChecked is { } arg74 && arg74 == true)
+        if (CheckBox1.IsChecked is { } arg74 && arg74 == true)
         {
             parameters += "-cib=1 ";
         }
 
-        if (this.NumericUpDown3.Text != default)
+        if (NumericUpDown3.Text != default)
         {
-            parameters += "-lr=" + this.NumericUpDown3.Text + " ";
+            parameters += "-lr=" + NumericUpDown3.Text + " ";
         }
 
-        if (this.NumericUpDown5.Text != default)
+        if (NumericUpDown5.Text != default)
         {
-            parameters += "-oblr=" + this.NumericUpDown5.Text + " ";
+            parameters += "-oblr=" + NumericUpDown5.Text + " ";
         }
 
-        if (this.NumericUpDown7.Text != default)
+        if (NumericUpDown7.Text != default)
         {
-            parameters += "-sr=" + this.NumericUpDown7.Text + " ";
+            parameters += "-sr=" + NumericUpDown7.Text + " ";
         }
 
-        if (this.NumericUpDown7_Copy.Text != default)
+        if (NumericUpDown7_Copy.Text != default)
         {
-            parameters += "-sr2=" + this.NumericUpDown7_Copy.Text + " ";
+            parameters += "-sr2=" + NumericUpDown7_Copy.Text + " ";
         }
 
-        if (this.NumericUpDown7_Copy1.Text != default)
+        if (NumericUpDown7_Copy1.Text != default)
         {
-            parameters += "-sr3=" + this.NumericUpDown7_Copy1.Text + " ";
+            parameters += "-sr3=" + NumericUpDown7_Copy1.Text + " ";
         }
 
-        if (this.CheckBox2.IsChecked is { } arg75 && arg75 == true)
+        if (CheckBox2.IsChecked is { } arg75 && arg75 == true)
         {
             parameters += "-cpo=1 ";
         }
 
-        if (this.CheckBox3.IsChecked is { } arg76 && arg76 == true)
+        if (CheckBox3.IsChecked is { } arg76 && arg76 == true)
         {
             parameters += "-cso=1 ";
         }
 
-        if (this.CheckBox4.IsChecked is { } arg77 && arg77 == true)
+        if (CheckBox4.IsChecked is { } arg77 && arg77 == true)
         {
             parameters += "-ftotc=1 ";
         }
-        if (this.CheckBox4_Copy.IsChecked is { } arg78 && arg78 == true)
+        if (CheckBox4_Copy.IsChecked is { } arg78 && arg78 == true)
         {
             parameters += "-rzbt=1 ";
         }
-        if (this.CheckBox4_Copy.IsChecked is { } arg79 && arg79 == false)
+        if (CheckBox4_Copy.IsChecked is { } arg79 && arg79 == false)
         {
             parameters += "-rzbt=0 ";
         }
 
-        if (this.Checkbox10.IsChecked is { } arg80 && arg80 == true)
+        if (Checkbox10.IsChecked is { } arg80 && arg80 == true)
         {
             parameters += "-dtbsowm=1 ";
         }
-        if (this.Checkbox9.IsChecked is { } arg81 && arg81 == true)
+        if (Checkbox9.IsChecked is { } arg81 && arg81 == true)
         {
             parameters += "-cfsa=1 ";
         }
-        if (this.CheckBox11.IsChecked is { } arg82 && arg82 == true)
+        if (CheckBox11.IsChecked is { } arg82 && arg82 == true)
         {
             parameters += "-dct=1 ";
         }
-        if (this.Checkbox12.IsChecked is { } arg83 && arg83 == true)
+        if (Checkbox12.IsChecked is { } arg83 && arg83 == true)
         {
             parameters += "-hps=1 ";
         }
-        if (this.Checkbox13.IsChecked is { } arg84 && arg84 == true)
+        if (Checkbox13.IsChecked is { } arg84 && arg84 == true)
         {
             parameters += "-hss=1 ";
         }
-        if (this.Checkbox14.IsChecked is { } arg85 && arg85 == true)
+        if (Checkbox14.IsChecked is { } arg85 && arg85 == true)
         {
             parameters += "-hpt=1 ";
         }
-        if (this.Checkbox15.IsChecked is { } arg86 && arg86 == true)
+        if (Checkbox15.IsChecked is { } arg86 && arg86 == true)
         {
             parameters += "-hst=1 ";
         }
-        if (this.Checkbox16.IsChecked is { } arg87 && arg87 == true)
+        if (Checkbox16.IsChecked is { } arg87 && arg87 == true)
         {
             parameters += "-sti=1 ";
         }
-        if (this.Checkbox16.IsChecked is { } arg88 && arg88 == true)
+        if (Checkbox16.IsChecked is { } arg88 && arg88 == true)
         {
             parameters += "-console ";
         }
 
-        Process.Start(@"..\..\..\TaskbarSharp\bin\Debug\TaskbarSharp.exe", parameters);
+        Process.Start(@"..\..\..\TaskbarSharp\bin\Debug\net8.0-windows\TaskbarSharp.exe", parameters);
     }
 
     private async void Button_Click_8(object sender, RoutedEventArgs e)

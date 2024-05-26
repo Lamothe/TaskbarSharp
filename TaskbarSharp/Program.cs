@@ -13,7 +13,7 @@ namespace TaskbarSharp;
 
 public class Program
 {
-    public static NotifyIcon noty = new NotifyIcon();
+    public static NotifyIcon notifyIcon = new NotifyIcon();
 
     public static void Main()
     {
@@ -249,7 +249,7 @@ public class Program
 
             if (stopgiven == true)
             {
-                noty.Visible = false;
+                notifyIcon.Visible = false;
                 TaskbarCenter.RevertToZero();
                 ResetTaskbarStyle();
                 Environment.Exit(0);
@@ -268,12 +268,12 @@ public class Program
 
             if (Settings.ShowTrayIcon == 1)
             {
-                noty.Text = "TaskbarSharp (L = Restart) (M = Config) (R = Stop)";
-                noty.Icon = My.Resources.Resources.icon;
-                noty.Visible = true;
+                notifyIcon.Text = "TaskbarSharp (L = Restart) (M = Config) (R = Stop)";
+                notifyIcon.Icon = My.Resources.Resources.icon;
+                notifyIcon.Visible = true;
             }
 
-            noty.MouseClick += MnuRef_Click;
+            notifyIcon.MouseClick += MnuRef_Click;
 
             // Start the TaskbarCenterer
             if (!(Settings.DontCenterTaskbar == 1))
@@ -297,10 +297,10 @@ public class Program
 
     public static void Toaster(string message)
     {
-        noty.BalloonTipTitle = "TaskbarSharp";
-        noty.BalloonTipText = message;
-        noty.Visible = true;
-        noty.ShowBalloonTip(3000);
+        notifyIcon.BalloonTipTitle = "TaskbarSharp";
+        notifyIcon.BalloonTipText = message;
+        notifyIcon.Visible = true;
+        notifyIcon.ShowBalloonTip(3000);
     }
 
     public static void MnuRef_Click(object sender, MouseEventArgs e)
@@ -308,12 +308,12 @@ public class Program
 
         if (e.Button == MouseButtons.Left)
         {
-            noty.Visible = false;
+            notifyIcon.Visible = false;
             Application.Restart();
         }
         else if (e.Button == MouseButtons.Right)
         {
-            noty.Visible = false;
+            notifyIcon.Visible = false;
             TaskbarCenter.RevertToZero();
             ResetTaskbarStyle();
             Environment.Exit(0);

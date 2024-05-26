@@ -257,7 +257,6 @@ public class TaskbarCenter
             while (Handle == default);
 
             Application.Restart();
-
         }
     }
 
