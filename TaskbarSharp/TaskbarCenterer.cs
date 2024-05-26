@@ -12,16 +12,9 @@ namespace TaskbarSharp;
 
 public static class TaskbarCenterer
 {
-    public static bool ScreensChanged;
-
     public static int TaskbarCount;
 
     public static ArrayList windowHandles = new ArrayList();
-
-    public static bool trayfixed;
-    public static IntPtr setposhwnd;
-    public static int setpospos;
-    public static string setposori;
 
     public static string initposcalc;
     public static bool initposcalcready;
@@ -93,10 +86,10 @@ public static class TaskbarCenterer
 
     public struct RectangleX
     {
-        public int left;
-        public int top;
-        public int width;
-        public int height;
+        public int Left;
+        public int Top;
+        public int Width;
+        public int Height;
     }
 
     public static RectangleX GetLocation(IAccessible acc, int idChild)
@@ -104,7 +97,7 @@ public static class TaskbarCenterer
         var rect = new RectangleX();
         if (!(acc == null))
         {
-            acc.accLocation(out rect.left, out rect.top, out rect.width, out rect.height, idChild);
+            acc.accLocation(out rect.Left, out rect.Top, out rect.Width, out rect.Height, idChild);
         }
         return rect;
     }
@@ -143,7 +136,7 @@ public static class TaskbarCenterer
 
                 if (MSTaskListWClass == IntPtr.Zero)
                 {
-                    UI.ShowError("TaskbarSharp: Could not find the handle of the taskbar. Your current version or build of Windows may not be supported.");
+                    UI.ShowError("TaskbarSharp: Could not find the handle of the taskbar.");
                     Environment.Exit(0);
                 }
 
@@ -168,30 +161,6 @@ public static class TaskbarCenterer
                 {
                     string results = null;
 
-                    if (settings.CheckFullscreenApp)
-                    {
-                        var activewindow = Win32.GetForegroundWindow();
-                        var curmonx = Screen.FromHandle(activewindow);
-                        var activewindowsize = new Win32.RECT();
-                        Win32.GetWindowRect(activewindow, ref activewindowsize);
-
-                        if (activewindowsize.Top == curmonx.Bounds.Top & activewindowsize.Bottom == curmonx.Bounds.Bottom & activewindowsize.Left == curmonx.Bounds.Left & activewindowsize.Right == curmonx.Bounds.Right)
-                        {
-                            Console.WriteLine("Fullscreen App detected " + activewindowsize.Bottom + "," + activewindowsize.Top + "," + activewindowsize.Left + "," + activewindowsize.Right);
-
-                            do
-                            {
-                                Thread.Sleep(500);
-                                activewindow = Win32.GetForegroundWindow();
-                                Win32.GetWindowRect(activewindow, ref activewindowsize);
-                                Thread.Sleep(500);
-                            }
-
-                            while (activewindowsize.Top == curmonx.Bounds.Top & activewindowsize.Bottom == curmonx.Bounds.Bottom & activewindowsize.Left == curmonx.Bounds.Left & activewindowsize.Right == curmonx.Bounds.Right);
-                            Console.WriteLine("Fullscreen App deactivated");
-                        }
-                    }
-
                     // Go through each taskbar and result in a unique string containing the current state
 
                     int i = 0;
@@ -202,8 +171,8 @@ public static class TaskbarCenterer
 
                         var TaskListPos = GetLocation(TaskList, 0);
 
-                        int tH = TaskListPos.height;
-                        int tW = TaskListPos.width;
+                        int tH = TaskListPos.Height;
+                        int tW = TaskListPos.Width;
 
                         foreach (IAccessible childx in children)
                         {
@@ -214,10 +183,10 @@ public static class TaskbarCenterer
                             }
                         }
 
-                        int cL = LastChildPos.left;
-                        int cT = LastChildPos.top;
-                        int cW = LastChildPos.width;
-                        int cH = LastChildPos.height;
+                        int cL = LastChildPos.Left;
+                        int cT = LastChildPos.Top;
+                        int cW = LastChildPos.Width;
+                        int cH = LastChildPos.Height;
 
                         try
                         {
@@ -267,21 +236,7 @@ public static class TaskbarCenterer
                 catch (Exception ex)
                 {
                     UI.ShowError(ex);
-
-                    // Lost taskbar handles restart application
-                    if (ex.ToString().Contains("NullReference") | ex.ToString().Contains("Missing method"))
-                    {
-                        IntPtr Handle;
-                        do
-                        {
-                            Handle = default;
-                            Thread.Sleep(250);
-                            Handle = Win32.FindWindowByClass("Shell_TrayWnd", (IntPtr)0);
-                        }
-                        while (Handle == default);
-                        Thread.Sleep(1000);
-                        Application.Restart();
-                    }
+                    Application.Restart();
                 }
             }
         }
@@ -296,8 +251,7 @@ public static class TaskbarCenterer
         try
         {
             // Calculate the new positions and pass them through to the animator
-
-            var Taskbars = new ArrayList();
+            var taskbars = new ArrayList();
 
             // Put all Taskbars into an ArrayList based on each TrayWnd in the TrayWnds ArrayList
             foreach (var Taskbar in windowHandles)
@@ -329,13 +283,13 @@ public static class TaskbarCenterer
                     continue;
                 }
 
-                Taskbars.Add(MSTaskListWClass);
+                taskbars.Add(MSTaskListWClass);
             }
 
             // Calculate Position for every taskbar and trigger the animator
             var LastChildPos = default(RectangleX);
             var TrayNotifyPos = default(RectangleX);
-            foreach (var TaskList in Taskbars)
+            foreach (var TaskList in taskbars)
             {
                 var sClassName = new StringBuilder("", 256);
                 Win32.GetClassName((IntPtr)TaskList, sClassName, 256);
@@ -397,33 +351,25 @@ public static class TaskbarCenterer
                 // If the taskbar is still moving then wait until it's not (This will prevent unneeded calculations that trigger the animator)
                 do
                 {
-                    curleft = TaskListPos.left;
+                    curleft = TaskListPos.Left;
                     TaskListPos = GetLocation(accessible, 0);
 
                     Thread.Sleep(30);
-                    curleft2 = TaskListPos.left;
+                    curleft2 = TaskListPos.Left;
                 }
                 while (curleft != curleft2);
 
                 // Calculate the exact width of the total icons
-                TaskbarWidth = LastChildPos.left - TaskListPos.left; // 'TaskbarTotalHeight
+                TaskbarWidth = LastChildPos.Left - TaskListPos.Left; // 'TaskbarTotalHeight
 
                 // Get info needed to calculate the position
-                TrayWndLeft = Math.Abs(TrayWndPos.left);
-                TrayWndWidth = Math.Abs(TrayWndPos.width);
-                RebarWndLeft = Math.Abs(RebarPos.left);
+                TrayWndLeft = Math.Abs(TrayWndPos.Left);
+                TrayWndWidth = Math.Abs(TrayWndPos.Width);
+                RebarWndLeft = Math.Abs(RebarPos.Left);
                 TaskbarLeft = Math.Abs(RebarWndLeft - TrayWndLeft);
 
                 // Calculate new position
-                if (TrayWndClassName.ToString() == "Shell_TrayWnd")
-                {
-                    Position = Math.Abs((int)Math.Round(TrayWndWidth / 2d - TaskbarLeft));
-                }
-                else
-                {
-                    Position = Math.Abs((int)Math.Round(TrayWndWidth / 2d - TaskbarWidth / 2d - TaskbarLeft)) + settings.TaskbarOffset;
-                }
-
+                Position = Math.Abs((int)Math.Round(TrayWndWidth / 2d - TaskbarLeft));
                 Win32.SetWindowPos((IntPtr)TaskList, IntPtr.Zero, Position, 0, 0, 0, Win32.SWP_NOSIZE | Win32.SWP_ASYNCWINDOWPOS | Win32.SWP_NOACTIVATE | Win32.SWP_NOZORDER | Win32.SWP_NOSENDCHANGING);
             }
         }
