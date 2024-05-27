@@ -2,142 +2,137 @@
 using Microsoft.Win32;
 using System;
 using System.Collections;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TaskbarSharp;
 
-namespace TaskbarSharp;
+const int LoopRefreshRate = 2000;
+const uint SWP_NOSIZE = 1U;
+const uint SWP_ASYNCWINDOWPOS = 16384U;
+const uint SWP_NOACTIVATE = 16U;
+const uint SWP_NOSENDCHANGING = 1024U;
+const uint SWP_NOZORDER = 4U;
 
-public class Program
+Guid _guidAccessible = new("{618736E0-3C3D-11CF-810C-00AA00389B71}");
+NotifyIcon notifyIcon = new();
+ArrayList windowHandles = [];
+Form mainForm = new();
+
+[DllImport("user32.dll", SetLastError = true)]
+static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
+[DllImport("user32.dll", CharSet = CharSet.Auto)]
+static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
+
+[DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+static extern IntPtr FindWindowEx(IntPtr parentHandle, IntPtr childAfter, string lclassName, string windowTitle);
+
+[DllImport("user32.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
+static extern IntPtr GetParent(IntPtr hWnd);
+
+[DllImport("SHCore.dll", SetLastError = true)]
+static extern bool SetProcessDpiAwareness(PROCESS_DPI_AWARENESS awareness);
+
+[DllImport("user32.dll", EntryPoint = "FindWindow", SetLastError = true, CharSet = CharSet.Auto)]
+static extern IntPtr FindWindowByClass(string lpClassName, IntPtr zero);
+
+[DllImport("user32.dll")]
+static extern uint SendMessage(IntPtr hWnd, int wMsg, bool wParam, int lParam);
+
+[DllImport("oleacc.dll")]
+static extern uint AccessibleChildren(IAccessible paccContainer, int iChildStart, int cChildren, object[] rgvarChildren, ref int pcObtained);
+
+[DllImport("oleacc")]
+static extern uint AccessibleObjectFromWindow(IntPtr Hwnd, int dwId, ref Guid riid, [MarshalAs(UnmanagedType.IUnknown)] ref object ppvObject);
+
+// Application starts here!
+try
 {
-    private const int LoopRefreshRate = 400;
-    private static Guid _guidAccessible = new Guid("{618736E0-3C3D-11CF-810C-00AA00389B71}");
+    foreach (var process in Process.GetProcessesByName("TaskbarSharp"))
+    {
+        if (!(process.Id == Environment.ProcessId))
+        {
+            process.Kill();
+        }
+    }
+}
+catch
+{
+}
 
-    private static NotifyIcon notifyIcon = new();
-    private static ArrayList windowHandles = [];
-    private static Form mainForm = new();
+// Prevent wrong position calculations
+SetProcessDpiAwareness(PROCESS_DPI_AWARENESS.Process_Per_Monitor_DPI_Aware);
 
-    public static void Main()
+notifyIcon.Text = "TaskbarSharp";
+notifyIcon.Icon = Resources.Icon;
+notifyIcon.Visible = true;
+notifyIcon.MouseClick += NotifyIcon_MouseClick;
+notifyIcon.ContextMenuStrip = new ContextMenuStrip();
+notifyIcon.ContextMenuStrip.Items.Add("Restart", null, NotifyIconContextMenuRestart_Click);
+notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
+notifyIcon.ContextMenuStrip.Items.Add("Exit", null, NotifyIconContextMenuExit_Click);
+
+SystemEvents.DisplaySettingsChanged += (s, e) => Application.Restart();
+SystemEvents.SessionSwitch += (s, e) => Application.Restart();
+
+var cancellationTokenSource = new CancellationTokenSource();
+var looperTask = Task.Run(() => PositionCalculatorLoop(), cancellationTokenSource.Token);
+
+mainForm.Activated += MainForm_Activated;
+
+Application.ThreadException += (s, e) => { ShowException(e.Exception); };
+Application.Run(new ApplicationContext(mainForm));
+
+// If the application has been terminated.
+notifyIcon.Visible = false;
+cancellationTokenSource.Cancel();
+looperTask.Wait();
+// Application ends here!
+
+void MainForm_Activated(object sender, EventArgs e)
+{
+    (sender as Form).Hide();
+}
+
+void NotifyIcon_MouseClick(object sender, MouseEventArgs e)
+{
+    notifyIcon.ContextMenuStrip.Show();
+}
+
+static void NotifyIconContextMenuRestart_Click(object sender, EventArgs e)
+{
+    Application.Restart();
+}
+
+static void NotifyIconContextMenuExit_Click(object sender, EventArgs e)
+{
+    Application.Exit();
+}
+
+RectangleX GetLocation(IAccessible accessible, int idChild)
+{
+    var rect = new RectangleX();
+    accessible?.accLocation(out rect.Left, out rect.Top, out rect.Width, out rect.Height, idChild);
+    return rect;
+}
+
+void PositionCalculatorLoop()
+{
+    while (!cancellationTokenSource.IsCancellationRequested)
     {
         try
         {
-            // Kill every other running instance of TaskbarSharp
-            try
-            {
-                foreach (var process in Process.GetProcessesByName("TaskbarSharp"))
-                {
-                    if (!(process.Id == Environment.ProcessId))
-                    {
-                        process.Kill();
-                    }
-                }
-            }
-            catch
-            {
-            }
+            var shellTrayWnd = FindWindowByClass("Shell_TrayWnd", 0);
+            var TrayNotifyWnd = FindWindowEx(shellTrayWnd, 0, "TrayNotifyWnd", null);
 
-            // Prevent wrong position calculations
-            Win32.SetProcessDpiAwareness(Win32.PROCESS_DPI_AWARENESS.Process_Per_Monitor_DPI_Aware);
-
-            notifyIcon.Text = "TaskbarSharp";
-            notifyIcon.Icon = My.Resources.Resources.icon;
-            notifyIcon.Visible = true;
-            notifyIcon.MouseClick += NotifyIcon_MouseClick;
-            notifyIcon.ContextMenuStrip = new ContextMenuStrip();
-            notifyIcon.ContextMenuStrip.Items.Add("Restart", null, NotifyIconContextMenuRestart_Click);
-            notifyIcon.ContextMenuStrip.Items.Add(new ToolStripSeparator());
-            notifyIcon.ContextMenuStrip.Items.Add("Exit", null, NotifyIconContextMenuExit_Click);
-
-            SystemEvents.DisplaySettingsChanged += (s, e) => Application.Restart();
-            SystemEvents.SessionSwitch += (s, e) => Application.Restart();
-
-            Task.Run(() => Looper());
-        }
-        catch (Exception ex)
-        {
-            ShowError(ex);
-        }
-
-        mainForm.Activated += MainForm_Activated;
-        Application.Run(new ApplicationContext(mainForm));
-
-        notifyIcon.Visible = false;
-    }
-
-    private static void MainForm_Activated(object sender, EventArgs e)
-    {
-        (sender as Form).Hide();
-    }
-
-    private static void NotifyIcon_MouseClick(object sender, MouseEventArgs e)
-    {
-        notifyIcon.ContextMenuStrip.Show();
-    }
-
-    private static void NotifyIconContextMenuRestart_Click(object sender, EventArgs e)
-    {
-        Application.Restart();
-    }
-
-    private static void NotifyIconContextMenuExit_Click(object sender, EventArgs e)
-    {
-        Application.Exit();
-    }
-
-    public struct RectangleX
-    {
-        public int Left;
-        public int Top;
-        public int Width;
-        public int Height;
-    }
-
-    public static RectangleX GetLocation(IAccessible accessible, int idChild)
-    {
-        var rect = new RectangleX();
-        if (!(accessible == null))
-        {
-            accessible.accLocation(out rect.Left, out rect.Top, out rect.Width, out rect.Height, idChild);
-        }
-        return rect;
-    }
-
-    public static void Looper()
-    {
-        try
-        {
-            while (true)
-            {
-                try
-                {
-                    Task.Run(() => PositionCalculator());
-                    Thread.Sleep(LoopRefreshRate);
-                }
-                catch (Exception ex)
-                {
-                    ShowError(ex);
-                    Application.Restart();
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            ShowError(ex);
-        }
-    }
-
-    private static void PositionCalculator()
-    {
-        try
-        {
-            var shellTrayWnd = Win32.FindWindowByClass("Shell_TrayWnd", 0);
-            var TrayNotifyWnd = Win32.FindWindowEx(shellTrayWnd, 0, "TrayNotifyWnd", null);
-
-            var reBarWindow32 = Win32.FindWindowEx(shellTrayWnd, 0, "ReBarWindow32", null);
-            var msTaskSwWClass = Win32.FindWindowEx(reBarWindow32, 0, "MSTaskSwWClass", null);
-            var msTaskListWClass = Win32.FindWindowEx(msTaskSwWClass, 0, "MSTaskListWClass", null);
+            var reBarWindow32 = FindWindowEx(shellTrayWnd, 0, "ReBarWindow32", null);
+            var msTaskSwWClass = FindWindowEx(reBarWindow32, 0, "MSTaskSwWClass", null);
+            var msTaskListWClass = FindWindowEx(msTaskSwWClass, 0, "MSTaskListWClass", null);
 
             if (msTaskListWClass == IntPtr.Zero)
             {
@@ -151,7 +146,7 @@ public class Program
             var lastChildPos = default(RectangleX);
             var trayNotifyPos = default(RectangleX);
             var sClassName = new StringBuilder("", 256);
-            Win32.GetClassName(msTaskListWClass, sClassName, 256);
+            CheckNonZeroResult(GetClassName(msTaskListWClass, sClassName, 256), nameof(GetClassName));
             RectangleX taskListPos;
 
             var accessible = GetAccessibleObjectFromHandle(taskList);
@@ -168,11 +163,11 @@ public class Program
                 }
             }
 
-            var rebarHandle = Win32.GetParent((IntPtr)taskList);
+            var rebarHandle = GetParent(taskList);
             var accessible3 = GetAccessibleObjectFromHandle(rebarHandle);
 
             var rebarClassName = new StringBuilder("", 256);
-            Win32.GetClassName(rebarHandle, rebarClassName, 256);
+            var _ = GetClassName(rebarHandle, rebarClassName, 256);
 
             int taskbarWidth;
             int trayWndLeft;
@@ -183,25 +178,25 @@ public class Program
             int curleft;
             int curleft2;
 
-            var TrayWndHandle = Win32.GetParent(Win32.GetParent((IntPtr)taskList));
+            var TrayWndHandle = GetParent(GetParent((IntPtr)taskList));
 
             var TrayWndClassName = new StringBuilder("", 256);
-            Win32.GetClassName(TrayWndHandle, TrayWndClassName, 256);
+            CheckNonZeroResult(GetClassName(TrayWndHandle, TrayWndClassName, 256), nameof(GetClassName));
 
             // Check if TrayWnd = wrong. if it is, correct it (This will be the primary taskbar which should be Shell_TrayWnd)
             if (TrayWndClassName.ToString() == "ReBarWindow32")
             {
-                Win32.SendMessage(TrayWndHandle, 11, false, 0);
-                TrayWndHandle = Win32.GetParent(Win32.GetParent(Win32.GetParent((IntPtr)taskList)));
+                CheckWin32Result(SendMessage(TrayWndHandle, 11, false, 0), nameof(SendMessage));
+                TrayWndHandle = GetParent(GetParent(GetParent(taskList)));
 
-                var TrayNotify = Win32.FindWindowEx(TrayWndHandle, (IntPtr)0, "TrayNotifyWnd", null);
+                var TrayNotify = FindWindowEx(TrayWndHandle, 0, "TrayNotifyWnd", null);
                 var accessible4 = GetAccessibleObjectFromHandle(TrayNotify);
                 trayNotifyPos = GetLocation(accessible4, 0);
 
-                Win32.SendMessage(Win32.GetParent(TrayWndHandle), 11, false, 0);
+                CheckWin32Result(SendMessage(GetParent(TrayWndHandle), 11, false, 0), nameof(SendMessage));
             }
 
-            Win32.GetClassName(TrayWndHandle, TrayWndClassName, 256);
+            CheckNonZeroResult(GetClassName(TrayWndHandle, TrayWndClassName, 256), nameof(GetClassName));
             var accessible2 = GetAccessibleObjectFromHandle(TrayWndHandle);
 
             var trayWndPos = GetLocation(accessible2, 0);
@@ -229,61 +224,92 @@ public class Program
 
             // Calculate new position
             position = Math.Abs((int)Math.Round(trayWndWidth / 2d - taskbarLeft));
-            Win32.SetWindowPos((IntPtr)taskList, IntPtr.Zero, position, 0, 0, 0, Win32.SWP_NOSIZE | Win32.SWP_ASYNCWINDOWPOS | Win32.SWP_NOACTIVATE | Win32.SWP_NOZORDER | Win32.SWP_NOSENDCHANGING);
+            SetWindowPos((IntPtr)taskList, IntPtr.Zero, position, 0, 0, 0, SWP_NOSIZE | SWP_ASYNCWINDOWPOS | SWP_NOACTIVATE | SWP_NOZORDER | SWP_NOSENDCHANGING);
+            Thread.Sleep(LoopRefreshRate);
         }
         catch (Exception ex)
         {
-            ShowError(ex);
+            ShowException(ex);
+            Application.Restart();
         }
     }
+}
 
-    private static IAccessible[] GetAccessibleChildren(IAccessible objAccessible)
+IAccessible[] GetAccessibleChildren(IAccessible objAccessible)
+{
+    int childCount;
+    try
     {
-        int childCount;
-        try
-        {
-            childCount = objAccessible.accChildCount;
-        }
-        catch (Exception ex)
-        {
-            ShowError(ex);
-            childCount = 0;
-        }
-
-        var accObjects = new IAccessible[childCount];
-        int count = 0;
-
-        if (childCount != 0)
-        {
-            Win32.AccessibleChildren(objAccessible, 0, childCount, accObjects, ref count);
-        }
-
-        return accObjects;
+        childCount = objAccessible.accChildCount;
     }
-
-    private static IAccessible GetAccessibleObjectFromHandle(IntPtr hwnd)
+    catch (Exception ex)
     {
-        var accObject = new object();
-        IAccessible objAccessible = null;
-        if (hwnd != (IntPtr)0)
-        {
-            Win32.AccessibleObjectFromWindow((int)hwnd, 0, ref _guidAccessible, ref accObject);
-            objAccessible = (IAccessible)accObject;
-        }
-
-        return objAccessible;
+        ShowException(ex);
+        childCount = 0;
     }
 
-    private static void ShowError(Exception ex)
+    var accObjects = new IAccessible[childCount];
+    int count = 0;
+
+    if (childCount != 0)
     {
-        ShowError(ex.Message);
+        CheckWin32Result(AccessibleChildren(objAccessible, 0, childCount, accObjects, ref count), nameof(AccessibleChildren));
     }
 
-    private static void ShowError(string message)
+    return accObjects;
+}
+
+IAccessible GetAccessibleObjectFromHandle(IntPtr hwnd)
+{
+    var accObject = new object();
+    IAccessible objAccessible = null;
+    if (hwnd != 0)
     {
-        notifyIcon.BalloonTipTitle = "TaskbarSharp Error";
-        notifyIcon.BalloonTipText = message;
-        notifyIcon.Visible = true;
-        notifyIcon.ShowBalloonTip(3000);
+        CheckWin32Result(AccessibleObjectFromWindow(hwnd, 0, ref _guidAccessible, ref accObject), nameof(AccessibleObjectFromWindow));
+        objAccessible = (IAccessible)accObject;
     }
+
+    return objAccessible;
+}
+
+void ShowError(string message)
+{
+    notifyIcon.BalloonTipTitle = "TaskbarSharp Error";
+    notifyIcon.BalloonTipText = message;
+    notifyIcon.Visible = true;
+    notifyIcon.ShowBalloonTip(3000);
+}
+
+void ShowException(Exception ex)
+{
+    ShowError(ex.Message);
+}
+
+void CheckWin32Result(uint result, string functionName)
+{
+    if (result != 0L)
+    {
+        throw new Win32Exception(Marshal.GetLastWin32Error(), $"The call to {functionName} failed");
+    }
+}
+
+void CheckNonZeroResult(int result, string functionName)
+{
+    if (result <= 0)
+    {
+        throw new Exception($"The call to {functionName} returned no results");
+    }
+}
+
+struct RectangleX
+{
+    public int Left;
+    public int Top;
+    public int Width;
+    public int Height;
+}
+
+enum PROCESS_DPI_AWARENESS
+{
+    Process_Per_Monitor_DPI_Aware = 2
 }
